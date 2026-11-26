@@ -197,6 +197,8 @@ struct EditorView: View {
                     .scaleEffect(drag?.id == item.id ? 1.02 : 1)
                     .offset(y: drag?.id == item.id ? drag!.offset : 0)
                     .zIndex(drag?.id == item.id ? 1 : 0)
+                    // The lifted row's slot change and offset must land in the same frame.
+                    .transaction { if drag?.id == item.id && drag?.moved == true { $0.animation = nil } }
                     .id(item.id == model.editingID ? "composer" : item.id.uuidString)
                     .canvasRow()
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -239,21 +241,39 @@ struct EditorView: View {
             onEnded: endDrag)
     }
 
+    /// Rows sit 8pt apart (4pt insets above and below).
+    private let rowGap: CGFloat = 8
+
+    /// Follows the finger 1:1. Positions come from row heights (stable) rather than live frames
+    /// (stale right after a swap), so the lifted row never jumps; it may pass several rows at once.
     private func follow(_ id: UUID, translation: CGFloat) {
         guard var current = drag, current.id == id,
-              let index = model.items.firstIndex(where: { $0.id == id }),
-              let frame = rowFrames[id] else { return }
+              let height = rowFrames[id]?.height else { return }
         current.translation = translation
         if abs(translation) > 10 { current.moved = true }
         let centre = current.originMidY + translation
-        if index + 1 < model.items.count, let below = rowFrames[model.items[index + 1].id], centre > below.midY {
-            current.shift += below.maxY - frame.maxY
-            withAnimation(.easeOut(duration: 0.15)) { model.move(id, by: 1) }
-        } else if index > 0, let above = rowFrames[model.items[index - 1].id], centre < above.midY {
-            current.shift -= frame.minY - above.minY
-            withAnimation(.easeOut(duration: 0.15)) { model.move(id, by: -1) }
+        while let index = model.items.firstIndex(where: { $0.id == id }) {
+            // Where this row's slot is now: its lifted position plus the slots it has traded.
+            let slotMid = current.originMidY + current.shift
+            if index + 1 < model.items.count, let below = rowFrames[model.items[index + 1].id]?.height,
+               centre > slotMid + height / 2 + rowGap + below / 2 {
+                current.shift += below + rowGap
+                move(id, by: 1)
+            } else if index > 0, let above = rowFrames[model.items[index - 1].id]?.height,
+                      centre < slotMid - height / 2 - rowGap - above / 2 {
+                current.shift -= above + rowGap
+                move(id, by: -1)
+            } else {
+                break
+            }
         }
         drag = current
+    }
+
+    /// Neighbours glide into the freed slot; the lifted row itself is placed without animation
+    /// (its offset already follows the finger).
+    private func move(_ id: UUID, by step: Int) {
+        withAnimation(.easeOut(duration: 0.15)) { model.move(id, by: step) }
     }
 
     private func endDrag() {
