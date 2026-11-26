@@ -131,7 +131,7 @@ struct RecordsDocument: FileDocument {
 }
 
 #if DEBUG
-/// Debug builds only: load the shared sample records (same file as Android) or clear everything.
+/// Debug builds only: load the homepage's sample records (same generator as the web trial) or clear everything.
 struct DebugSampleSection: View {
     @Environment(RecordStore.self) private var store
     @State private var message: String?
@@ -142,7 +142,7 @@ struct DebugSampleSection: View {
                 .font(.brand(15, .medium))
                 .padding(.top, 8)
             VStack(spacing: 0) {
-                Button { load() } label: { row("예시 기록 넣기", detail: "기존 기록을 지우고 예시 24일치를 넣어요.") }
+                Button { load() } label: { row("예시 기록 넣기", detail: "기존 기록을 지우고 홈페이지 체험과 같은 3년치 기록을 넣어요.") }
                 Rectangle().fill(Palette.line).frame(height: 1)
                 Button(role: .destructive) { clear() } label: { row("모든 기록 지우기", detail: "빈 홈 화면을 확인할 때 써요.") }
             }
@@ -166,8 +166,7 @@ struct DebugSampleSection: View {
 
     private func load() {
         do {
-            let url = try SampleRecords.url()
-            let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: Data(contentsOf: url))
+            let archive = SampleGenerator.archive()
             try store.replaceAll(with: archive)
             message = "예시 기록 \(archive.days.count)일치를 넣었어요."
         } catch {
@@ -185,13 +184,3 @@ struct DebugSampleSection: View {
     }
 }
 #endif
-
-/// Shared sample data (records.json format), also used by the Android app.
-enum SampleRecords {
-    static func url(bundle: Bundle = .main) throws -> URL {
-        guard let url = bundle.url(forResource: "sample-records", withExtension: "json") else {
-            throw CocoaError(.fileNoSuchFile)
-        }
-        return url
-    }
-}

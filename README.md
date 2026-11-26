@@ -37,11 +37,11 @@ from that sibling path, checks its SHA-256 pin, and runs every shared case that 
 
 ## Sample data (debug builds)
 
-Settings › 개발용 테스트 데이터 (Debug only) loads `Tokipin/Resources/Samples/sample-records.json`
-(24 days, Dec 2025 – Nov 2026, `records.json` format) or clears everything for the empty home.
-The file covers the UX v0.1 scenarios: 2026-10-01 with 5 fragments (+2), 00:00 / 12:00 / 18:45,
-a 2025→2026 year boundary, family/flag/keycap/©️ emoji, long text, and an 8-fragment day.
-Android uses the same file contents so both apps show the same data.
+Settings › 개발용 테스트 데이터 (Debug only) → 예시 기록 넣기 fills the app with the same records as
+the homepage trial: `Tokipin/Core/SampleGenerator.swift` is a port of `../tokipin/trial.js` +
+`trial-content.js` (same seeded generator, 28 themes, Korean words, three years ending today, quiet
+days left empty). `SampleRecordsTests` runs the web scripts in JavaScriptCore and checks every
+day and item match. 모든 기록 지우기 clears everything for the empty home.
 
 ## Data format
 

@@ -101,19 +101,36 @@ final class RecordStoreTests: XCTestCase {
     }
 }
 
+import JavaScriptCore
+
 @MainActor
 final class SampleRecordsTests: XCTestCase {
-    /// The shared sample file loads and every fragment follows the input rules.
-    func testSampleRecordsAreValid() throws {
-        let data = try Data(contentsOf: try SampleRecords.url(bundle: Bundle(for: RecordStore.self)))
-        let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: data)
-        XCTAssertEqual(archive.days.count, 24)
+    /// Runs the homepage's own trial.js (../tokipin) and checks the app generates the same days and items.
+    func testMatchesHomepageTrial() throws {
+        let web = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .deletingLastPathComponent().appendingPathComponent("tokipin")
+        let context = try XCTUnwrap(JSContext())
+        context.exceptionHandler = { _, error in XCTFail("JS: \(String(describing: error))") }
+        context.evaluateScript("""
+            var window = this; var document = { documentElement: { lang: 'ko' }, addEventListener: function(){}, hidden: false };
+            window.addEventListener = function(){}; window.setTimeout = function(){ return 0 }; window.clearTimeout = function(){};
+            """)
+        for file in ["trial-content.js", "trial.js"] {
+            context.evaluateScript(try String(contentsOf: web.appendingPathComponent(file), encoding: .utf8))
+        }
+        let trial = try XCTUnwrap(context.objectForKeyedSubscript("TokipinTrial"))
+        let today = try XCTUnwrap(DayKey(string: trial.objectForKeyedSubscript("today").toString()))
+        let archive = SampleGenerator.archive(today: today)
+        let webDates = trial.invokeMethod("dates", withArguments: []).toArray() as? [String] ?? []
+        XCTAssertEqual(archive.days.map(\.date.string), webDates)
+        XCTAssertGreaterThan(webDates.count, 900)
         for day in archive.days {
+            let webItems = trial.invokeMethod("get", withArguments: [day.date.string]).toArray() as? [[String: Any]] ?? []
+            XCTAssertEqual(day.items.map(\.kind.rawValue), webItems.map { $0["kind"] as? String ?? "" }, day.date.string)
+            XCTAssertEqual(day.items.map(\.value), webItems.map { $0["value"] as? String ?? "" }, day.date.string)
             for item in day.items {
                 XCTAssertEqual(ItemValidator.normalize(item.kind, item.value), .value(item.value), "\(day.date.string) \(item.value)")
             }
         }
-        let october = try XCTUnwrap(archive.days.first { $0.date == DayKey(year: 2026, month: 10, day: 1) })
-        XCTAssertEqual(MonthCellPreview.fragments(october.items).overflow, "+2")
     }
 }
