@@ -40,6 +40,15 @@ every case that applies to iOS (81 of 82; `emoji.externalIme` is Android-only), 
   `ComposerField`, `SwipePager`.
 - All navigation (tap, swipe, pinch, view menu) goes through `AppModel.navigate`, which requests at most one tick.
 
+## Daily read & edit
+
+- **Empty day**: a small glass card with the peeking rabbit under the date strip, `+` opens that day's editor. The empty text is VoiceOver-only ("이날 남긴 기록이 없어요.").
+- **Empty 기록한 날 month**: the same art inside the month page (it travels with the swipe and comes back on cancel); VoiceOver announces "<month>에 남긴 기록이 없어요." once when the month settles.
+- **Art layout** (`EmptyRecordArt`): 172×120 at 390pt width (rabbit 90×90), width = round(44% of page width) capped at 172, ratio kept; horizontally centred; its centre sits at 30% of the height between the strip/rail and the bottom buttons, clamped on short screens.
+- **Filled day**: read-only items, one pencil (이날 기록 편집) at the bottom. The pencil opens the editor with the keyboard closed; tapping an item edits it with its own tool.
+- **Editor**: long press and release in place → 삭제 menu; long press and drag up/down → reorder across kinds; swipe to delete with undo. VoiceOver actions: 위로 이동, 아래로 이동, 삭제.
+- Changes are saved only with ✓. The first saved item replaces the rabbit; saving with the last item deleted returns to the same day's empty screen. Drafts are kept per day.
+
 ## Sample data (debug builds)
 
 Settings › 개발용 테스트 데이터 (Debug only) → 예시 기록 넣기 fills the app with the same records as
@@ -50,7 +59,7 @@ day and item match. 모든 기록 지우기 clears everything for the empty home
 
 ## Data format
 
-Stored at `Application Support/Tokipin/records.json` (atomic writes); the draft sits next to it in `draft.json`. Export writes the same JSON:
+Stored at `Application Support/Tokipin/records.json` (atomic writes); unsaved drafts sit next to it in `drafts.json`, one per day (a v0.1 `draft.json` is migrated on load). Export writes the same JSON:
 
 ```json
 {

@@ -46,6 +46,8 @@ struct Draft: Codable, Equatable, Sendable {
     var raw: String
     var editingID: UUID?
     var changed: Bool
+    /// When this draft was last written; the newest one is resumed after a relaunch.
+    var savedAt: Date?
 }
 
 /// Same rules as the web demo's `normalized()`:

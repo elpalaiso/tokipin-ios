@@ -34,7 +34,8 @@ final class RecordStore {
     private(set) var state: LoadState = .idle
     private(set) var records: [DayKey: [RecordItem]] = [:]
     private(set) var updatedAt: [DayKey: Date] = [:]
-    private(set) var draft: Draft?
+    /// Unsaved editor state, one per day, so a draft on one day never overwrites another's.
+    private(set) var drafts: [DayKey: Draft] = [:]
     /// True until the first record is saved or the first editor is closed.
     private(set) var isFirstLaunch: Bool
 
@@ -53,7 +54,8 @@ final class RecordStore {
     }
 
     private var recordsURL: URL { directory.appendingPathComponent("records.json") }
-    private var draftURL: URL { directory.appendingPathComponent("draft.json") }
+    private var draftURL: URL { directory.appendingPathComponent("draft.json") }   // v0.1 single draft
+    private var draftsURL: URL { directory.appendingPathComponent("drafts.json") }
 
     // MARK: Loading
 
@@ -61,7 +63,8 @@ final class RecordStore {
         state = .loading
         let recordsURL = recordsURL
         let draftURL = draftURL
-        let result: Result<(RecordArchive?, Draft?), Error> = await Task.detached(priority: .userInitiated) {
+        let draftsURL = draftsURL
+        let result: Result<(RecordArchive?, [Draft]), Error> = await Task.detached(priority: .userInitiated) {
             do {
                 var archive: RecordArchive?
                 if FileManager.default.fileExists(atPath: recordsURL.path) {
@@ -69,15 +72,18 @@ final class RecordStore {
                     archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: data)
                 }
                 // A broken draft must never block reading the records.
-                let draft = (try? Data(contentsOf: draftURL)).flatMap { try? JSONDecoder.tokipin.decode(Draft.self, from: $0) }
-                return .success((archive, draft))
+                var drafts = (try? Data(contentsOf: draftsURL)).flatMap { try? JSONDecoder.tokipin.decode([Draft].self, from: $0) } ?? []
+                if drafts.isEmpty, let old = (try? Data(contentsOf: draftURL)).flatMap({ try? JSONDecoder.tokipin.decode(Draft.self, from: $0) }) {
+                    drafts = [old]
+                }
+                return .success((archive, drafts))
             } catch {
                 return .failure(error)
             }
         }.value
 
         switch result {
-        case .success(let (archive, draft)):
+        case .success(let (archive, drafts)):
             var records: [DayKey: [RecordItem]] = [:]
             var updated: [DayKey: Date] = [:]
             for day in archive?.days ?? [] where !day.items.isEmpty {
@@ -86,7 +92,9 @@ final class RecordStore {
             }
             self.records = records
             self.updatedAt = updated
-            self.draft = draft
+            // A draft identical to what is saved holds nothing to resume.
+            self.drafts = Dictionary(drafts.map { ($0.day, $0) }, uniquingKeysWith: { a, _ in a })
+                .filter { day, draft in !(draft.raw.isEmpty && draft.items == (records[day] ?? [])) }
             if !records.isEmpty { markEditorOpened() }
             state = .loaded
         case .failure:
@@ -175,22 +183,42 @@ final class RecordStore {
         try write(next, updated: nextUpdated)
         records = next
         updatedAt = nextUpdated
-        updateDraft(nil)
+        drafts = [:]
+        writeDrafts()
     }
 
     // MARK: Draft
 
-    func updateDraft(_ draft: Draft?) {
-        self.draft = draft
+    func draft(for day: DayKey) -> Draft? { drafts[day] }
+
+    /// The most recently touched draft (resumed after the app was interrupted).
+    var latestDraft: Draft? {
+        drafts.values.max { ($0.savedAt ?? .distantPast) < ($1.savedAt ?? .distantPast) }
+    }
+
+    /// Stores or clears the draft of one day; other days' drafts are untouched.
+    func updateDraft(_ draft: Draft?, for day: DayKey) {
+        if var draft {
+            draft.savedAt = Date()
+            drafts[day] = draft
+        } else {
+            drafts[day] = nil
+        }
+        writeDrafts()
+    }
+
+    private func writeDrafts() {
         do {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            if let draft {
-                try JSONEncoder.tokipin.encode(draft).write(to: draftURL, options: .atomic)
-            } else if FileManager.default.fileExists(atPath: draftURL.path) {
-                try FileManager.default.removeItem(at: draftURL)
+            if drafts.isEmpty {
+                try? FileManager.default.removeItem(at: draftsURL)
+            } else {
+                let list = drafts.keys.sorted().map { drafts[$0]! }
+                try JSONEncoder.tokipin.encode(list).write(to: draftsURL, options: .atomic)
             }
+            try? FileManager.default.removeItem(at: draftURL)
         } catch {
-            // The draft stays in memory; losing the on-disk copy is not fatal.
+            // Drafts stay in memory; losing the on-disk copy is not fatal.
         }
     }
 

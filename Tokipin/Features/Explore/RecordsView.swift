@@ -4,6 +4,7 @@ import SwiftUI
 /// month's cards vertically, and use the month rail on top to jump or fling across months.
 struct RecordsView: View {
     @Environment(AppModel.self) private var app
+    @Environment(RecordStore.self) private var store
     let onLongPress: (DayKey) -> Void
     /// Body drag progress (−1…1) mirrored by the rail while the finger is down.
     @State private var progress: CGFloat = 0
@@ -18,6 +19,12 @@ struct RecordsView: View {
                 app.commitRecordsMonth(app.recordsMonth.adding(months: delta))
             }) { page in
                 RecordsMonthPage(month: app.recordsMonth.adding(months: page), onLongPress: onLongPress)
+            }
+        }
+        .onChange(of: app.recordsMonth) { _, month in
+            // Only a settled month is announced; previews and cancelled drags never are.
+            if app.level == .records, store.days(in: month).isEmpty, UIAccessibility.isVoiceOverRunning {
+                UIAccessibility.post(notification: .announcement, argument: EmptyStateText.month(month))
             }
         }
     }
@@ -35,19 +42,13 @@ struct RecordsMonthPage: View {
         let days = store.days(in: month)
         ScrollViewReader { proxy in
             ScrollView {
+                if days.isEmpty {
+                    // Part of this month's page, so it travels with the body swipe and comes back on cancel.
+                    EmptyRecordArt(label: EmptyStateText.month(month))
+                        .containerRelativeFrame([.horizontal, .vertical])
+                } else {
                 LazyVStack(alignment: .leading, spacing: 12) {
-                    if days.isEmpty {
-                        VStack(alignment: .leading, spacing: 14) {
-                            Text("이달에 남긴 기록이 없어요.")
-                                .font(.brand(15))
-                                .foregroundStyle(Palette.secondary)
-                            OutlineCapsuleButton(title: "달력 보기") {
-                                app.setLevel(.month)
-                                app.requestReveal(app.selectedDay)
-                            }
-                        }
-                        .padding(.top, 12)
-                    } else {
+                    Group {
                         ForEach(RecordsLayout.rows(days), id: \.first) { row in
                             if row.count == 1 {
                                 RecordCard(day: row[0], large: true, onLongPress: onLongPress)
@@ -62,6 +63,7 @@ struct RecordsMonthPage: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 24)
+                }
             }
             .scrollIndicators(.hidden)
             .onAppear { scroll(proxy, days: days, to: app.selectedDay, anchorY: nil) }

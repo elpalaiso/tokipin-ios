@@ -15,13 +15,7 @@ struct DayView: View {
             .frame(height: 74)
             Rectangle().fill(Palette.line).frame(height: 1).padding(.horizontal, 20)
             SwipePager(region: .dayBody, onCommit: move) { page in
-                ScrollView {
-                    DayBody(day: app.selectedDay.adding(days: page), onUndo: onUndo, onError: onError)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 20)
-                        .padding(.bottom, 24)
-                }
-                .scrollIndicators(.hidden)
+                DayPage(day: app.selectedDay.adding(days: page), onUndo: onUndo, onError: onError)
             }
         }
         .accessibilityAction(named: "다음 날") { move(1) }
@@ -181,7 +175,31 @@ struct WeekRail: View {
     }
 }
 
-/// One day's items: the first in a large card, the rest as rows.
+/// One page of 일간: the shared empty art on an empty day, else the day's items.
+struct DayPage: View {
+    @Environment(RecordStore.self) private var store
+    let day: DayKey
+    let onUndo: (PendingUndo) -> Void
+    let onError: (Error) -> Void
+
+    var body: some View {
+        ScrollView {
+            if store.items(on: day).isEmpty {
+                EmptyRecordArt(label: EmptyStateText.day)
+                    .containerRelativeFrame([.horizontal, .vertical])
+            } else {
+                DayBody(day: day, onUndo: onUndo, onError: onError)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 24)
+            }
+        }
+        .scrollIndicators(.hidden)
+    }
+}
+
+/// One day's items in saved order: the first in a large card, the rest as rows. Read-only;
+/// editing goes through the bottom pencil.
 struct DayBody: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
@@ -191,20 +209,12 @@ struct DayBody: View {
 
     var body: some View {
         let items = store.items(on: day)
-        if items.isEmpty {
-            Text("이날 남긴 기록이 없어요.")
-                .font(.brand(15))
-                .foregroundStyle(Palette.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 8)
-        } else {
-            VStack(spacing: 0) {
-                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                    if index == 0 {
-                        leadCard(item).padding(.bottom, 14)
-                    } else {
-                        row(item)
-                    }
+        VStack(spacing: 0) {
+            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                if index == 0 {
+                    leadCard(item).padding(.bottom, 14)
+                } else {
+                    row(item)
                 }
             }
         }
@@ -220,7 +230,6 @@ struct DayBody: View {
             }
             .padding(.top, 34)
             Spacer()
-            itemMenu(item)
         }
         .padding(.leading, 22)
         .padding(.trailing, 6)
@@ -242,7 +251,6 @@ struct DayBody: View {
                     .font(.brand(item.kind == .emoji ? 26 : 21))
                     .foregroundStyle(Palette.primary)
                 Spacer()
-                itemMenu(item)
             }
             .padding(.leading, 6)
             .frame(minHeight: 66)
@@ -255,30 +263,5 @@ struct DayBody: View {
             Rectangle().fill(Palette.line).frame(height: 1)
         }
         .accessibilityElement(children: .combine)
-    }
-
-    private func itemMenu(_ item: RecordItem) -> some View {
-        Menu {
-            Button { app.openEditor(for: day, item: item.id) } label: { Label("수정", systemImage: "pencil") }
-            Button(role: .destructive) { delete(item) } label: { Label("삭제", systemImage: "trash") }
-        } label: {
-            Image(systemName: "ellipsis")
-                .font(.system(size: 15))
-                .foregroundStyle(Palette.secondary)
-                .frame(width: 44, height: 44)
-                .contentShape(Rectangle())
-        }
-        .accessibilityLabel("\(item.displayValue) 더보기")
-    }
-
-    private func delete(_ item: RecordItem) {
-        do {
-            guard let removed = try store.deleteItem(item.id, on: day) else { return }
-            onUndo(PendingUndo(message: String(localized: "항목을 삭제했어요.")) {
-                do { try store.restoreItem(removed.item, at: removed.index, on: day) } catch { onError(error) }
-            })
-        } catch {
-            onError(error)
-        }
     }
 }

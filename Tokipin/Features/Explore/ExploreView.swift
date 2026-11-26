@@ -103,13 +103,11 @@ struct ExploreView: View {
                 .accessibilityLabel(parent == .month ? Text("\(headerTitle)월 달력으로") : Text("\(headerTitle)년으로"))
             }
             Spacer()
-            if app.level == .day {
+            // Adding and editing live in the bottom +/pencil; the menu keeps deleting a whole day.
+            if app.level == .day && !store.items(on: app.selectedDay).isEmpty {
                 Menu {
-                    Button { app.openEditor(for: app.selectedDay) } label: { Label("이날 기록하기", systemImage: "pencil") }
-                    if !store.items(on: app.selectedDay).isEmpty {
-                        Button(role: .destructive) { dayToDelete = app.selectedDay } label: {
-                            Label("이날 기록 삭제", systemImage: "trash")
-                        }
+                    Button(role: .destructive) { dayToDelete = app.selectedDay } label: {
+                        Label("이날 기록 삭제", systemImage: "trash")
                     }
                 } label: { HeaderIcon(systemName: "ellipsis") }
                 .accessibilityLabel("이날 더보기")
@@ -217,7 +215,13 @@ struct ExploreView: View {
                 HStack {
                     FloatingCapsuleButton(title: "오늘") { app.goToday() }
                     Spacer()
-                    FloatingAddButton { openAdd() }
+                    if app.level == .day && !store.items(on: app.selectedDay).isEmpty {
+                        FloatingAddButton(systemImage: "pencil", accessibilityLabel: "이날 기록 편집") {
+                            app.openEditor(for: app.selectedDay, keyboard: false)
+                        }
+                    } else {
+                        FloatingAddButton { openAdd() }
+                    }
                 }
                 .padding(.horizontal, 20)
             }
@@ -296,12 +300,10 @@ struct ExploreView: View {
 
     // MARK: Actions
 
+    /// + opens the day on screen in 일간 (today elsewhere). That day's own draft is resumed;
+    /// drafts kept on other days stay where they are.
     private func openAdd() {
-        if let draft = store.draft {
-            app.openEditor(for: draft.day)
-        } else {
-            app.openEditor(for: app.level == .day ? app.selectedDay : .today)
-        }
+        app.openEditor(for: app.level == .day ? app.selectedDay : .today)
     }
 
     private func deleteDay(_ day: DayKey) {

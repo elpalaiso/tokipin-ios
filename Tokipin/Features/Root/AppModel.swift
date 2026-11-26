@@ -54,6 +54,8 @@ final class AppModel {
     var focusedMonth: MonthKey = DayKey.today.monthKey
     var editorDay: DayKey?
     var editorFocusItem: UUID?
+    /// False when the editor is opened with the pencil: existing items show, keyboard stays down.
+    var editorStartsWithKeyboard = true
     var isSearching = false
     var searchQuery = ""
     /// Set when a day is opened from search; the header then offers "검색 결과".
@@ -157,8 +159,9 @@ final class AppModel {
         return nearest.map { ($0.key, $0.value) }
     }
 
-    func openEditor(for day: DayKey, item: UUID? = nil) {
+    func openEditor(for day: DayKey, item: UUID? = nil, keyboard: Bool = true) {
         editorFocusItem = item
+        editorStartsWithKeyboard = keyboard
         editorDay = day
     }
 }

@@ -21,7 +21,7 @@ struct RootView: View {
             }
         }
         .fullScreenCover(item: $app.editorDay) { day in
-            EditorView(day: day, focusItem: app.editorFocusItem)
+            EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard)
         }
         .task { await load() }
     }
@@ -36,7 +36,7 @@ struct RootView: View {
         slow.cancel()
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
-        if let draft = store.draft {
+        if let draft = store.latestDraft {
             // The app was interrupted mid-entry: bring the draft back.
             app.select(draft.day, haptic: false)
             app.openEditor(for: draft.day)

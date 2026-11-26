@@ -127,6 +127,22 @@ final class EditorModel {
         changed = true
     }
 
+    /// Reorders by stable item ID; values and kinds are untouched. Saved only with ✓.
+    func move(fromOffsets source: IndexSet, toOffset destination: Int) {
+        let before = items.map(\.id)
+        items.move(fromOffsets: source, toOffset: destination)
+        if items.map(\.id) != before { changed = true }
+    }
+
+    /// VoiceOver 위로/아래로 이동: one step, focus stays on the same item.
+    func move(_ id: UUID, by offset: Int) {
+        guard let index = items.firstIndex(where: { $0.id == id }) else { return }
+        let target = index + offset
+        guard items.indices.contains(target) else { return }
+        items.swapAt(index, target)
+        changed = true
+    }
+
     /// Puts deleted items back in their original positions.
     func undoDelete() {
         for entry in lastDeleted.sorted(by: { $0.index < $1.index }) {

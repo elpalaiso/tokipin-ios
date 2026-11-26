@@ -11,11 +11,28 @@ struct EditorView: View {
     @State private var syncingPicker = false
     @State private var keyboardWanted = true
     @State private var undoID: UUID?
+    /// Row being lifted by a long press (reorder or, if released in place, the 삭제 menu).
+    @State private var drag: RowDrag?
+    @State private var rowFrames: [UUID: CGRect] = [:]
+    @State private var menuID: UUID?
+    @State private var finished = false
     private let focusItem: UUID?
 
+    struct RowDrag: Equatable {
+        let id: UUID
+        /// Row centre when it was lifted; the finger's row centre is this plus the translation.
+        let originMidY: CGFloat
+        var translation: CGFloat = 0
+        /// Distance the row's layout slot has travelled through swaps during this drag.
+        var shift: CGFloat = 0
+        var moved = false
+        var offset: CGFloat { translation - shift }
+    }
 
-    init(day: DayKey, focusItem: UUID?) {
+
+    init(day: DayKey, focusItem: UUID?, startsWithKeyboard: Bool = true) {
         self.focusItem = focusItem
+        _keyboardWanted = State(initialValue: startsWithKeyboard)
         _model = State(initialValue: EditorModel(day: day, items: [], draft: nil))
     }
 
@@ -30,7 +47,10 @@ struct EditorView: View {
         }
         .onAppear(perform: setUp)
         .onChange(of: model.draft) { _, draft in
-            store.updateDraft(model.changed || !model.raw.isEmpty ? draft : nil)
+            // After ✓ the saved record is the truth; a late model change must not resurrect the draft.
+            guard !finished else { return }
+            let matchesSaved = model.raw.isEmpty && model.items == store.items(on: model.day)
+            store.updateDraft(model.changed && !matchesSaved || !model.raw.isEmpty ? draft : nil, for: model.day)
         }
         .onChange(of: time) { _, value in
             // Only an explicit wheel change stages a time; opening the tool adds nothing.
@@ -42,7 +62,7 @@ struct EditorView: View {
 
     private func setUp() {
         let existing = store.items(on: model.day)
-        let draft = store.draft?.day == model.day ? store.draft : nil
+        let draft = store.draft(for: model.day)
         model = EditorModel(day: model.day, items: existing, draft: draft)
         if let focusItem, let item = model.items.first(where: { $0.id == focusItem }) {
             model.edit(item)
@@ -112,17 +132,42 @@ struct EditorView: View {
                         } else if let selection = model.selection {
                             selectableRow(item, selected: selection.contains(item.id))
                         } else {
+                            // Tap: edit. Long-press and release in place: 삭제 menu.
+                            // Long-press and drag up/down: reorder, across every kind.
                             itemText(item, position: index)
                                 .onTapGesture { model.edit(item); syncTimePicker(); keyboardWanted = true }
-                                .onLongPressGesture(minimumDuration: 0.45) {
-                                    model.beginSelection(with: item.id)
-                                    keyboardWanted = false
+                                .gesture(liftGesture(item.id))
+                                .popover(isPresented: Binding(get: { menuID == item.id }, set: { if !$0 { menuID = nil } }),
+                                         attachmentAnchor: .rect(.bounds), arrowEdge: .top) {
+                                    Button(role: .destructive) {
+                                        menuID = nil
+                                        delete([item.id])
+                                    } label: {
+                                        Label("삭제", systemImage: "trash")
+                                            .font(.brand(17))
+                                            .frame(minWidth: 160, alignment: .leading)
+                                            .padding(.horizontal, 20)
+                                            .padding(.vertical, 14)
+                                    }
+                                    .presentationCompactAdaptation(.popover)
                                 }
                                 .accessibilityAddTraits(.isButton)
                                 .accessibilityHint("두 번 탭해 수정해요.")
+                                .accessibilityAction(named: "위로 이동") { model.move(item.id, by: -1) }
+                                .accessibilityAction(named: "아래로 이동") { model.move(item.id, by: 1) }
                                 .accessibilityAction(named: "삭제") { delete([item.id]) }
                         }
                     }
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { rowFrames[item.id] = $0 }
+                    .background {
+                        if drag?.id == item.id {
+                            RoundedRectangle(cornerRadius: 12).fill(Color(hex: 0x3E4B43)).padding(.horizontal, -14)
+                                .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
+                        }
+                    }
+                    .scaleEffect(drag?.id == item.id ? 1.02 : 1)
+                    .offset(y: drag?.id == item.id ? drag!.offset : 0)
+                    .zIndex(drag?.id == item.id ? 1 : 0)
                     .id(item.id == model.editingID ? "composer" : item.id.uuidString)
                     .canvasRow()
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -146,10 +191,46 @@ struct EditorView: View {
             .scrollDismissesKeyboard(.never)
             .contentMargins(.top, 20, for: .scrollContent)
             .environment(\.defaultMinListRowHeight, 10)
+            .scrollDisabled(drag != nil)
             .onChange(of: model.items.count) { _, _ in
                 withAnimation { proxy.scrollTo("composer", anchor: .bottom) }
             }
         }
+    }
+
+    /// Long press lifts the row; the drag that follows reorders it, one neighbour at a time.
+    /// UIKit's recognizer coexists with the List's swipe-to-delete and scrolling.
+    private func liftGesture(_ id: UUID) -> LiftGesture {
+        LiftGesture(
+            onBegan: {
+                guard model.selection == nil else { return }
+                withAnimation(.easeOut(duration: 0.15)) { drag = RowDrag(id: id, originMidY: rowFrames[id]?.midY ?? 0) }
+            },
+            onChanged: { follow(id, translation: $0) },
+            onEnded: endDrag)
+    }
+
+    private func follow(_ id: UUID, translation: CGFloat) {
+        guard var current = drag, current.id == id,
+              let index = model.items.firstIndex(where: { $0.id == id }),
+              let frame = rowFrames[id] else { return }
+        current.translation = translation
+        if abs(translation) > 10 { current.moved = true }
+        let centre = current.originMidY + translation
+        if index + 1 < model.items.count, let below = rowFrames[model.items[index + 1].id], centre > below.midY {
+            current.shift += below.maxY - frame.maxY
+            withAnimation(.easeOut(duration: 0.15)) { model.move(id, by: 1) }
+        } else if index > 0, let above = rowFrames[model.items[index - 1].id], centre < above.midY {
+            current.shift -= frame.minY - above.minY
+            withAnimation(.easeOut(duration: 0.15)) { model.move(id, by: -1) }
+        }
+        drag = current
+    }
+
+    private func endDrag() {
+        guard let current = drag else { return }
+        if !current.moved { menuID = current.id }
+        withAnimation(.easeOut(duration: 0.15)) { drag = nil }
     }
 
     private func fontSize(for kind: ItemKind, position: Int) -> CGFloat {
@@ -367,19 +448,22 @@ struct EditorView: View {
 
     /// ✓ saves everything, including the value still being typed, then returns to the day card.
     private func finish() {
-        guard let items = model.itemsForSaving() else { return }
+        finished = true
+        guard let items = model.itemsForSaving() else { finished = false; return }
         let existing = store.items(on: model.day)
         if items == existing {
-            store.updateDraft(nil)
+            store.updateDraft(nil, for: model.day)
             leave(to: existing.isEmpty ? nil : model.day)
             return
         }
         do {
             try store.save(day: model.day, items: items)
             model.saveFailed = false
-            store.updateDraft(nil)
-            leave(to: items.isEmpty ? nil : model.day)
+            store.updateDraft(nil, for: model.day)
+            // The last item gone: 일간 shows the same day's empty screen.
+            leave(to: items.isEmpty && app.level != .day ? nil : model.day)
         } catch {
+            finished = false
             model.saveFailed = true
         }
     }
@@ -387,7 +471,7 @@ struct EditorView: View {
     /// Back keeps the draft; + on the home screen continues it.
     private func close() {
         // Nothing to keep if the items match what is saved and nothing is being typed.
-        if model.raw.isEmpty && model.items == store.items(on: model.day) { store.updateDraft(nil) }
+        if model.raw.isEmpty && model.items == store.items(on: model.day) { store.updateDraft(nil, for: model.day) }
         leave(to: nil)
     }
 
@@ -408,5 +492,37 @@ private extension View {
         listRowInsets(EdgeInsets(top: 4, leading: 26, bottom: 4, trailing: 26))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
+    }
+}
+
+/// Long press (0.4 s) that keeps reporting the finger's vertical travel until it lifts.
+struct LiftGesture: UIGestureRecognizerRepresentable {
+    let onBegan: () -> Void
+    let onChanged: (CGFloat) -> Void
+    let onEnded: () -> Void
+
+    final class Coordinator { var startY: CGFloat = 0 }
+
+    func makeCoordinator(converter: CoordinateSpaceConverter) -> Coordinator { Coordinator() }
+
+    func makeUIGestureRecognizer(context: Context) -> UILongPressGestureRecognizer {
+        let recognizer = UILongPressGestureRecognizer()
+        recognizer.minimumPressDuration = 0.4
+        return recognizer
+    }
+
+    func handleUIGestureRecognizerAction(_ recognizer: UILongPressGestureRecognizer, context: Context) {
+        let y = recognizer.location(in: nil).y
+        switch recognizer.state {
+        case .began:
+            context.coordinator.startY = y
+            onBegan()
+        case .changed:
+            onChanged(y - context.coordinator.startY)
+        case .ended, .cancelled, .failed:
+            onEnded()
+        default:
+            break
+        }
     }
 }
