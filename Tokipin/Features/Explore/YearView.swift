@@ -59,20 +59,20 @@ struct YearView: View {
         }
     }
 
-    private var recordedYears: Set<Int> { Set(store.records.keys.map(\.year)) }
+    private var recordedYears: Set<Int> { store.recordedYears }
 
     private var sections: [CalendarRange.YearSection] {
         CalendarRange.yearSections(today: app.today, recordedYears: recordedYears,
-                                   earliestRecord: store.records.keys.min(), expanded: app.expandedYearGaps)
+                                   earliestRecord: store.earliestDay, expanded: app.expandedYearGaps)
     }
 
     private func clamped(_ year: Int) -> Int {
-        let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.records.keys.min()).year
+        let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.earliestDay).year
         return min(max(year, first), app.today.year)
     }
 
     private func openGap(for year: Int) {
-        if let gap = CalendarRange.yearGaps(today: app.today, recordedYears: recordedYears, earliestRecord: store.records.keys.min())
+        if let gap = CalendarRange.yearGaps(today: app.today, recordedYears: recordedYears, earliestRecord: store.earliestDay)
             .first(where: { year >= $0.first && year <= $0.last }) {
             app.expandedYearGaps.insert(gap.first)
         }
@@ -122,7 +122,7 @@ struct MiniMonth: View {
     var body: some View {
         let recorded = Set(store.days(in: month).map(\.day))
         let isFocused = month == app.selectedDay.monthKey
-        let inRange = CalendarRange.contains(month, today: app.today, earliestRecord: store.records.keys.min())
+        let inRange = CalendarRange.contains(month, today: app.today, earliestRecord: store.earliestDay)
         Button {
             // Keep the selected day if it is in this month; otherwise its latest record or the 1st.
             let day = month == app.selectedDay.monthKey ? app.selectedDay

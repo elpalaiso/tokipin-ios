@@ -7,8 +7,13 @@ enum RecordedMonths {
     /// Unique months of saved days up to this month, plus this month; oldest first.
     /// Drafts never count, and saved future months are left out of this view.
     static func visible(recordedDays: some Sequence<DayKey>, today: DayKey) -> [MonthKey] {
+        visible(recordedMonths: Set(recordedDays.map(\.monthKey)), today: today)
+    }
+
+    /// Same, from the store's month index (no scan over every day).
+    static func visible(recordedMonths: Set<MonthKey>, today: DayKey) -> [MonthKey] {
         let current = today.monthKey
-        var months = Set(recordedDays.map(\.monthKey).filter { $0 <= current })
+        var months = recordedMonths.filter { $0 <= current }
         months.insert(current)
         return months.sorted()
     }

@@ -34,6 +34,18 @@ final class RecordStore {
     private(set) var state: LoadState = .idle
     private(set) var records: [DayKey: [RecordItem]] = [:]
     private(set) var updatedAt: [DayKey: Date] = [:]
+    /// Derived from `records`, kept in step on every write so views never scan all days per
+    /// frame: days per month (newest first), recorded months and years, earliest day.
+    private(set) var monthIndex: [MonthKey: [DayKey]] = [:]
+    private(set) var recordedMonths: Set<MonthKey> = []
+    private(set) var recordedYears: Set<Int> = []
+    private(set) var earliestDay: DayKey?
+    /// Lower-cased search text, built on the first search after a change.
+    @ObservationIgnored private var searchIndex: [(day: DayKey, item: RecordItem, text: NSString, date: NSString)]?
+    /// Encoded JSON per saved day (see `write`).
+    @ObservationIgnored private var dayJSON: [DayKey: Data] = [:]
+    /// Bumped on every write so a background cache fill never lands on newer data.
+    @ObservationIgnored private var recordsVersion = 0
     /// Unsaved editor state, one per day, so a draft on one day never overwrites another's.
     private(set) var drafts: [DayKey: Draft] = [:]
     /// True until the first record is saved or the first editor is closed.
@@ -92,6 +104,8 @@ final class RecordStore {
             }
             self.records = records
             self.updatedAt = updated
+            reindex()
+            primeDayJSON()
             // A draft identical to what is saved holds nothing to resume.
             self.drafts = Dictionary(drafts.map { ($0.day, $0) }, uniquingKeysWith: { a, _ in a })
                 .filter { day, draft in !(draft.raw.isEmpty && draft.items == (records[day] ?? [])) }
@@ -122,9 +136,10 @@ final class RecordStore {
             next[day] = items
             nextUpdated[day] = Date()
         }
-        try write(next, updated: nextUpdated)
+        try write(next, updated: nextUpdated, changed: [day])
         records = next
         updatedAt = nextUpdated
+        reindex(month: day.monthKey)
     }
 
     @discardableResult
@@ -158,11 +173,70 @@ final class RecordStore {
         try save(day: day, items: items)
     }
 
-    private func write(_ records: [DayKey: [RecordItem]], updated: [DayKey: Date]) throws {
+    /// Fills the per-day JSON cache off the main thread after loading, so even the first save
+    /// re-encodes only the day that changed.
+    private func primeDayJSON() {
+        let snapshot = records, updated = updatedAt, version = recordsVersion
+        Task.detached(priority: .utility) {
+            let encoder = JSONEncoder.tokipinCompact
+            var cache: [DayKey: Data] = [:]
+            for (day, items) in snapshot {
+                cache[day] = try? encoder.encode(RecordArchive.Day(date: day, items: items, updatedAt: updated[day] ?? Date()))
+            }
+            await MainActor.run { [cache] in
+                if self.recordsVersion == version && self.dayJSON.isEmpty { self.dayJSON = cache }
+            }
+        }
+    }
+
+    // MARK: Index
+
+    /// Full rebuild (load, import, replace).
+    private func reindex() {
+        var index: [MonthKey: [DayKey]] = [:]
+        for day in records.keys { index[day.monthKey, default: []].append(day) }
+        for key in index.keys { index[key]!.sort(by: >) }
+        monthIndex = index
+        recordedMonths = Set(index.keys)
+        recordedYears = Set(index.keys.map(\.year))
+        earliestDay = records.keys.min()
+        searchIndex = nil
+    }
+
+    /// One month changed (a day saved or removed).
+    private func reindex(month: MonthKey) {
+        let days = records.keys.filter { $0.monthKey == month }.sorted(by: >)
+        monthIndex[month] = days.isEmpty ? nil : days
+        if days.isEmpty { recordedMonths.remove(month) } else { recordedMonths.insert(month) }
+        recordedYears = Set(recordedMonths.map(\.year))
+        earliestDay = monthIndex[recordedMonths.min() ?? month]?.last
+        searchIndex = nil
+    }
+
+    /// Writes the whole archive atomically. Each day's JSON is cached, so saving one day
+    /// re-encodes only that day (`changed`; nil = everything) and joins the rest.
+    private func write(_ records: [DayKey: [RecordItem]], updated: [DayKey: Date], changed: Set<DayKey>?) throws {
         if simulateWriteFailure { throw CocoaError(.fileWriteOutOfSpace) }
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let data = try JSONEncoder.tokipin.encode(Self.archive(records, updated: updated))
+        var cache = changed == nil ? [:] : dayJSON
+        let encoder = JSONEncoder.tokipinCompact
+        var data = Data(#"{"version":1,"days":["#.utf8)
+        for (index, day) in records.keys.sorted().enumerated() {
+            let chunk: Data
+            if let cached = cache[day], changed?.contains(day) == false {
+                chunk = cached
+            } else {
+                chunk = try encoder.encode(RecordArchive.Day(date: day, items: records[day]!, updatedAt: updated[day] ?? Date()))
+                cache[day] = chunk
+            }
+            if index > 0 { data.append(UInt8(ascii: ",")) }
+            data.append(chunk)
+        }
+        data.append(contentsOf: Array("]}".utf8))
         try data.write(to: recordsURL, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        // Only after a successful write; removed days drop out of the cache.
+        dayJSON = cache.filter { records[$0.key] != nil }
+        recordsVersion += 1
     }
 
     private static func archive(_ records: [DayKey: [RecordItem]], updated: [DayKey: Date]) -> RecordArchive {
@@ -180,9 +254,10 @@ final class RecordStore {
             next[day.date] = day.items
             nextUpdated[day.date] = day.updatedAt
         }
-        try write(next, updated: nextUpdated)
+        try write(next, updated: nextUpdated, changed: nil)
         records = next
         updatedAt = nextUpdated
+        reindex()
         drafts = [:]
         writeDrafts()
     }
@@ -227,26 +302,31 @@ final class RecordStore {
     var isEmpty: Bool { records.isEmpty }
 
     /// Newest first.
-    var sortedDays: [DayKey] { records.keys.sorted(by: >) }
+    var sortedDays: [DayKey] { monthIndex.keys.sorted(by: >).flatMap { monthIndex[$0]! } }
 
     func items(on day: DayKey) -> [RecordItem] { records[day] ?? [] }
 
-    func days(in month: MonthKey) -> [DayKey] {
-        records.keys.filter { $0.monthKey == month }.sorted(by: >)
-    }
+    /// Newest first, from the month index.
+    func days(in month: MonthKey) -> [DayKey] { monthIndex[month] ?? [] }
 
     /// Matches item text, a kind name ("장소"), or a date ("11.25", "2026.11").
     func search(_ query: String) -> [SearchResult] {
         let q = query.trimmingCharacters(in: .whitespaces).lowercased()
         guard !q.isEmpty else { return [] }
         let kind = ItemKind.allCases.first { $0.label == q }
+        if searchIndex == nil {
+            searchIndex = sortedDays.flatMap { day in
+                let date = (day.dotted + " " + day.string) as NSString
+                return (records[day] ?? []).map { (day, $0, $0.value.lowercased() as NSString, date) }
+            }
+        }
         var results: [SearchResult] = []
-        for day in sortedDays {
-            let dateMatch = q.count >= 2 && (day.dotted.contains(q) || day.string.contains(q))
-            for item in records[day] ?? [] {
-                if dateMatch || item.kind == kind || item.value.lowercased().contains(q) {
-                    results.append(SearchResult(day: day, item: item))
-                }
+        // Dates only match queries made of digits and separators ("11.25", "2026.11").
+        let datelike = q.count >= 2 && q.allSatisfy { $0.isNumber || $0 == "." || $0 == "-" }
+        for entry in searchIndex! {
+            let dateMatch = datelike && entry.date.range(of: q, options: .literal).location != NSNotFound
+            if dateMatch || entry.item.kind == kind || entry.text.range(of: q, options: .literal).location != NSNotFound {
+                results.append(SearchResult(day: entry.day, item: entry.item))
             }
         }
         return results
@@ -264,6 +344,24 @@ extension JSONEncoder {
         encoder.dateEncodingStrategy = .iso8601
         return encoder
     }
+}
+
+extension JSONEncoder {
+    static var tokipinCompact: JSONEncoder {
+        let encoder = JSONEncoder()
+        // Same ISO 8601 text as `.iso8601`, with one shared formatter instead of one per date.
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            try container.encode(isoFormatter.string(from: date))
+        }
+        return encoder
+    }
+
+    nonisolated(unsafe) private static let isoFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
 }
 
 extension JSONDecoder {

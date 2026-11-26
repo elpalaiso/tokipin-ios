@@ -134,8 +134,23 @@ struct MonthKey: Hashable, Comparable, Identifiable, Sendable {
         return MonthKey(year: total / 12, month: total % 12 + 1)
     }
 
-    /// Day numbers laid out in weeks; nil for leading/trailing blanks.
+    /// Day numbers laid out in weeks; nil for leading/trailing blanks. Cached: the month and
+    /// year grids ask for every visible month on each render.
     func weeks(firstWeekday: Int = DayKey.deviceFirstWeekday) -> [[Int?]] {
+        let key = WeeksKey(month: self, firstWeekday: firstWeekday)
+        MonthKey.weeksLock.lock()
+        defer { MonthKey.weeksLock.unlock() }
+        if let cached = MonthKey.weeksCache[key] { return cached }
+        let value = computeWeeks(firstWeekday: firstWeekday)
+        MonthKey.weeksCache[key] = value
+        return value
+    }
+
+    private struct WeeksKey: Hashable { let month: MonthKey; let firstWeekday: Int }
+    nonisolated(unsafe) private static var weeksCache: [WeeksKey: [[Int?]]] = [:]
+    private static let weeksLock = NSLock()
+
+    private func computeWeeks(firstWeekday: Int) -> [[Int?]] {
         let lead = firstDay.column(firstWeekday: firstWeekday)
         var cells: [Int?] = Array(repeating: nil, count: lead) + (1...numberOfDays).map { $0 }
         while cells.count % 7 != 0 { cells.append(nil) }

@@ -11,7 +11,7 @@ struct RecordsView: View {
 
     /// Months with saved items plus this month (v0.3); every move steps through this list.
     private var months: [MonthKey] {
-        RecordedMonths.visible(recordedDays: store.records.keys, today: app.today)
+        RecordedMonths.visible(recordedMonths: store.recordedMonths, today: app.today)
     }
 
     var body: some View {

@@ -145,6 +145,10 @@ struct DebugSampleSection: View {
             VStack(spacing: 0) {
                 Button { load() } label: { row("예시 기록 넣기", detail: "기존 기록을 지우고 홈페이지 체험과 같은 3년치 기록을 넣어요.") }
                 Rectangle().fill(Palette.line).frame(height: 1)
+                Button { load(years: 10) } label: {
+                    row("대용량 예시 넣기 (10년)", detail: "같은 생성 규칙으로 10년치를 넣어 속도를 확인해요. 기존 기록을 교체해요.")
+                }
+                Rectangle().fill(Palette.line).frame(height: 1)
                 Button { confirmingRangeSamples = true } label: {
                     row("달력 범위 예시 넣기", detail: "2026.11.26 기준의 빈 달과 빈 해를 확인해요. 기존 기록과 초안을 교체해요.")
                 }
@@ -175,9 +179,9 @@ struct DebugSampleSection: View {
         .contentShape(Rectangle())
     }
 
-    private func load() {
+    private func load(years: Int = 3) {
         do {
-            let archive = SampleGenerator.archive()
+            let archive = SampleGenerator.archive(years: years)
             try store.replaceAll(with: archive)
             message = "예시 기록 \(archive.days.count)일치를 넣었어요."
         } catch {

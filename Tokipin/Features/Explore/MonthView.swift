@@ -70,7 +70,7 @@ struct MonthView: View {
         }
     }
 
-    private var recordedMonths: Set<MonthKey> { Set(store.records.keys.map(\.monthKey)) }
+    private var recordedMonths: Set<MonthKey> { store.recordedMonths }
 
     /// From the first explorable month to this month; long empty periods folded.
     private var sections: [CalendarRange.MonthSection] {
@@ -78,7 +78,7 @@ struct MonthView: View {
     }
 
     private func clamped(_ month: MonthKey) -> MonthKey {
-        let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.records.keys.min())
+        let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.earliestDay)
         return min(max(month, first), CalendarRange.lastMonth(today: app.today))
     }
 

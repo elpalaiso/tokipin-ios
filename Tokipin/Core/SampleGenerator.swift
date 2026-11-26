@@ -87,8 +87,8 @@ enum SampleGenerator {
     }
 
     /// Three years ending today, like the homepage trial.
-    static func archive(today: DayKey = .today) -> RecordArchive {
-        let start = firstDay(today: today)
+    static func archive(today: DayKey = .today, years: Int = 3) -> RecordArchive {
+        let start = firstDay(today: today, years: years)
         var days: [RecordArchive.Day] = []
         for number in dayNumber(start)...dayNumber(today) where hasSample(number) {
             let key = day(fromNumber: number)
@@ -97,10 +97,11 @@ enum SampleGenerator {
         return RecordArchive(days: days)
     }
 
-    /// The day after the same date three years earlier (the web's firstDay).
-    static func firstDay(today: DayKey) -> DayKey {
-        let last = MonthKey(year: today.year - 3, month: today.month).numberOfDays
-        let anniversary = DayKey(year: today.year - 3, month: today.month, day: min(today.day, last))
+    /// The day after the same date `years` earlier (the web's firstDay uses 3).
+    /// `years: 10` is the shared large-data seed for performance checks.
+    static func firstDay(today: DayKey, years: Int = 3) -> DayKey {
+        let last = MonthKey(year: today.year - years, month: today.month).numberOfDays
+        let anniversary = DayKey(year: today.year - years, month: today.month, day: min(today.day, last))
         return day(fromNumber: dayNumber(anniversary) + 1)
     }
 
