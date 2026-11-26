@@ -89,8 +89,9 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
 
     /// Full date for VoiceOver and titles. Korean keeps "2026.11.25(수)"; other languages use the
     /// locale's own date format (e.g. "Wed, Nov 25, 2026").
-    var label: String {
-        let locale = TimeRules.displayLocale
+    var label: String { label(locale: TimeRules.displayLocale) }
+
+    func label(locale: Locale) -> String {
         if locale.language.languageCode?.identifier == "ko" { return "\(dotted)(\(weekdaySymbol))" }
         return DayKey.formatted(date, template: "yMMMdEEE", locale: locale)
     }

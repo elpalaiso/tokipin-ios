@@ -97,9 +97,17 @@ enum TimeRules {
         return formatter.string(from: date)
     }
 
-    /// App language for AM/PM words (Korean today), independent of the device region.
+    /// The app's display language with the person's region, so en-GB reads "25 Nov 2026" while the
+    /// strings come from en.lproj. A localization that names its own region (es-419, pt-BR, zh-HK) keeps it.
     static var displayLocale: Locale {
-        Locale(identifier: Bundle.main.preferredLocalizations.first ?? "ko")
+        locale(localization: Bundle.main.preferredLocalizations.first ?? "en", region: Locale.current.region)
+    }
+
+    static func locale(localization: String, region: Locale.Region?) -> Locale {
+        let language = Locale.Language(identifier: localization)
+        guard language.region == nil, let region else { return Locale(identifier: localization) }
+        return Locale(components: Locale.Components(languageCode: language.languageCode, script: language.script,
+                                                    languageRegion: region))
     }
 }
 
