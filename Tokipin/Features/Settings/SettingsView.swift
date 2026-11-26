@@ -29,10 +29,15 @@ struct SettingsView: View {
 
                     VStack(spacing: 0) {
                         Toggle(isOn: $hapticsEnabled) {
-                            Text("터치 피드백").font(.brand(16, .medium))
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("진동").font(.brand(16, .medium))
+                                Text("날짜를 넘기거나 보기를 바꿀 때 가볍게 진동해요.")
+                                    .font(.brand(13))
+                                    .foregroundStyle(Palette.secondary)
+                            }
                         }
                         .tint(Palette.focus)
-                        .frame(minHeight: 56)
+                        .frame(minHeight: 66)
                         Rectangle().fill(Palette.line).frame(height: 1)
                         Button(action: export) {
                             HStack {
