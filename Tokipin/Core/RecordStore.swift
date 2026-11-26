@@ -163,6 +163,21 @@ final class RecordStore {
         })
     }
 
+    /// Replaces every record (debug sample data, tests). Saved atomically like any write.
+    func replaceAll(with archive: RecordArchive) throws {
+        guard state == .loaded else { throw StoreError.notLoaded }
+        var next: [DayKey: [RecordItem]] = [:]
+        var nextUpdated: [DayKey: Date] = [:]
+        for day in archive.days where !day.items.isEmpty {
+            next[day.date] = day.items
+            nextUpdated[day.date] = day.updatedAt
+        }
+        try write(next, updated: nextUpdated)
+        records = next
+        updatedAt = nextUpdated
+        updateDraft(nil)
+    }
+
     // MARK: Draft
 
     func updateDraft(_ draft: Draft?) {

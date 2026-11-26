@@ -35,6 +35,14 @@ from that sibling path, checks its SHA-256 pin, and runs every shared case that 
   `ComposerField`, `SwipePager`.
 - All navigation (tap, swipe, pinch, view menu) goes through `AppModel.navigate`, which requests at most one tick.
 
+## Sample data (debug builds)
+
+Settings › 개발용 테스트 데이터 (Debug only) loads `Tokipin/Resources/Samples/sample-records.json`
+(24 days, Dec 2025 – Nov 2026, `records.json` format) or clears everything for the empty home.
+The file covers the UX v0.1 scenarios: 2026-10-01 with 5 fragments (+2), 00:00 / 12:00 / 18:45,
+a 2025→2026 year boundary, family/flag/keycap/©️ emoji, long text, and an 8-fragment day.
+Android uses the same file contents so both apps show the same data.
+
 ## Data format
 
 Stored at `Application Support/Tokipin/records.json` (atomic writes); the draft sits next to it in `draft.json`. Export writes the same JSON:

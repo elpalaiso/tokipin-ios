@@ -100,3 +100,20 @@ final class RecordStoreTests: XCTestCase {
         XCTAssertEqual(store.items(on: day).map(\.value), ["귤"])
     }
 }
+
+@MainActor
+final class SampleRecordsTests: XCTestCase {
+    /// The shared sample file loads and every fragment follows the input rules.
+    func testSampleRecordsAreValid() throws {
+        let data = try Data(contentsOf: try SampleRecords.url(bundle: Bundle(for: RecordStore.self)))
+        let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: data)
+        XCTAssertEqual(archive.days.count, 24)
+        for day in archive.days {
+            for item in day.items {
+                XCTAssertEqual(ItemValidator.normalize(item.kind, item.value), .value(item.value), "\(day.date.string) \(item.value)")
+            }
+        }
+        let october = try XCTUnwrap(archive.days.first { $0.date == DayKey(year: 2026, month: 10, day: 1) })
+        XCTAssertEqual(MonthCellPreview.fragments(october.items).overflow, "+2")
+    }
+}

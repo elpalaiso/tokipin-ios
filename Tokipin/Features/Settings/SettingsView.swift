@@ -74,6 +74,9 @@ struct SettingsView: View {
                     }
                     .padding(.horizontal, 18)
                     .glassCard(cornerRadius: 18, fill: Color.white.opacity(0.05))
+#if DEBUG
+                    DebugSampleSection()
+#endif
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 30)
@@ -124,5 +127,71 @@ struct RecordsDocument: FileDocument {
 
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         FileWrapper(regularFileWithContents: data)
+    }
+}
+
+#if DEBUG
+/// Debug builds only: load the shared sample records (same file as Android) or clear everything.
+struct DebugSampleSection: View {
+    @Environment(RecordStore.self) private var store
+    @State private var message: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(verbatim: "개발용 테스트 데이터")
+                .font(.brand(15, .medium))
+                .padding(.top, 8)
+            VStack(spacing: 0) {
+                Button { load() } label: { row("예시 기록 넣기", detail: "기존 기록을 지우고 예시 24일치를 넣어요.") }
+                Rectangle().fill(Palette.line).frame(height: 1)
+                Button(role: .destructive) { clear() } label: { row("모든 기록 지우기", detail: "빈 홈 화면을 확인할 때 써요.") }
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 18)
+            .glassCard(cornerRadius: 18, fill: Color.white.opacity(0.05))
+            if let message {
+                Text(verbatim: message).font(.brand(13)).foregroundStyle(Palette.focus)
+            }
+        }
+    }
+
+    private func row(_ title: String, detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(verbatim: title).font(.brand(16, .medium))
+            Text(verbatim: detail).font(.brand(13)).foregroundStyle(Palette.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+        .contentShape(Rectangle())
+    }
+
+    private func load() {
+        do {
+            let url = try SampleRecords.url()
+            let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: Data(contentsOf: url))
+            try store.replaceAll(with: archive)
+            message = "예시 기록 \(archive.days.count)일치를 넣었어요."
+        } catch {
+            message = "예시 기록을 넣지 못했어요: \(error.localizedDescription)"
+        }
+    }
+
+    private func clear() {
+        do {
+            try store.replaceAll(with: RecordArchive(days: []))
+            message = "모든 기록을 지웠어요."
+        } catch {
+            message = "지우지 못했어요: \(error.localizedDescription)"
+        }
+    }
+}
+#endif
+
+/// Shared sample data (records.json format), also used by the Android app.
+enum SampleRecords {
+    static func url(bundle: Bundle = .main) throws -> URL {
+        guard let url = bundle.url(forResource: "sample-records", withExtension: "json") else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+        return url
     }
 }

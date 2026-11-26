@@ -1,0 +1,489 @@
+{
+  "days": [
+    {
+      "date": "2025-12-24",
+      "items": [
+        {
+          "id": "4AB2BC7F-9247-52C3-8571-6EEC9B898025",
+          "kind": "word",
+          "value": "크리스마스 이브"
+        },
+        {
+          "id": "C2B5ABB3-BDE3-5126-8404-BD844F89D58A",
+          "kind": "place",
+          "value": "명동"
+        },
+        {
+          "id": "5FAD01D1-B89F-568F-B0D2-15D75CD55577",
+          "kind": "emoji",
+          "value": "🎄"
+        }
+      ],
+      "updatedAt": "2025-12-24T12:00:00Z"
+    },
+    {
+      "date": "2025-12-31",
+      "items": [
+        {
+          "id": "91DD3344-8994-5706-8C7B-B0FA9BFEE717",
+          "kind": "time",
+          "value": "23:50"
+        },
+        {
+          "id": "C13CA45C-2DD0-52C9-B8B7-856BF6A59831",
+          "kind": "word",
+          "value": "카운트다운"
+        },
+        {
+          "id": "C239EBF8-FA6B-5B92-9D47-BA277BF276F9",
+          "kind": "emoji",
+          "value": "🎆"
+        }
+      ],
+      "updatedAt": "2025-12-31T12:00:00Z"
+    },
+    {
+      "date": "2026-01-01",
+      "items": [
+        {
+          "id": "48AB47EF-850E-5FE5-83C8-0D242A2A286F",
+          "kind": "time",
+          "value": "00:00"
+        },
+        {
+          "id": "B811F333-AFE0-5DB6-9E69-570263D3CEE9",
+          "kind": "word",
+          "value": "새 달력"
+        },
+        {
+          "id": "23D3AD5C-74EA-5111-A923-02957CE93B9A",
+          "kind": "place",
+          "value": "집"
+        }
+      ],
+      "updatedAt": "2026-01-01T12:00:00Z"
+    },
+    {
+      "date": "2026-01-15",
+      "items": [
+        {
+          "id": "BBD92F9D-2ED4-51E6-A788-402E5D8585C9",
+          "kind": "word",
+          "value": "첫눈"
+        },
+        {
+          "id": "C3EB31C1-760C-5CCD-8DA3-A8D9AFBC789F",
+          "kind": "emoji",
+          "value": "❄️"
+        }
+      ],
+      "updatedAt": "2026-01-15T12:00:00Z"
+    },
+    {
+      "date": "2026-02-14",
+      "items": [
+        {
+          "id": "EC2884A0-7215-5CBE-9B58-5AF91A42E659",
+          "kind": "emoji",
+          "value": "🍫"
+        },
+        {
+          "id": "B2358A70-5215-53C7-AC79-C39090256603",
+          "kind": "word",
+          "value": "초콜릿"
+        }
+      ],
+      "updatedAt": "2026-02-14T12:00:00Z"
+    },
+    {
+      "date": "2026-03-21",
+      "items": [
+        {
+          "id": "21ADF3E5-13B1-5635-96B4-B137ABCBD582",
+          "kind": "word",
+          "value": "꽃"
+        },
+        {
+          "id": "FD7CC1DC-E6F1-5693-AD2F-8EB69B483968",
+          "kind": "place",
+          "value": "정원"
+        },
+        {
+          "id": "8895002E-7ACB-5C3E-AB82-CCC7A8E76774",
+          "kind": "emoji",
+          "value": "🌷"
+        }
+      ],
+      "updatedAt": "2026-03-21T12:00:00Z"
+    },
+    {
+      "date": "2026-04-05",
+      "items": [
+        {
+          "id": "68DA8C97-8FD3-5551-AB60-DCB4520A9CE5",
+          "kind": "place",
+          "value": "석촌호수"
+        },
+        {
+          "id": "44579567-36A6-52A1-80CD-310968AA35A6",
+          "kind": "emoji",
+          "value": "🌸"
+        },
+        {
+          "id": "78A5BF32-4F3D-52E7-89FD-D95042428F38",
+          "kind": "time",
+          "value": "14:30"
+        }
+      ],
+      "updatedAt": "2026-04-05T12:00:00Z"
+    },
+    {
+      "date": "2026-05-05",
+      "items": [
+        {
+          "id": "A61DE3E6-90FB-578A-BC06-7EFF19F3D5A7",
+          "kind": "emoji",
+          "value": "👨‍👩‍👧‍👦"
+        },
+        {
+          "id": "ACC0E381-4C0D-5A95-8929-DCFF9A4968C2",
+          "kind": "place",
+          "value": "한강공원"
+        },
+        {
+          "id": "3C65D790-8C17-5CA1-9D92-77B7C79707A3",
+          "kind": "word",
+          "value": "소풍"
+        }
+      ],
+      "updatedAt": "2026-05-05T12:00:00Z"
+    },
+    {
+      "date": "2026-06-13",
+      "items": [
+        {
+          "id": "411FB483-6EB2-5C15-97B8-D6064B599947",
+          "kind": "word",
+          "value": "장마 시작"
+        },
+        {
+          "id": "4BF7E401-EA4B-549C-86AC-B8A1EBE643C1",
+          "kind": "emoji",
+          "value": "🌧️"
+        }
+      ],
+      "updatedAt": "2026-06-13T12:00:00Z"
+    },
+    {
+      "date": "2026-07-20",
+      "items": [
+        {
+          "id": "5FF57010-A5AE-5066-88D0-AABABB857038",
+          "kind": "place",
+          "value": "속초"
+        },
+        {
+          "id": "73716CFC-DC30-56EF-94FD-F62A9D0871F9",
+          "kind": "emoji",
+          "value": "🌊"
+        },
+        {
+          "id": "EE4FC70F-D24B-5A35-81C3-A714D874C694",
+          "kind": "time",
+          "value": "06:10"
+        },
+        {
+          "id": "420499F3-80F2-5073-BEE8-F8D9A4A71B52",
+          "kind": "word",
+          "value": "일출"
+        }
+      ],
+      "updatedAt": "2026-07-20T12:00:00Z"
+    },
+    {
+      "date": "2026-08-15",
+      "items": [
+        {
+          "id": "24ADC613-9C2E-580C-BC4A-6A618D4A1359",
+          "kind": "emoji",
+          "value": "🇰🇷"
+        },
+        {
+          "id": "AB03B44D-9819-53A0-A191-8FBC7EFD011B",
+          "kind": "word",
+          "value": "광복절"
+        }
+      ],
+      "updatedAt": "2026-08-15T12:00:00Z"
+    },
+    {
+      "date": "2026-09-06",
+      "items": [
+        {
+          "id": "BE7F18F9-FD1D-5FD1-A1EB-FDEEBFCF25FF",
+          "kind": "time",
+          "value": "17:40"
+        },
+        {
+          "id": "BCF6CF9F-05B5-53B5-A643-DE5433E64449",
+          "kind": "place",
+          "value": "서점"
+        },
+        {
+          "id": "D41BFC9E-5C71-5678-8771-BD3E72CD4425",
+          "kind": "emoji",
+          "value": "📚"
+        }
+      ],
+      "updatedAt": "2026-09-06T12:00:00Z"
+    },
+    {
+      "date": "2026-09-30",
+      "items": [
+        {
+          "id": "E5B8F8C9-8DFE-5F3E-A61E-0AB521DCA3F4",
+          "kind": "word",
+          "value": "아주 긴 문장으로 남긴 단어 하나가 화면에서 어떻게 줄바꿈되는지 확인해요"
+        },
+        {
+          "id": "274B7D5E-FA85-51CF-905D-72412DE2A02A",
+          "kind": "place",
+          "value": "서울특별시 마포구 연남동 어딘가의 작은 카페"
+        }
+      ],
+      "updatedAt": "2026-09-30T12:00:00Z"
+    },
+    {
+      "date": "2026-10-01",
+      "items": [
+        {
+          "id": "B6340908-AD69-5028-84EE-34AC4F1F3931",
+          "kind": "word",
+          "value": "산책"
+        },
+        {
+          "id": "F9A68360-0BED-5025-8590-A31771EF175C",
+          "kind": "place",
+          "value": "공원"
+        },
+        {
+          "id": "6EC3A73F-F8D2-5861-AEB3-FD32D8238792",
+          "kind": "emoji",
+          "value": "🌿"
+        },
+        {
+          "id": "FA4E6738-4E01-528C-94EE-3ACD589C9857",
+          "kind": "time",
+          "value": "16:20"
+        },
+        {
+          "id": "0695835E-CA75-5DE3-805B-A9E273D7D978",
+          "kind": "word",
+          "value": "바람"
+        }
+      ],
+      "updatedAt": "2026-10-01T12:00:00Z"
+    },
+    {
+      "date": "2026-10-09",
+      "items": [
+        {
+          "id": "8615519B-49D2-5DC3-970E-0FA50EEFFEEA",
+          "kind": "word",
+          "value": "한글날"
+        },
+        {
+          "id": "4318DB24-765D-5CE7-98C0-EE7583903026",
+          "kind": "emoji",
+          "value": "1️⃣"
+        },
+        {
+          "id": "9798AD2F-0BDA-54C3-B8E3-07608F4C1881",
+          "kind": "emoji",
+          "value": "©️"
+        }
+      ],
+      "updatedAt": "2026-10-09T12:00:00Z"
+    },
+    {
+      "date": "2026-10-31",
+      "items": [
+        {
+          "id": "71971CA5-7803-57B4-AF26-AF48613894DC",
+          "kind": "emoji",
+          "value": "🎃"
+        },
+        {
+          "id": "8D02B02C-E22C-5115-986F-8E6260122D70",
+          "kind": "time",
+          "value": "20:00"
+        }
+      ],
+      "updatedAt": "2026-10-31T12:00:00Z"
+    },
+    {
+      "date": "2026-11-02",
+      "items": [
+        {
+          "id": "50114805-3282-5A25-A526-C3E37F493B0A",
+          "kind": "word",
+          "value": "소금빵"
+        }
+      ],
+      "updatedAt": "2026-11-02T12:00:00Z"
+    },
+    {
+      "date": "2026-11-06",
+      "items": [
+        {
+          "id": "14B64064-B8F8-533D-8E24-E879F6B8A78A",
+          "kind": "place",
+          "value": "성수"
+        },
+        {
+          "id": "176F210A-667C-5681-881E-1F736560F284",
+          "kind": "emoji",
+          "value": "☕"
+        }
+      ],
+      "updatedAt": "2026-11-06T12:00:00Z"
+    },
+    {
+      "date": "2026-11-13",
+      "items": [
+        {
+          "id": "32E54658-7AD7-5C8C-BF51-A4348F40178E",
+          "kind": "word",
+          "value": "읽던 책"
+        },
+        {
+          "id": "252146A9-062C-5EB4-80AB-2AA45F2965DC",
+          "kind": "place",
+          "value": "서점"
+        }
+      ],
+      "updatedAt": "2026-11-13T12:00:00Z"
+    },
+    {
+      "date": "2026-11-18",
+      "items": [
+        {
+          "id": "26FFB28D-B974-5B67-B04F-3572608CECF4",
+          "kind": "word",
+          "value": "산책"
+        },
+        {
+          "id": "C2C4552A-A5E6-5652-B8AD-CC457A4C9C1D",
+          "kind": "place",
+          "value": "한강"
+        }
+      ],
+      "updatedAt": "2026-11-18T12:00:00Z"
+    },
+    {
+      "date": "2026-11-20",
+      "items": [
+        {
+          "id": "1B0D6B92-1723-5F1D-97B0-F591F1A281DB",
+          "kind": "time",
+          "value": "12:00"
+        },
+        {
+          "id": "F5C7BDE8-0830-543F-AAA2-5AF363C81C76",
+          "kind": "word",
+          "value": "점심"
+        },
+        {
+          "id": "304F699C-2839-5251-A0B1-FDDF4A2D8CF5",
+          "kind": "emoji",
+          "value": "🍜"
+        }
+      ],
+      "updatedAt": "2026-11-20T12:00:00Z"
+    },
+    {
+      "date": "2026-11-22",
+      "items": [
+        {
+          "id": "72C51690-241B-5DBC-8CAC-3B2CDFD6D65D",
+          "kind": "word",
+          "value": "밤공기"
+        },
+        {
+          "id": "CD3B1837-1646-5BE7-BFAF-ECE9737852C8",
+          "kind": "emoji",
+          "value": "🌙"
+        }
+      ],
+      "updatedAt": "2026-11-22T12:00:00Z"
+    },
+    {
+      "date": "2026-11-24",
+      "items": [
+        {
+          "id": "A5D96A5E-5059-5AC3-9F2B-2E9AE1596A9C",
+          "kind": "time",
+          "value": "18:45"
+        },
+        {
+          "id": "E86BC78C-8FEA-527B-AC10-DDE2D94A6C51",
+          "kind": "word",
+          "value": "음악"
+        },
+        {
+          "id": "65ADEFBF-1BE7-5094-8261-5AF3924A6B89",
+          "kind": "emoji",
+          "value": "🎧"
+        }
+      ],
+      "updatedAt": "2026-11-24T12:00:00Z"
+    },
+    {
+      "date": "2026-11-25",
+      "items": [
+        {
+          "id": "AE06E880-97EE-5A8D-8EB1-3AC1AA622FDC",
+          "kind": "word",
+          "value": "살구잼"
+        },
+        {
+          "id": "68B5986F-977A-5440-8BD5-0B9FA82BE952",
+          "kind": "place",
+          "value": "연남동"
+        },
+        {
+          "id": "03224204-45B3-54D7-BBD1-313D5113EB32",
+          "kind": "time",
+          "value": "16:20"
+        },
+        {
+          "id": "C8D6D342-2866-5A26-ABFD-0E712EFA6ACC",
+          "kind": "emoji",
+          "value": "🍊"
+        },
+        {
+          "id": "D8AA1209-4DED-53F7-8C1F-B6C36B40A59D",
+          "kind": "word",
+          "value": "창가 자리"
+        },
+        {
+          "id": "6A5D627C-AD33-596A-8D4C-D580A60C7372",
+          "kind": "emoji",
+          "value": "👍🏽"
+        },
+        {
+          "id": "324769F7-9645-53C8-BACE-6DF70FEBCCD1",
+          "kind": "time",
+          "value": "21:05"
+        },
+        {
+          "id": "0AEFDC10-844B-55B9-AE98-5BC57F18D1F9",
+          "kind": "word",
+          "value": "귤"
+        }
+      ],
+      "updatedAt": "2026-11-25T12:00:00Z"
+    }
+  ],
+  "version": 1
+}

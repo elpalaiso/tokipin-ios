@@ -344,17 +344,22 @@ struct EmptyHome: View {
 
 /// The mascot peeking from the bottom-right corner.
 struct EmptyHomeRabbit: View {
+    /// The artwork is drawn to peek up from the bottom edge of its square, so it sits flush
+    /// with the screen bottom. Size follows the screen so every device shows ears, head and eyes.
     var body: some View {
-        Image("PeekRabbit")
-            .renderingMode(.template)
-            .resizable()
-            .scaledToFit()
-            .foregroundStyle(Palette.rabbit)
-            .frame(width: 210, height: 210)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-            .offset(x: 30, y: 40)
-            .ignoresSafeArea()
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
+        GeometryReader { geometry in
+            let size = min(max(geometry.size.width * 0.52, 170), 300)
+            Image("PeekRabbit")
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(Palette.rabbit)
+                .frame(width: size, height: size)
+                .offset(x: size * 0.06)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+        }
+        .ignoresSafeArea()
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
