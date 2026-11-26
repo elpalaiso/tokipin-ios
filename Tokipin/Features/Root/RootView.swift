@@ -6,6 +6,10 @@ struct RootView: View {
     @Environment(AppModel.self) private var app
     @State private var showSkeleton = false
     @State private var didRoute = false
+    /// Continues the system launch screen (same colour and icon) until the first read is done,
+    /// as Android keeps its splash; a slow read hands over to the skeleton instead.
+    @State private var showSplash = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -21,6 +25,9 @@ struct RootView: View {
                 ExploreView()
             }
         }
+        .overlay {
+            if showSplash { LaunchSplash().transition(.opacity) }
+        }
         .fullScreenCover(item: $app.editorDay) { day in
             EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard)
         }
@@ -31,6 +38,11 @@ struct RootView: View {
         .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in refreshToday() }
     }
 
+    private func hideSplash() {
+        guard showSplash else { return }
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) { showSplash = false }
+    }
+
     private func refreshToday() {
         let now = DayKey.today
         if app.today != now { app.today = now }
@@ -38,12 +50,20 @@ struct RootView: View {
 
     private func load() async {
         showSkeleton = false
+        let started = Date()
         let slow = Task {
             try? await Task.sleep(for: .milliseconds(350))
-            if !Task.isCancelled { showSkeleton = true }
+            if !Task.isCancelled {
+                showSkeleton = true
+                hideSplash()
+            }
         }
         await store.load()
         slow.cancel()
+        // Long enough to be seen as a splash, never longer than the read itself needs.
+        let remaining = 0.6 - Date().timeIntervalSince(started)
+        if remaining > 0 { try? await Task.sleep(for: .seconds(remaining)) }
+        hideSplash()
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
         if let draft = store.latestDraft {
@@ -100,5 +120,17 @@ struct RecoveryView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 24)
         .padding(.top, 60)
+    }
+}
+
+/// Same picture as the UILaunchScreen in Info.plist (LaunchBackground + LaunchIcon centred in
+/// the safe area), so the hand-off from the system launch screen is invisible.
+struct LaunchSplash: View {
+    var body: some View {
+        ZStack {
+            Color("LaunchBackground").ignoresSafeArea()
+            Image("LaunchIcon")
+        }
+        .accessibilityHidden(true)
     }
 }
