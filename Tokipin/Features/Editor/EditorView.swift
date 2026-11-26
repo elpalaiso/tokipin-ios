@@ -16,6 +16,11 @@ struct EditorView: View {
     @State private var rowFrames: [UUID: CGRect] = [:]
     @State private var menuID: UUID?
     @State private var finished = false
+    /// Date picker from the centre date.
+    @State private var picking = false
+    @State private var keyboardBeforePicking = false
+    /// Opened with the pencil: the saved day as a whole is being edited.
+    @State private var wholeDay: Bool
     private let focusItem: UUID?
 
     struct RowDrag: Equatable {
@@ -33,6 +38,7 @@ struct EditorView: View {
     init(day: DayKey, focusItem: UUID?, startsWithKeyboard: Bool = true) {
         self.focusItem = focusItem
         _keyboardWanted = State(initialValue: startsWithKeyboard)
+        _wholeDay = State(initialValue: !startsWithKeyboard)
         _model = State(initialValue: EditorModel(day: day, items: [], draft: nil))
     }
 
@@ -46,6 +52,18 @@ struct EditorView: View {
             }
         }
         .onAppear(perform: setUp)
+        .sheet(isPresented: $picking, onDismiss: { if !keyboardWanted { keyboardWanted = keyboardBeforePicking } }) {
+            EntryDatePicker(current: model.day, today: app.today, onCancel: {
+                picking = false
+            }, onConfirm: { day in
+                picking = false
+                changeDay(to: day)
+            })
+            .presentationDetents([.height(460)])
+            .presentationDragIndicator(.visible)
+            .presentationBackground(Color(hex: 0x2E3832))
+            .presentationCornerRadius(28)
+        }
         .onChange(of: model.draft) { _, draft in
             // After ✓ the saved record is the truth; a late model change must not resurrect the draft.
             guard !finished else { return }
@@ -96,9 +114,20 @@ struct EditorView: View {
             .frame(height: 62)
         } else {
             ZStack {
-                Text(model.day.spacedLabel)
-                    .font(.brand(15))
+                Button(action: openPicker) {
+                    HStack(spacing: 4) {
+                        Text(model.day.spacedLabel)
+                            .font(.brand(15))
+                        Image(systemName: "chevron.down").font(.system(size: 10, weight: .semibold))
+                    }
                     .foregroundStyle(Palette.primary)
+                    .frame(minHeight: 44)
+                    .padding(.horizontal, 8)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(verbatim: model.day.label))
+                .accessibilityHint(Text("두 번 탭해 날짜를 바꿔요."))
                 HStack(spacing: 6) {
                     CircleIconButton(accessibilityLabel: "홈으로, 초안 보관", action: close) {
                         Image("IconBack").renderingMode(.template).resizable().scaledToFit()
@@ -447,6 +476,29 @@ struct EditorView: View {
     }
 
     /// ✓ saves everything, including the value still being typed, then returns to the day card.
+    private func openPicker() {
+        keyboardBeforePicking = keyboardWanted
+        keyboardWanted = false
+        picking = true
+    }
+
+    /// The picker's ✓: moves the editor only. New pieces go to the chosen day; a saved day being
+    /// edited keeps its changes there as a draft. Nothing is saved until the editor's ✓.
+    private func changeDay(to day: DayKey) {
+        guard day != model.day, CalendarRange.canWrite(day, today: app.today) else { return }
+        if model.editingID != nil, !model.commitRaw() { return }
+        let outcome = EntryDateChange.change(
+            current: model.draft, saved: store.items(on: model.day), to: day,
+            targetSaved: store.items(on: day), targetDraft: store.draft(for: day), wholeDay: wholeDay)
+        store.updateDraft(outcome.sourceDraft, for: model.day)
+        if let target = outcome.targetDraft { store.updateDraft(target, for: day) }
+        model = EditorModel(day: day, items: store.items(on: day), draft: outcome.targetDraft)
+        undoID = nil
+        wholeDay = false
+        keyboardBeforePicking = true
+        keyboardWanted = true
+    }
+
     private func finish() {
         finished = true
         guard let items = model.itemsForSaving() else { finished = false; return }

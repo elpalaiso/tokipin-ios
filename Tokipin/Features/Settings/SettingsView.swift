@@ -135,6 +135,7 @@ struct RecordsDocument: FileDocument {
 struct DebugSampleSection: View {
     @Environment(RecordStore.self) private var store
     @State private var message: String?
+    @State private var confirmingRangeSamples = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -144,6 +145,10 @@ struct DebugSampleSection: View {
             VStack(spacing: 0) {
                 Button { load() } label: { row("예시 기록 넣기", detail: "기존 기록을 지우고 홈페이지 체험과 같은 3년치 기록을 넣어요.") }
                 Rectangle().fill(Palette.line).frame(height: 1)
+                Button { confirmingRangeSamples = true } label: {
+                    row("달력 범위 예시 넣기", detail: "2026.11.26 기준의 빈 달과 빈 해를 확인해요. 기존 기록과 초안을 교체해요.")
+                }
+                Rectangle().fill(Palette.line).frame(height: 1)
                 Button(role: .destructive) { clear() } label: { row("모든 기록 지우기", detail: "빈 홈 화면을 확인할 때 써요.") }
             }
             .buttonStyle(.plain)
@@ -152,6 +157,12 @@ struct DebugSampleSection: View {
             if let message {
                 Text(verbatim: message).font(.brand(13)).foregroundStyle(Palette.focus)
             }
+        }
+        .alert("달력 범위 예시로 교체할까요?", isPresented: $confirmingRangeSamples) {
+            Button("취소", role: .cancel) {}
+            Button("교체", role: .destructive) { loadRangeSamples() }
+        } message: {
+            Text("이 기기의 기존 기록과 초안을 교체해요.")
         }
     }
 
@@ -180,6 +191,19 @@ struct DebugSampleSection: View {
             message = "모든 기록을 지웠어요."
         } catch {
             message = "지우지 못했어요: \(error.localizedDescription)"
+        }
+    }
+
+    private func loadRangeSamples() {
+        do {
+            guard let url = Bundle.main.url(forResource: "calendar-range-records", withExtension: "json") else {
+                throw CocoaError(.fileNoSuchFile)
+            }
+            let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: Data(contentsOf: url))
+            try store.replaceAll(with: archive)
+            message = "달력 범위 예시 \(archive.days.count)일치를 넣었어요."
+        } catch {
+            message = "달력 범위 예시를 넣지 못했어요: \(error.localizedDescription)"
         }
     }
 }

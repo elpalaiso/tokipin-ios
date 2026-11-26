@@ -11,8 +11,21 @@ struct YearView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20) {
-                    ForEach(years, id: \.self) { year in
-                        yearBlock(year).id(year)
+                    ForEach(sections, id: \.id) { section in
+                        switch section {
+                        case .year(let year):
+                            yearBlock(year).id(year)
+                        case .gap(let first, let last):
+                            FoldRow(label: first == last ? String(first) : "\(first) – \(last)",
+                                    spoken: first == last ? String(localized: "\(String(first))년, 기록 없는 해")
+                                        : String(localized: "\(String(first))년부터 \(String(last))년까지 기록 없는 \(last - first + 1)년"),
+                                    expanded: app.expandedYearGaps.contains(first)) {
+                                withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+                                    if app.expandedYearGaps.contains(first) { app.expandedYearGaps.remove(first) } else { app.expandedYearGaps.insert(first) }
+                                }
+                            }
+                            .id(section.id)
+                        }
                     }
                 }
                 .scrollTargetLayout()
@@ -24,12 +37,17 @@ struct YearView: View {
             .onAppear {
                 guard !didInitialScroll else { return }
                 didInitialScroll = true
-                proxy.scrollTo(app.focusedMonth.year, anchor: .top)
+                openGap(for: app.focusedMonth.year)
+                proxy.scrollTo(clamped(app.focusedMonth.year), anchor: .top)
             }
             .onChange(of: app.reveal) { _, request in
                 guard let request, app.level == .year else { return }
-                withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
-                    proxy.scrollTo(request.day.year, anchor: .top)
+                let year = clamped(request.day.year)
+                openGap(for: year)
+                Task { @MainActor in
+                    withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+                        proxy.scrollTo(year, anchor: .top)
+                    }
                 }
             }
             .onChange(of: visibleYear) { _, year in
@@ -41,19 +59,39 @@ struct YearView: View {
         }
     }
 
-    private var years: [Int] {
-        let today = DayKey.today.year
-        let earliest = store.records.keys.min()?.year ?? today
-        return Array(min(earliest, today - 1)...max(today, app.selectedDay.year) + 1)
+    private var recordedYears: Set<Int> { Set(store.records.keys.map(\.year)) }
+
+    private var sections: [CalendarRange.YearSection] {
+        CalendarRange.yearSections(today: app.today, recordedYears: recordedYears,
+                                   earliestRecord: store.records.keys.min(), expanded: app.expandedYearGaps)
+    }
+
+    private func clamped(_ year: Int) -> Int {
+        let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.records.keys.min()).year
+        return min(max(year, first), app.today.year)
+    }
+
+    private func openGap(for year: Int) {
+        if let gap = CalendarRange.yearGaps(today: app.today, recordedYears: recordedYears, earliestRecord: store.records.keys.min())
+            .first(where: { year >= $0.first && year <= $0.last }) {
+            app.expandedYearGaps.insert(gap.first)
+        }
     }
 
     private func yearBlock(_ year: Int) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(String(year))
-                .font(.brand(30, .medium))
-                .foregroundStyle(Palette.primary)
-                .accessibilityAddTraits(.isHeader)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 16) {
+            // ③ Summary dot: this year holds at least one record. It adds to, never replaces,
+            // the selected-month focus and the per-day dots below.
+            HStack(alignment: .top, spacing: 5) {
+                Text(String(year))
+                    .font(.brand(30, .medium))
+                    .foregroundStyle(Palette.primary)
+                if recordedYears.contains(year) { SummaryDot(size: 6).padding(.top, 8) }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(recordedYears.contains(year) ? Text("\(String(year))년, 기록 있음") : Text("\(String(year))년"))
+            .accessibilityAddTraits(.isHeader)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: columns), spacing: 16) {
                 ForEach(1...12, id: \.self) { month in
                     MiniMonth(month: MonthKey(year: year, month: month))
                 }
@@ -61,6 +99,18 @@ struct YearView: View {
         }
         .padding(14)
         .glassCard(cornerRadius: 22, fill: Palette.surface.opacity(0.78))
+    }
+
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    /// Phones: 3×4. Wide screens: 4×3 or 6×2.
+    private var columns: Int { sizeClass == .regular ? 4 : 3 }
+}
+
+/// Small dot next to a year or month title meaning "has records".
+struct SummaryDot: View {
+    var size: CGFloat = 4
+    var body: some View {
+        Circle().fill(Palette.focus).frame(width: size, height: size).accessibilityHidden(true)
     }
 }
 
@@ -72,6 +122,7 @@ struct MiniMonth: View {
     var body: some View {
         let recorded = Set(store.days(in: month).map(\.day))
         let isFocused = month == app.selectedDay.monthKey
+        let inRange = CalendarRange.contains(month, today: app.today, earliestRecord: store.records.keys.min())
         Button {
             // Keep the selected day if it is in this month; otherwise its latest record or the 1st.
             let day = month == app.selectedDay.monthKey ? app.selectedDay
@@ -81,9 +132,12 @@ struct MiniMonth: View {
             app.requestReveal(day)
         } label: {
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(month.month)")
-                    .font(.brand(15, .medium))
-                    .foregroundStyle(Palette.primary)
+                HStack(alignment: .top, spacing: 3) {
+                    Text("\(month.month)")
+                        .font(.brand(15, .medium))
+                        .foregroundStyle(Palette.primary)
+                    if !recorded.isEmpty { SummaryDot(size: 4).padding(.top, 5) }
+                }
                 Grid(horizontalSpacing: 0, verticalSpacing: 1) {
                     ForEach(Array(month.weeks().enumerated()), id: \.offset) { _, week in
                         GridRow {
@@ -114,7 +168,19 @@ struct MiniMonth: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .pinchTarget(.month(month), in: .year)
-        .accessibilityLabel("\(month.month)월, 기록한 날 \(recorded.count)일")
+        // Before the first explorable month or after this month: dimmed and inactive.
+        .disabled(!inRange)
+        .opacity(inRange ? 1 : 0.35)
+        .modifier(PinchTargetIf(enabled: inRange, target: .month(month)))
+        .accessibilityLabel(inRange ? Text("\(month.month)월, 기록한 날 \(recorded.count)일") : Text("\(month.month)월, 범위 밖"))
+        .accessibilityAddTraits(isFocused ? .isSelected : [])
+    }
+}
+
+private struct PinchTargetIf: ViewModifier {
+    let enabled: Bool
+    let target: PinchTarget
+    func body(content: Content) -> some View {
+        if enabled { content.pinchTarget(target, in: .year) } else { content }
     }
 }

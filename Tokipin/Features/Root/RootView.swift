@@ -6,6 +6,7 @@ struct RootView: View {
     @Environment(AppModel.self) private var app
     @State private var showSkeleton = false
     @State private var didRoute = false
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         @Bindable var app = app
@@ -24,6 +25,15 @@ struct RootView: View {
             EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard)
         }
         .task { await load() }
+        // The month may roll over while the app is in the background or the time zone changes.
+        .onChange(of: scenePhase) { _, phase in if phase == .active { refreshToday() } }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in refreshToday() }
+        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in refreshToday() }
+    }
+
+    private func refreshToday() {
+        let now = DayKey.today
+        if app.today != now { app.today = now }
     }
 
     private func load() async {

@@ -25,8 +25,18 @@ struct MonthView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(spacing: 18) {
-                        ForEach(months, id: \.self) { month in
-                            MonthGrid(month: month).id(month)
+                        ForEach(sections, id: \.id) { section in
+                            switch section {
+                            case .month(let month):
+                                MonthGrid(month: month).id(month)
+                            case .gap(let first, let last):
+                                FoldRow(label: MonthKey.rangeLabel(first, last),
+                                        spoken: String(localized: "\(first.spokenLabel)부터 \(last.spokenLabel)까지 기록 없는 \(CalendarRange.monthCount(first, last))개월"),
+                                        expanded: app.expandedMonthGaps.contains(first)) {
+                                    toggle(first)
+                                }
+                                .id(section.id)
+                            }
                         }
                     }
                     .scrollTargetLayout()
@@ -38,12 +48,18 @@ struct MonthView: View {
                 .onAppear {
                     guard !didInitialScroll else { return }
                     didInitialScroll = true
-                    proxy.scrollTo(app.focusedMonth, anchor: .top)
+                    openGap(for: app.focusedMonth)
+                    proxy.scrollTo(clamped(app.focusedMonth), anchor: .top)
                 }
                 .onChange(of: app.reveal) { _, request in
                     guard let request, app.level == .month else { return }
-                    withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
-                        proxy.scrollTo(request.day.monthKey, anchor: UnitPoint(x: 0.5, y: request.anchorY ?? 0))
+                    // Entering a folded month on purpose opens its period first.
+                    let month = clamped(request.day.monthKey)
+                    openGap(for: month)
+                    Task { @MainActor in
+                        withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+                            proxy.scrollTo(month, anchor: UnitPoint(x: 0.5, y: request.anchorY ?? 0))
+                        }
                     }
                 }
             }
@@ -54,18 +70,65 @@ struct MonthView: View {
         }
     }
 
-    private var months: [MonthKey] {
-        let today = DayKey.today.monthKey
-        let earliest = store.records.keys.min()?.monthKey ?? today
-        let first = min(MonthKey(year: earliest.year, month: 1), MonthKey(year: today.year - 1, month: 1))
-        let last = MonthKey(year: max(today.year, app.selectedDay.year) + 1, month: 12)
-        var result: [MonthKey] = []
-        var cursor = first
-        while cursor <= last {
-            result.append(cursor)
-            cursor = cursor.adding(months: 1)
+    private var recordedMonths: Set<MonthKey> { Set(store.records.keys.map(\.monthKey)) }
+
+    /// From the first explorable month to this month; long empty periods folded.
+    private var sections: [CalendarRange.MonthSection] {
+        CalendarRange.monthSections(today: app.today, recordedMonths: recordedMonths, expanded: app.expandedMonthGaps)
+    }
+
+    private func clamped(_ month: MonthKey) -> MonthKey {
+        let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.records.keys.min())
+        return min(max(month, first), CalendarRange.lastMonth(today: app.today))
+    }
+
+    private func openGap(for month: MonthKey) {
+        if let gap = CalendarRange.gap(containing: month, today: app.today, recordedMonths: recordedMonths) {
+            app.expandedMonthGaps.insert(gap)
         }
-        return result
+    }
+
+    private func toggle(_ gap: MonthKey) {
+        withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+            if app.expandedMonthGaps.contains(gap) { app.expandedMonthGaps.remove(gap) } else { app.expandedMonthGaps.insert(gap) }
+        }
+    }
+}
+
+/// One row standing in for a folded empty period ("2017.06 – 2023.03 ⌄"). Tap opens it in place;
+/// the same row stays above the opened months to fold them again.
+struct FoldRow: View {
+    let label: String
+    let spoken: String
+    let expanded: Bool
+    let action: () -> Void
+    @AccessibilityFocusState private var focused: Bool
+
+    var body: some View {
+        Button {
+            action()
+            // Keep VoiceOver on the row after it opens or folds.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { focused = true }
+        } label: {
+            HStack {
+                Text(verbatim: label)
+                    .font(.brand(14))
+                    .foregroundStyle(Palette.primary)
+                Spacer()
+                Image(systemName: expanded ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Palette.secondary)
+            }
+            .padding(.horizontal, 16)
+            .frame(minHeight: 44)
+            .glassCard(cornerRadius: 14, fill: Palette.surface.opacity(0.7))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: spoken))
+        .accessibilityValue(expanded ? Text("펼침") : Text("접힘"))
+        .accessibilityHint(expanded ? Text("두 번 탭해 접어요.") : Text("두 번 탭해 펼쳐요."))
+        .accessibilityFocused($focused)
     }
 }
 

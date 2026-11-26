@@ -49,7 +49,18 @@ every case that applies to iOS (81 of 82; `emoji.externalIme` is Android-only), 
 - **Editor**: long press and release in place → 삭제 menu; long press and drag up/down → reorder across kinds; swipe to delete with undo. VoiceOver actions: 위로 이동, 아래로 이동, 삭제.
 - Changes are saved only with ✓. The first saved item replaces the rabbit; saving with the last item deleted returns to the same day's empty screen. Drafts are kept per day.
 
+## Calendar range
+
+- The device's local month is the last month; new records can go up to its last day. Explore starts at the earlier of 11 months ago and the oldest saved record's month (recent 12 months with no records). Only saved records move the range; drafts and the picker never do.
+- **월간**: stops at the first month. Before the protected recent 12 months, a run of ≥ 6 empty months folds into one row ("2017.06 – 2023.03"); 1–5 stay open. Tap the row to open or fold it; entering a folded month from elsewhere opens it.
+- **연간**: years that overlap the recent 12 months or hold a record stay open; record-less past years in between fold into one row. Months outside the range are dimmed and inactive. The selected month's focus, per-day record dots and the year/month summary dots are all shown together.
+- **기록한 날**: month paging and the rail stay inside the range (empty months included).
+- **Editor date**: tap the centre date. ✕ restores everything; ✓ moves the editor only (the editor's ✓ saves). New pieces travel to the chosen day after its own items, once; a saved day opened with the pencil keeps its changes there as a draft.
+- Rules live in `CalendarRange` and `EntryDateChange` (tested with the shared fixture, reference date 2026-11-26).
+
 ## Sample data (debug builds)
+
+- **달력 범위 예시 넣기** (Settings → 개발용 테스트 데이터) loads `Tokipin/DebugFixtures/calendar-range-records.json` (512 days, 1,632 items, SHA-256 530bfab8…8744, shared with web and Android). It replaces records and drafts; use it on a clean test install. The file is excluded from Release builds.
 
 Settings › 개발용 테스트 데이터 (Debug only) → 예시 기록 넣기 fills the app with the same records as
 the homepage trial: `Tokipin/Core/SampleGenerator.swift` is a port of `../tokipin/trial.js` +

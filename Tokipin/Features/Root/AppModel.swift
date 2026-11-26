@@ -70,6 +70,12 @@ final class AppModel {
     private(set) var recordsMonth: MonthKey = DayKey.today.monthKey
     /// True while two fingers pinch; pagers cancel any unsettled horizontal move.
     var isPinching = false
+    /// The device's local date. Refreshed when the app becomes active or the day/time zone
+    /// changes; never moves the selection by itself.
+    var today: DayKey = .today
+    /// Folded empty periods the person opened (first month / first year of each).
+    var expandedMonthGaps: Set<MonthKey> = []
+    var expandedYearGaps: Set<Int> = []
     /// On-screen frames (window coordinates) of dates and months, per level, for pinch anchoring.
     @ObservationIgnored var pinchFrames: [ExploreLevel: [PinchTarget: CGRect]] = [:]
 

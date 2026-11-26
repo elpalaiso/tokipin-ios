@@ -11,22 +11,37 @@ struct RecordsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MonthRail(committed: app.recordsMonth, progress: progress) { month in
-                app.commitRecordsMonth(month)
+            MonthRail(committed: app.recordsMonth, progress: progress, range: range) { month in
+                app.commitRecordsMonth(min(max(month, range.lowerBound), range.upperBound))
             }
             .frame(height: 52)
-            SwipePager(region: .recordsBody, onProgress: { progress = $0 }, onCommit: { delta in
+            SwipePager(region: .recordsBody, onProgress: { progress = $0 },
+                       canMove: { range.contains(app.recordsMonth.adding(months: $0)) }, onCommit: { delta in
                 app.commitRecordsMonth(app.recordsMonth.adding(months: delta))
             }) { page in
                 RecordsMonthPage(month: app.recordsMonth.adding(months: page), onLongPress: onLongPress)
             }
         }
+        .onAppear(perform: clampMonth)
+        .onChange(of: range) { _, _ in clampMonth() }
         .onChange(of: app.recordsMonth) { _, month in
             // Only a settled month is announced; previews and cancelled drags never are.
             if app.level == .records, store.days(in: month).isEmpty, UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: EmptyStateText.month(month))
             }
         }
+    }
+}
+
+extension RecordsView {
+    /// Months 기록한 날 can show: first explorable month … this month.
+    var range: ClosedRange<MonthKey> {
+        CalendarRange.firstMonth(today: app.today, earliestRecord: store.records.keys.min())...CalendarRange.lastMonth(today: app.today)
+    }
+
+    func clampMonth() {
+        let clamped = min(max(app.recordsMonth, range.lowerBound), range.upperBound)
+        if clamped != app.recordsMonth { app.commitRecordsMonth(clamped, haptic: false) }
     }
 }
 
@@ -172,6 +187,8 @@ struct MonthRail: View {
     let committed: MonthKey
     /// Body drag progress, in months (−1…1).
     let progress: CGFloat
+    /// Explorable months; the rail holds only these.
+    let range: ClosedRange<MonthKey>
     let onSelect: (MonthKey) -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -180,16 +197,17 @@ struct MonthRail: View {
     @State private var centerOffset: CGFloat = 0
     @State private var userScrolling = false
 
-    private static let first = MonthKey(year: 1970, month: 1)
-    private static let count = 12 * 131 // 1970 … 2100
-    private static func month(at index: Int) -> MonthKey { first.adding(months: index) }
+    private var count: Int { CalendarRange.monthCount(range.lowerBound, range.upperBound) }
+    private func month(at index: Int) -> MonthKey {
+        range.lowerBound.adding(months: min(max(index, 0), count - 1))
+    }
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
-                    ForEach(0..<Self.count, id: \.self) { index in
-                        label(Self.month(at: index)).id(Self.month(at: index))
+                    ForEach(0..<count, id: \.self) { index in
+                        label(month(at: index)).id(month(at: index))
                     }
                 }
                 .scrollTargetLayout()
@@ -206,7 +224,7 @@ struct MonthRail: View {
                 userScrolling = new == .tracking || new == .interacting || new == .decelerating
                 // Commit only when a person's drag or fling comes to rest, never for our own scrolls.
                 guard new == .idle else { return }
-                let landed = Self.month(at: Int((centerOffset / slot).rounded()))
+                let landed = month(at: Int((centerOffset / slot).rounded()))
                 if old == .decelerating || old == .tracking || old == .interacting {
                     if landed != committed { onSelect(landed) }
                 } else if landed != committed {
@@ -231,8 +249,8 @@ struct MonthRail: View {
         .accessibilityLabel("월 선택")
         .accessibilityAdjustableAction { direction in
             switch direction {
-            case .increment: onSelect(committed.adding(months: 1))
-            case .decrement: onSelect(committed.adding(months: -1))
+            case .increment: if committed < range.upperBound { onSelect(committed.adding(months: 1)) }
+            case .decrement: if committed > range.lowerBound { onSelect(committed.adding(months: -1)) }
             @unknown default: break
             }
         }
@@ -241,7 +259,7 @@ struct MonthRail: View {
     /// Month shown in the centre right now: the rail's own position while it is flung,
     /// otherwise the body-drag preview.
     private var centred: MonthKey {
-        userScrolling ? Self.month(at: Int((centerOffset / slot).rounded()))
+        userScrolling ? month(at: Int((centerOffset / slot).rounded()))
             : InteractionRules.previewMonth(committed: committed, dragFraction: progress)
     }
 

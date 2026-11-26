@@ -9,21 +9,27 @@ struct DayView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SwipePager(region: .weekRail, onCommit: move) { page in
+            SwipePager(region: .weekRail, canMove: { canReach(app.selectedDay.adding(days: $0 * 7).weekStart()) },
+                       onCommit: move) { page in
                 WeekRail(center: app.selectedDay.adding(days: page * 7))
             }
             .frame(height: 74)
             Rectangle().fill(Palette.line).frame(height: 1).padding(.horizontal, 20)
-            SwipePager(region: .dayBody, onCommit: move) { page in
+            SwipePager(region: .dayBody, canMove: { canReach(app.selectedDay.adding(days: $0)) }, onCommit: move) { page in
                 DayPage(day: app.selectedDay.adding(days: page), onUndo: onUndo, onError: onError)
             }
         }
-        .accessibilityAction(named: "다음 날") { move(1) }
+        .accessibilityAction(named: "다음 날") { if canReach(app.selectedDay.adding(days: 1)) { move(1) } }
         .accessibilityAction(named: "이전 날") { move(-1) }
     }
 
+    /// Days run up to the last day of this month (the newest a record can go).
+    private func canReach(_ day: DayKey) -> Bool {
+        day <= CalendarRange.lastWritableDay(today: app.today)
+    }
+
     private func move(_ days: Int) {
-        app.select(app.selectedDay.adding(days: days))
+        app.select(min(app.selectedDay.adding(days: days), CalendarRange.lastWritableDay(today: app.today)))
     }
 }
 
@@ -34,6 +40,8 @@ struct SwipePager<Page: View>: View {
     let region: InteractionRules.SwipeRegion
     /// Drag progress toward the next page (+1) or previous page (−1); mirrors the body for linked views.
     var onProgress: ((CGFloat) -> Void)? = nil
+    /// False for a page outside the range: the drag resists and settles back.
+    var canMove: (Int) -> Bool = { _ in true }
     let onCommit: (Int) -> Void
     @ViewBuilder let page: (Int) -> Page
 
@@ -79,7 +87,9 @@ struct SwipePager<Page: View>: View {
                     fromEdge = value.startLocation.x < InteractionRules.edgeReserve
                 }
                 if axis == .horizontal && !fromEdge {
-                    offset = value.translation.width
+                    let towards = value.translation.width < 0 ? 1 : -1
+                    // At the range's end the page only gives a little (rubber band).
+                    offset = canMove(towards) ? value.translation.width : value.translation.width * 0.2
                     onProgress?(-offset / max(width, 1))
                 }
             }
@@ -105,7 +115,7 @@ struct SwipePager<Page: View>: View {
     }
 
     private func settle(delta: Int, width: CGFloat) {
-        guard delta != 0 else {
+        guard delta != 0, canMove(delta.signum()) else {
             withAnimation(.easeOut(duration: InteractionRules.cancelDuration)) {
                 offset = 0
                 onProgress?(0)
