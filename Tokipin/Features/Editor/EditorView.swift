@@ -101,41 +101,52 @@ struct EditorView: View {
 
     // MARK: Canvas
 
+    /// A List so rows get the native swipe-to-delete (Figma: "입력 줄을 밀면 삭제 버튼").
     private var canvas: some View {
         ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(Array(model.items.enumerated()), id: \.element.id) { index, item in
+            List {
+                ForEach(Array(model.items.enumerated()), id: \.element.id) { index, item in
+                    Group {
                         if item.id == model.editingID && model.selection == nil {
-                            composer(position: index).id("composer")
+                            composer(position: index)
                         } else if let selection = model.selection {
                             selectableRow(item, selected: selection.contains(item.id))
                         } else {
-                            SwipeDeleteRow(onDelete: { delete([item.id]) }) {
-                                itemText(item, position: index)
-                            }
-                            .onTapGesture { model.edit(item); syncTimePicker(); keyboardWanted = true }
-                            .onLongPressGesture(minimumDuration: 0.45) {
-                                Haptics.selection()
-                                model.beginSelection(with: item.id)
-                                keyboardWanted = false
-                            }
-                            .accessibilityAddTraits(.isButton)
-                            .accessibilityHint("두 번 탭해 수정해요.")
-                            .accessibilityAction(named: "삭제") { delete([item.id]) }
+                            itemText(item, position: index)
+                                .onTapGesture { model.edit(item); syncTimePicker(); keyboardWanted = true }
+                                .onLongPressGesture(minimumDuration: 0.45) {
+                                    Haptics.selection()
+                                    model.beginSelection(with: item.id)
+                                    keyboardWanted = false
+                                }
+                                .accessibilityAddTraits(.isButton)
+                                .accessibilityHint("두 번 탭해 수정해요.")
+                                .accessibilityAction(named: "삭제") { delete([item.id]) }
                         }
                     }
-                    if model.editingID == nil && model.selection == nil {
-                        composer(position: model.items.count).id("composer")
+                    .id(item.id == model.editingID ? "composer" : item.id.uuidString)
+                    .canvasRow()
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        if model.selection == nil && item.id != model.editingID {
+                            Button(role: .destructive) { delete([item.id]) } label: {
+                                Label("삭제", systemImage: "trash")
+                            }
+                            .tint(Palette.danger)
+                        }
                     }
                 }
-                .padding(.horizontal, 26)
-                .padding(.top, 24)
-                .padding(.bottom, 40)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                if model.editingID == nil && model.selection == nil {
+                    composer(position: model.items.count)
+                        .id("composer")
+                        .canvasRow()
+                }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
             .scrollDismissesKeyboard(.never)
+            .contentMargins(.top, 20, for: .scrollContent)
+            .environment(\.defaultMinListRowHeight, 10)
             .onChange(of: model.items.count) { _, _ in
                 withAnimation { proxy.scrollTo("composer", anchor: .bottom) }
             }
@@ -182,11 +193,11 @@ struct EditorView: View {
     private func composer(position: Int) -> some View {
         let size = fontSize(for: model.kind, position: position)
         if model.kind == .time {
-            Text(model.raw.isEmpty ? "시간" : model.raw)
+            (model.raw.isEmpty ? Text("시간") : Text(verbatim: model.raw))
                 .font(.brand(size, .medium))
                 .foregroundStyle(model.raw.isEmpty ? Palette.secondary.opacity(0.5) : Palette.primary)
                 .padding(.vertical, 4)
-                .accessibilityLabel(model.raw.isEmpty ? "시간 입력, 아래 선택기에서 골라요" : "시간 \(model.raw)")
+                .accessibilityLabel(model.raw.isEmpty ? Text("시간 입력, 아래 선택기에서 골라요") : Text("시간 \(model.raw)"))
         } else {
             ComposerField(
                 text: $model.raw,
@@ -194,7 +205,7 @@ struct EditorView: View {
                 font: BrandFont.uiFont(size, position == 0 ? .medium : .regular, relativeTo: .title1),
                 preferEmoji: model.kind == .emoji,
                 isFocused: keyboardWanted && model.selection == nil,
-                accessibilityLabel: "\(model.kind.label) 입력",
+                accessibilityLabel: String(localized: "\(model.kind.label) 입력"),
                 onReturn: commitField
             )
             .frame(height: size * 1.5)
@@ -206,7 +217,7 @@ struct EditorView: View {
     private var bottomControls: some View {
         VStack(spacing: 10) {
             if undoID != nil {
-                UndoToast(message: "항목을 삭제했어요.") {
+                UndoToast(message: String(localized: "항목을 삭제했어요.")) {
                     model.undoDelete()
                     undoID = nil
                 }
@@ -302,7 +313,7 @@ struct EditorView: View {
                 model.raw = Self.timeFormatter.string(from: time)
                 commitField()
             } label: {
-                Text(model.editingID == nil ? "시간 추가" : "시간 수정")
+                (model.editingID == nil ? Text("시간 추가") : Text("시간 수정"))
                     .font(.brand(15, .medium))
                     .foregroundStyle(Palette.onFocus)
                     .frame(maxWidth: .infinity, minHeight: 46)
@@ -340,7 +351,7 @@ struct EditorView: View {
         let wasEditing = model.editingID != nil
         guard model.commitRaw() else { return }
         if model.kind == .time { keyboardWanted = false }
-        UIAccessibility.post(notification: .announcement, argument: wasEditing ? "항목을 수정했어요." : "항목을 추가했어요.")
+        UIAccessibility.post(notification: .announcement, argument: wasEditing ? String(localized: "항목을 수정했어요.") : String(localized: "항목을 추가했어요."))
     }
 
     private func delete(_ ids: Set<UUID>) {
@@ -401,41 +412,10 @@ struct EditorView: View {
     }
 }
 
-/// Swipe an entry left to reveal its delete button.
-struct SwipeDeleteRow<Content: View>: View {
-    let onDelete: () -> Void
-    @ViewBuilder let content: () -> Content
-    @State private var offset: CGFloat = 0
-    private let revealWidth: CGFloat = 72
-
-    var body: some View {
-        ZStack(alignment: .trailing) {
-            if offset < 0 {
-                Button(action: { offset = 0; onDelete() }) {
-                    Image(systemName: "trash")
-                        .font(.system(size: 17))
-                        .foregroundStyle(Palette.primary)
-                        .frame(width: 60, height: 52)
-                        .background(Palette.danger, in: RoundedRectangle(cornerRadius: 12))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("삭제")
-            }
-            content()
-                .background(offset < 0 ? Color.white.opacity(0.05) : .clear, in: RoundedRectangle(cornerRadius: 10))
-                .offset(x: offset)
-        }
-        .gesture(
-            DragGesture(minimumDistance: 18)
-                .onChanged { value in
-                    guard abs(value.translation.width) > abs(value.translation.height) else { return }
-                    offset = min(0, max(-revealWidth - 20, value.translation.width))
-                }
-                .onEnded { value in
-                    withAnimation(.easeOut(duration: 0.18)) {
-                        offset = value.translation.width < -40 ? -revealWidth : 0
-                    }
-                }
-        )
+private extension View {
+    func canvasRow() -> some View {
+        listRowInsets(EdgeInsets(top: 4, leading: 26, bottom: 4, trailing: 26))
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
     }
 }

@@ -13,7 +13,18 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
         return calendar
     }()
 
-    static let weekdaySymbols = ["일", "월", "화", "수", "목", "금", "토"]
+    /// Short weekday names, Sunday first. Localizable (keys weekday.sun … weekday.sat).
+    static var weekdaySymbols: [String] {
+        [
+            String(localized: "weekday.sun", defaultValue: "일"),
+            String(localized: "weekday.mon", defaultValue: "월"),
+            String(localized: "weekday.tue", defaultValue: "화"),
+            String(localized: "weekday.wed", defaultValue: "수"),
+            String(localized: "weekday.thu", defaultValue: "목"),
+            String(localized: "weekday.fri", defaultValue: "금"),
+            String(localized: "weekday.sat", defaultValue: "토")
+        ]
+    }
 
     init(year: Int, month: Int, day: Int) {
         self.year = year

@@ -15,6 +15,11 @@ struct DayView: View {
             Rectangle().fill(Palette.line).frame(height: 1).padding(.horizontal, 20)
             ScrollView {
                 dayBody
+                    .id(app.selectedDay)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: app.dayTransitionEdge).combined(with: .opacity),
+                        removal: .move(edge: app.dayTransitionEdge == .trailing ? .leading : .trailing).combined(with: .opacity)
+                    ))
                     .padding(.horizontal, 20)
                     .padding(.top, 20)
                     .padding(.bottom, 24)
@@ -117,7 +122,7 @@ struct DayView: View {
         let day = app.selectedDay
         do {
             guard let removed = try store.deleteItem(item.id, on: day) else { return }
-            onUndo(PendingUndo(message: "항목을 삭제했어요.") {
+            onUndo(PendingUndo(message: String(localized: "항목을 삭제했어요.")) {
                 do { try store.restoreItem(removed.item, at: removed.index, on: day) } catch { onError(error) }
             })
         } catch {
@@ -173,6 +178,13 @@ struct WeekStrip: View {
                 .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
+        .id(start)
+        .transition(.asymmetric(
+            insertion: .move(edge: app.dayTransitionEdge).combined(with: .opacity),
+            removal: .move(edge: app.dayTransitionEdge == .trailing ? .leading : .trailing).combined(with: .opacity)
+        ))
+        .frame(maxWidth: .infinity)
+        .clipped()
         .padding(.horizontal, 12)
         .padding(.bottom, 10)
         .gesture(

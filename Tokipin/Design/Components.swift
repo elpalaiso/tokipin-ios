@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Round 44pt control with a thin outline (back, check, more).
 struct CircleIconButton<Label: View>: View {
-    let accessibilityLabel: String
+    let accessibilityLabel: LocalizedStringKey
     var highlighted = false
     let action: () -> Void
     @ViewBuilder let label: () -> Label
@@ -53,7 +53,7 @@ struct KindIcon: View {
 /// Bottom toast with an undo action ("항목을 삭제했어요. 실행 취소").
 struct UndoToast: View {
     let message: String
-    var actionTitle = "실행 취소"
+    var actionTitle: LocalizedStringKey = "실행 취소"
     let action: () -> Void
 
     var body: some View {
@@ -77,7 +77,7 @@ struct UndoToast: View {
 
 /// Capsule "오늘" and round "+" at the bottom of explore screens.
 struct FloatingCapsuleButton: View {
-    let title: String
+    let title: LocalizedStringKey
     let action: () -> Void
 
     var body: some View {
@@ -121,7 +121,7 @@ struct FloatingAddButton: View {
 
 /// Outlined capsule used for secondary actions ("달력 보기", "다시 시도").
 struct OutlineCapsuleButton: View {
-    let title: String
+    let title: LocalizedStringKey
     var systemImage: String?
     let action: () -> Void
 

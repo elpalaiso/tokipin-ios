@@ -9,10 +9,10 @@ enum ExploreLevel: Int, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .day: "일간"
-        case .records: "기록한 날"
-        case .month: "월간 달력"
-        case .year: "연간"
+        case .day: String(localized: "level.day", defaultValue: "일간")
+        case .records: String(localized: "level.records", defaultValue: "기록한 날")
+        case .month: String(localized: "level.month", defaultValue: "월간 달력")
+        case .year: String(localized: "level.year", defaultValue: "연간")
         }
     }
 
@@ -46,6 +46,8 @@ final class AppModel {
     /// Explore level and day to restore when search closes.
     var searchReturn: (ExploreLevel, DayKey)?
     var isShowingSettings = false
+    /// Which side the next day slides in from (left/right swipe feedback).
+    var dayTransitionEdge: Edge = .trailing
 
     func setLevel(_ newLevel: ExploreLevel) {
         guard newLevel != level else { return }
@@ -55,7 +57,10 @@ final class AppModel {
 
     func select(_ day: DayKey, haptic: Bool = true) {
         guard day != selectedDay else { return }
-        selectedDay = day
+        dayTransitionEdge = day > selectedDay ? .trailing : .leading
+        withAnimation(.easeOut(duration: 0.22)) {
+            selectedDay = day
+        }
         focusedMonth = day.monthKey
         if haptic { Haptics.selection() }
     }

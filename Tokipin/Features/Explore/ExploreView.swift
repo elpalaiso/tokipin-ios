@@ -77,7 +77,7 @@ struct ExploreView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(parent == .month ? "\(headerTitle)월 달력으로" : "\(headerTitle)년으로")
+                .accessibilityLabel(parent == .month ? Text("\(headerTitle)월 달력으로") : Text("\(headerTitle)년으로"))
             }
             Spacer()
             if app.level == .day {
@@ -208,7 +208,7 @@ struct ExploreView: View {
     private func deleteDay(_ day: DayKey) {
         do {
             let items = try store.deleteDay(day)
-            showUndo(PendingUndo(message: "이날 기록 \(items.count)개를 삭제했어요.") {
+            showUndo(PendingUndo(message: String(localized: "이날 기록 \(items.count)개를 삭제했어요.")) {
                 do { try store.restoreDay(day, items: items) } catch { showError(error) }
             })
         } catch {
@@ -226,7 +226,7 @@ struct ExploreView: View {
     }
 
     private func showError(_ error: Error) {
-        errorMessage = "저장 공간을 확인한 뒤 다시 시도해 주세요."
+        errorMessage = String(localized: "저장 공간을 확인한 뒤 다시 시도해 주세요.")
     }
 }
 

@@ -87,11 +87,11 @@ struct SettingsView: View {
             contentType: .json,
             defaultFilename: "tokipin-\(DayKey.today.string)"
         ) { result in
-            if case .success = result { exportMessage = "기록을 내보냈어요." }
+            if case .success = result { exportMessage = String(localized: "기록을 내보냈어요.") }
         }
     }
 
-    private func linkRow(_ title: String) -> some View {
+    private func linkRow(_ title: LocalizedStringKey) -> some View {
         HStack {
             Text(title).font(.brand(16, .medium))
             Spacer()
@@ -107,7 +107,7 @@ struct SettingsView: View {
             exportDocument = RecordsDocument(data: try store.exportData())
             exportMessage = nil
         } catch {
-            exportMessage = "내보내지 못했어요. 다시 시도해 주세요."
+            exportMessage = String(localized: "내보내지 못했어요. 다시 시도해 주세요.")
         }
     }
 }

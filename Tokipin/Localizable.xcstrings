@@ -1,0 +1,322 @@
+{
+  "sourceLanguage": "ko",
+  "strings": {
+    "": {
+      "shouldTranslate": false
+    },
+    "%@ %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ %2$@"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "%@ 더보기": {},
+    "%@ 입력": {},
+    "%@ 추가": {},
+    "%@, %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@, %2$@"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "%@, %@ %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@, %2$@ %3$@"
+          }
+        }
+      },
+      "shouldTranslate": false
+    },
+    "%@년으로": {},
+    "%@월 달력으로": {},
+    "%lld": {
+      "shouldTranslate": false
+    },
+    "%lld개 선택": {},
+    "%lld년 %lld월": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld년 %2$lld월"
+          }
+        }
+      }
+    },
+    "%lld월, 기록한 날 %lld일": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld월, 기록한 날 %2$lld일"
+          }
+        }
+      }
+    },
+    "+%lld": {
+      "shouldTranslate": false
+    },
+    "Aa": {
+      "shouldTranslate": false
+    },
+    "Tokipin은 계정으로 기록을 동기화하지 않아요. 기기를 바꾸거나 앱 데이터를 지우기 전에 보관하고 싶은 기록은 설정에서 JSON 파일로 내보내 주세요.": {},
+    "Tokipin은 회원가입 없이 사용하는 iOS·Android 기록 앱이에요. 기록과 작성 중인 초안은 기기의 앱 저장공간에 보관해요.": {},
+    "kind.emoji": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "이모지"
+          }
+        }
+      }
+    },
+    "kind.place": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "장소"
+          }
+        }
+      }
+    },
+    "kind.time": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "시간"
+          }
+        }
+      }
+    },
+    "kind.word": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "단어"
+          }
+        }
+      }
+    },
+    "level.day": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "일간"
+          }
+        }
+      }
+    },
+    "level.month": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "월간 달력"
+          }
+        }
+      }
+    },
+    "level.records": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "기록한 날"
+          }
+        }
+      }
+    },
+    "level.year": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "연간"
+          }
+        }
+      }
+    },
+    "weekday.fri": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "금"
+          }
+        }
+      }
+    },
+    "weekday.mon": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "월"
+          }
+        }
+      }
+    },
+    "weekday.sat": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "토"
+          }
+        }
+      }
+    },
+    "weekday.sun": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "일"
+          }
+        }
+      }
+    },
+    "weekday.thu": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "목"
+          }
+        }
+      }
+    },
+    "weekday.tue": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "화"
+          }
+        }
+      }
+    },
+    "weekday.wed": {
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "new",
+            "value": "수"
+          }
+        }
+      }
+    },
+    "개인정보 처리방침": {},
+    "검색 결과": {},
+    "검색 결과가 없어요.": {},
+    "검색 닫기": {},
+    "검색어 지우기": {},
+    "기기를 바꾸거나 앱 데이터를 지울 때": {},
+    "기기에 저장된 기록을 읽을 수 없어요.\n잠시 후 다시 시도해 주세요.": {},
+    "기록 검색": {},
+    "기록 내보내기": {},
+    "기록 저장": {},
+    "기록 추가": {},
+    "기록과 초안은 이 기기에 저장돼요. 앱 데이터를 지우면 함께 삭제돼요. 위치와 캘린더에 접근하지 않아요.": {},
+    "기록에 대한 권리": {},
+    "기록을 내보냈어요.": {},
+    "기록을 불러오는 중이에요.": {},
+    "기록을 불러오지 못했어요": {},
+    "기록을 어떻게 보관하고 지우나요?": {},
+    "내보내지 못했어요. 다시 시도해 주세요.": {},
+    "내보낸 파일과 기기 백업": {},
+    "다시 시도": {},
+    "단어, 장소, 날짜 검색": {},
+    "닫기": {},
+    "달력 보기": {},
+    "달력이나 검색에서 기록을 확인하고 항목 하나 또는 하루 전체를 지울 수 있어요. 직접 지우거나 기기에서 앱 데이터를 삭제할 때까지 기록을 보관해요. 앱 데이터를 삭제하면 그 기기의 기록과 초안이 함께 지워져요.": {},
+    "두 번 탭해 수정해요.": {},
+    "뒤로": {},
+    "삭제": {},
+    "선택한 항목 삭제": {},
+    "설정": {},
+    "설정에서 저장한 기록을 JSON 파일로 내보낼 수 있어요. 내보낸 파일은 앱에서 기록을 지운 뒤에도 남으니, 저장한 위치에서 직접 관리해 주세요. Tokipin은 계정 동기화를 제공하지 않아요. 기기 백업·복원에 기록이 포함되는지는 운영체제와 앱의 백업 설정에 따라 달라져요.": {},
+    "수정": {},
+    "시간": {},
+    "시간 %@": {},
+    "시간 수정": {},
+    "시간 입력, 아래 선택기에서 골라요": {},
+    "시간 추가": {},
+    "시간을 선택해 주세요.": {},
+    "실행 취소": {},
+    "아직 남긴 기록이 없어요.": {},
+    "앱 이용": {},
+    "어떤 정보를 저장하나요?": {},
+    "오늘": {},
+    "운영자 및 개인정보 문의": {},
+    "운영자 및 이용 문의": {},
+    "운영자 정보, 문의처와 시행일은 정식 출시 때 안내할 예정이에요.": {},
+    "이 약관은 iOS·Android용 Tokipin 앱에서 개인 기록을 작성하고 열어볼 때 적용되는 이용 기준이에요.": {},
+    "이날 기록 %lld개 삭제": {},
+    "이날 기록 %lld개를 삭제했어요.": {},
+    "이날 기록 삭제": {},
+    "이날 기록하기": {},
+    "이날 남긴 기록이 없어요.": {},
+    "이날 더보기": {},
+    "이달에 남긴 기록이 없어요.": {},
+    "이모지를 입력해 주세요.": {},
+    "이용약관": {},
+    "입력 종류": {},
+    "장소는 직접 입력해요. Tokipin은 기기의 위치나 캘린더에 대한 접근 권한을 요청하지 않아요. 앱의 달력에는 내가 남긴 기록이 표시돼요.": {},
+    "장소와 캘린더에 접근하나요?": {},
+    "저장 공간을 확인한 뒤 다시 시도해 주세요.": {},
+    "저장 및 개인정보": {},
+    "저장하지 못했어요": {},
+    "저장하지 못했어요.\n입력은 이 화면에 남아 있어요.\n저장 공간을 확인해 주세요.": {},
+    "저장한 기록을 JSON 파일로 내려받아요.": {},
+    "직접 만든 기록에 대한 권리는 작성자에게 있어요. 다른 사람의 글이나 개인정보가 담긴 기록을 외부에 공유할 때에는 그 사람의 권리와 사생활을 존중해 주세요.": {},
+    "직접 입력한 단어, 이모지, 장소, 시간과 기록 날짜, 입력 순서를 저장해요. 이 정보와 작성 중인 초안은 오프라인에서 기록을 이어 쓰고, 날짜별로 찾고 수정하는 데 사용해요.": {},
+    "첫 기록 남기기": {},
+    "출시 전 초안 · iOS·Android 앱 기준": {},
+    "취소": {},
+    "탐색 보기": {},
+    "탐색 보기, %@": {},
+    "터치 피드백": {},
+    "항목 선택": {},
+    "항목을 삭제했어요.": {},
+    "항목을 수정했어요.": {},
+    "항목을 추가했어요.": {},
+    "홈으로, 초안 보관": {},
+    "확인": {},
+    "회원가입 없이 단어, 이모지, 장소, 시간을 원하는 순서로 남길 수 있어요. 연간, 월간, 기록한 날, 일간 보기에서 다시 열거나 검색하고, 직접 수정·삭제할 수 있어요.": {}
+  },
+  "version": "1.0"
+}

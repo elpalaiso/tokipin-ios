@@ -8,10 +8,10 @@ enum ItemKind: String, Codable, CaseIterable, Identifiable, Sendable {
 
     var label: String {
         switch self {
-        case .word: "단어"
-        case .emoji: "이모지"
-        case .place: "장소"
-        case .time: "시간"
+        case .word: String(localized: "kind.word", defaultValue: "단어")
+        case .emoji: String(localized: "kind.emoji", defaultValue: "이모지")
+        case .place: String(localized: "kind.place", defaultValue: "장소")
+        case .time: String(localized: "kind.time", defaultValue: "시간")
         }
     }
 
@@ -84,6 +84,6 @@ enum ItemValidator {
     }
 
     static func invalidMessage(for kind: ItemKind) -> String {
-        kind == .time ? "시간을 선택해 주세요." : "이모지를 입력해 주세요."
+        kind == .time ? String(localized: "시간을 선택해 주세요.") : String(localized: "이모지를 입력해 주세요.")
     }
 }
