@@ -71,20 +71,13 @@ struct RecordsMonthPage: View {
                     EmptyRecordArt(label: EmptyStateText.month(month))
                         .containerRelativeFrame([.horizontal, .vertical])
                 } else {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    Group {
-                        ForEach(RecordsLayout.rows(days), id: \.first) { row in
-                            if row.count == 1 {
-                                RecordCard(day: row[0], large: true, onLongPress: onLongPress)
-                            } else {
-                                HStack(alignment: .top, spacing: 12) {
-                                    ForEach(row, id: \.self) { RecordCard(day: $0, large: false, onLongPress: onLongPress) }
-                                }
-                            }
-                        }
+                BentoGrid {
+                    ForEach(days, id: \.self) { day in
+                        RecordCard(day: day, onLongPress: onLongPress)
+                        EmptyBento()
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 14)
                 .padding(.top, 8)
                 .padding(.bottom, 24)
                 }
@@ -113,79 +106,188 @@ struct RecordsMonthPage: View {
     }
 }
 
-enum RecordsLayout {
-    /// Bento rhythm: one wide card, then a pair, repeating.
-    static func rows(_ days: [DayKey]) -> [[DayKey]] {
-        var rows: [[DayKey]] = []
-        var index = 0
-        var wide = true
-        while index < days.count {
-            let size = wide ? 1 : min(2, days.count - index)
-            rows.append(Array(days[index..<index + size]))
-            index += size
-            wide.toggle()
-        }
-        return rows
-    }
-}
-
+/// One recorded day: its date, then every item in entry order on one line, joined by " · ".
+/// Place and time carry small icons; emoji read inline. As wide as its content.
 struct RecordCard: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     let day: DayKey
-    let large: Bool
     let onLongPress: (DayKey) -> Void
 
     var body: some View {
         let items = store.items(on: day)
-        let title = items.first { $0.kind != .emoji } ?? items.first
-        let rest = items.filter { $0.id != title?.id }
-        let emoji = rest.first { $0.kind == .emoji }
-        let detail = rest.filter { $0.kind != .emoji }.map(\.displayValue)
-
-        VStack(alignment: .leading, spacing: 0) {
-            Text(String(format: "%02d / %@", day.day, day.weekdaySymbol))
-                .font(.brand(13))
+        VStack(alignment: .leading, spacing: 4) {
+            Text(verbatim: String(localized: "\(day.day) / \(day.weekdaySymbol)"))
+                .font(.brand(12))
                 .foregroundStyle(Palette.secondary)
-            Text(title?.displayValue ?? "")
-                .font(.brand(large ? 28 : 21, .medium))
-                .foregroundStyle(Palette.primary)
-                .lineLimit(1)
-                .padding(.top, large ? 16 : 12)
-            HStack(alignment: .bottom) {
-                if large {
-                    Text(detail.joined(separator: "  ·  "))
-                        .font(.brand(14))
-                        .foregroundStyle(Palette.secondary)
-                        .lineLimit(1)
-                    Spacer()
-                    if let emoji {
-                        Text(emoji.value)
-                            .font(.system(size: 22))
-                            .frame(width: 48, height: 48)
-                            .background(Color.white.opacity(0.08), in: Circle())
-                    }
-                } else {
-                    Text(emoji?.value ?? detail.first ?? "")
-                        .font(.brand(13))
-                        .foregroundStyle(Palette.secondary)
-                        .lineLimit(1)
+                .frame(height: 17, alignment: .leading)
+            ItemFlow {
+                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
+                    ItemChunk(item: item, last: index == items.count - 1)
                 }
             }
-            .padding(.top, 8)
+            // A card widened to fill its row keeps its content 18 from the trailing edge.
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, minHeight: large ? 148 : 128, alignment: .topLeading)
-        .glassCard(cornerRadius: 18, fill: Palette.surface.opacity(0.88))
-        .contentShape(RoundedRectangle(cornerRadius: 18))
+        .padding(.leading, 13)
+        .padding(.trailing, 18)
+        .padding(.top, 10)
+        .padding(.bottom, 11)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .glassCard(cornerRadius: 14, fill: Palette.surface.opacity(0.88))
+        .contentShape(RoundedRectangle(cornerRadius: 14))
         .pinchTarget(.day(day), in: .records)
         .id(day)
         .onTapGesture { app.openDay(day) }
         .onLongPressGesture(minimumDuration: 0.45) { onLongPress(day) }
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(day.label), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(.isButton)
         .accessibilityAction(named: "이날 기록 삭제") { onLongPress(day) }
+    }
+}
+
+/// One item with its trailing separator, kept together when the line wraps.
+private struct ItemChunk: View {
+    let item: RecordItem
+    let last: Bool
+
+    var body: some View {
+        HStack(spacing: 0) {
+            if item.kind == .place || item.kind == .time {
+                Image(item.kind == .place ? "KindPlace" : "KindTime")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 13, height: 13)
+                    .foregroundStyle(Palette.secondary)
+                    .padding(.trailing, 2)
+            }
+            Text(verbatim: item.displayValue)
+                .font(.brand(15))
+                .foregroundStyle(Palette.primary)
+                .lineLimit(nil)
+            if !last {
+                // Separator box: 9 wide, 4 on each side of the dot.
+                Text(verbatim: "·")
+                    .font(.brand(15))
+                    .foregroundStyle(Palette.secondary)
+                    .frame(width: 9)
+            }
+        }
+        .frame(minHeight: 24)
+    }
+}
+
+/// Lays chunks left to right with a space between and wraps at chunk boundaries; a chunk wider
+/// than the line wraps inside itself. Reports the widest line, so a wrapped card hugs its text.
+private struct ItemFlow: Layout {
+    var spacing: CGFloat = 0
+    var lineSpacing: CGFloat = 0
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        arrange(width: proposal.width ?? .infinity, subviews: subviews).size
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        for (index, frame) in arrange(width: bounds.width, subviews: subviews).frames.enumerated() {
+            subviews[index].place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
+                                  proposal: ProposedViewSize(frame.size))
+        }
+    }
+
+    private func arrange(width maxWidth: CGFloat, subviews: Subviews) -> (frames: [CGRect], size: CGSize) {
+        var frames: [CGRect] = []
+        var x: CGFloat = 0, y: CGFloat = 0, lineHeight: CGFloat = 0, widest: CGFloat = 0
+        for subview in subviews {
+            var size = subview.sizeThatFits(.unspecified)
+            if size.width > maxWidth { size = subview.sizeThatFits(ProposedViewSize(width: maxWidth, height: nil)) }
+            if x > 0 && x + spacing + size.width > maxWidth {
+                y += lineHeight + lineSpacing
+                x = 0
+                lineHeight = 0
+            }
+            let originX = x == 0 ? 0 : x + spacing
+            frames.append(CGRect(origin: CGPoint(x: originX, y: y), size: size))
+            x = originX + size.width
+            lineHeight = max(lineHeight, size.height)
+            widest = max(widest, x)
+        }
+        return (frames, CGSize(width: widest, height: y + lineHeight))
+    }
+}
+
+/// Decoration filling left-over width in a row; never focusable or tappable.
+private struct EmptyBento: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 14)
+            .fill(Color.white.opacity(0.10))
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+}
+
+/// Places (card, bento) pairs by `BentoRows`: content-sized cards, pairs when both fit on one
+/// line, empty bentos alternating right → left. Unused bentos get zero size.
+private struct BentoGrid: Layout {
+    struct Cache {
+        var width: CGFloat = -1
+        var rows: [BentoRows.Row] = []
+    }
+
+    func makeCache(subviews: Subviews) -> Cache { Cache() }
+
+    func updateCache(_ cache: inout Cache, subviews: Subviews) { cache = Cache() }
+
+    private func rows(width: CGFloat, subviews: Subviews, cache: inout Cache) -> [BentoRows.Row] {
+        if cache.width == width { return cache.rows }
+        var cards: [BentoRows.Card] = []
+        for index in stride(from: 0, to: subviews.count, by: 2) {
+            let card = subviews[index]
+            // Rounded up so placing a card at its measured width never wraps its last item.
+            let natural = card.sizeThatFits(.unspecified)
+            if natural.width.rounded(.up) <= width {
+                cards.append(.init(width: natural.width.rounded(.up), height: natural.height.rounded(.up), wraps: false))
+            } else {
+                let wrapped = card.sizeThatFits(ProposedViewSize(width: width, height: nil))
+                cards.append(.init(width: min(wrapped.width.rounded(.up), width), height: wrapped.height.rounded(.up), wraps: true))
+            }
+        }
+        cache.width = width
+        cache.rows = BentoRows.rows(cards, available: width)
+        return cache.rows
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) -> CGSize {
+        let width = proposal.width ?? 390
+        let rows = rows(width: width, subviews: subviews, cache: &cache)
+        let height = rows.reduce(0) { $0 + $1.height } + BentoRows.gap * CGFloat(max(rows.count - 1, 0))
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) {
+        let rows = rows(width: bounds.width, subviews: subviews, cache: &cache)
+        var used = Set<Int>()
+        var y = bounds.minY
+        for row in rows {
+            var x = bounds.minX
+            func placeBento(_ width: CGFloat) {
+                let bento = subviews[row.cards[0] * 2 + 1]
+                bento.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(width: width, height: row.height))
+                used.insert(row.cards[0] * 2 + 1)
+                x += width + BentoRows.gap
+            }
+            if let bento = row.bento, bento.side == .leading { placeBento(bento.width) }
+            for (card, width) in zip(row.cards, row.widths) {
+                subviews[card * 2].place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(width: width, height: row.height))
+                x += width + BentoRows.gap
+            }
+            if let bento = row.bento, bento.side == .trailing { placeBento(bento.width) }
+            y += row.height + BentoRows.gap
+        }
+        for index in stride(from: 1, to: subviews.count, by: 2) where !used.contains(index) {
+            subviews[index].place(at: CGPoint(x: bounds.minX, y: bounds.minY), proposal: .zero)
+        }
     }
 }
 
