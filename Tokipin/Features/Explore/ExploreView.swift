@@ -13,6 +13,8 @@ struct ExploreView: View {
     @State private var pendingUndo: PendingUndo?
     @State private var dayToDelete: DayKey?
     @State private var errorMessage: String?
+    /// Live pinch scale, used only for visual feedback while fingers are down.
+    @State private var pinchScale: CGFloat = 1
 
     var body: some View {
         @Bindable var app = app
@@ -22,8 +24,16 @@ struct ExploreView: View {
                 header
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .scaleEffect(min(max(pinchScale, 0.9), 1.1))
+                    .opacity(1 - min(abs(pinchScale - 1), 0.3))
             }
-            .simultaneousGesture(pinch)
+            .background(
+                PinchCatcher(
+                    isEnabled: app.editorDay == nil && !app.isSearching && !app.isShowingSettings,
+                    onChange: { pinchScale = $0 },
+                    onEnd: finishPinch
+                )
+            )
 
             if store.isEmpty && app.level == .records {
                 EmptyHomeRabbit()
@@ -184,15 +194,17 @@ struct ExploreView: View {
         .padding(.bottom, 6)
     }
 
-    private var pinch: some Gesture {
-        MagnifyGesture()
-            .onEnded { value in
-                if value.magnification > 1.15, let next = app.level.zoomedIn {
-                    app.setLevel(next)
-                } else if value.magnification < 0.87, let next = app.level.zoomedOut {
-                    app.setLevel(next)
-                }
-            }
+    /// Spread = more detail (연간 → 월간 → 기록한 날 → 일간), pinch = less.
+    /// The selected day stays the anchor, so zooming keeps the same date in view.
+    private func finishPinch(_ scale: CGFloat) {
+        if scale > 1.2, let next = app.level.zoomedIn {
+            app.searchHighlight = nil
+            app.setLevel(next)
+        } else if scale < 0.83, let next = app.level.zoomedOut {
+            app.searchHighlight = nil
+            app.setLevel(next)
+        }
+        withAnimation(.easeOut(duration: 0.2)) { pinchScale = 1 }
     }
 
     // MARK: Actions

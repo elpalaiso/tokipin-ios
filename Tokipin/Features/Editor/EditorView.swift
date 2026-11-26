@@ -396,7 +396,8 @@ struct EditorView: View {
 
     /// Back keeps the draft; + on the home screen continues it.
     private func close() {
-        if !(model.changed || !model.raw.isEmpty) { store.updateDraft(nil) }
+        // Nothing to keep if the items match what is saved and nothing is being typed.
+        if model.raw.isEmpty && model.items == store.items(on: model.day) { store.updateDraft(nil) }
         leave(to: nil)
     }
 
