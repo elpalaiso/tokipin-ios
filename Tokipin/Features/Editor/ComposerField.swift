@@ -57,6 +57,18 @@ struct ComposerField: UIViewRepresentable {
             parent.text = field.text ?? ""
         }
 
+        /// With the emoji tool, only emoji get in, even if the person switches to another keyboard.
+        func textField(_ field: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            guard parent.preferEmoji, !string.isEmpty else { return true }
+            let emoji = String(string.filter { ItemValidator.containsEmoji(String($0)) })
+            if emoji == string { return true }
+            if !emoji.isEmpty, let current = field.text, let swiftRange = Range(range, in: current) {
+                field.text = current.replacingCharacters(in: swiftRange, with: emoji)
+                parent.text = field.text ?? ""
+            }
+            return false
+        }
+
         func textFieldShouldReturn(_ field: UITextField) -> Bool {
             // Finish any Hangul composition before reading the value.
             field.unmarkText()

@@ -12,8 +12,6 @@ struct EditorView: View {
     @State private var undoID: UUID?
     private let focusItem: UUID?
 
-    /// Quick picks from the web demo, shown with the emoji tool. (Not in Figma — kept for parity with the homepage trial.)
-    private let quickEmoji = ["🍊", "🧣", "🎧", "☕", "🌿", "📷", "🌙"]
 
     init(day: DayKey, focusItem: UUID?) {
         self.focusItem = focusItem
@@ -244,20 +242,6 @@ struct EditorView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 26)
                     .accessibilityAddTraits(.updatesFrequently)
-            }
-            if model.kind == .emoji && model.selection == nil {
-                HStack(spacing: 4) {
-                    ForEach(quickEmoji, id: \.self) { emoji in
-                        Button {
-                            model.raw = emoji
-                            commitField()
-                        } label: {
-                            Text(emoji).font(.system(size: 24)).frame(maxWidth: .infinity, minHeight: 44)
-                        }
-                        .accessibilityLabel("\(emoji) 추가")
-                    }
-                }
-                .padding(.horizontal, 20)
             }
             toolbar
             if model.kind == .time && model.selection == nil {
