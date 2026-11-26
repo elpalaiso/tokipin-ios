@@ -141,7 +141,7 @@ struct RecordCard: View {
         .onTapGesture { app.openDay(day) }
         .onLongPressGesture(minimumDuration: 0.45) { onLongPress(day) }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(day.label), \(items.map(\.displayValue).joined(separator: ", "))")
+        .accessibilityLabel("\(day.spokenLabel), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(.isButton)
         .accessibilityAction(named: "이날 기록 삭제") { onLongPress(day) }
     }

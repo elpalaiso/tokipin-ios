@@ -80,21 +80,34 @@ enum TimeRules {
 
     /// True when the device prefers a 24-hour clock (Settings › General › Date & Time).
     static func deviceUses24Hour(locale: Locale = .autoupdatingCurrent) -> Bool {
+        let key = locale.identifier
+        hourCycleLock.lock()
+        defer { hourCycleLock.unlock() }
+        if let cached = hourCycle[key] { return cached }
         let format = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale) ?? "H"
-        return !format.contains("a")
+        let uses24 = !format.contains("a")
+        hourCycle[key] = uses24
+        return uses24
     }
+
+    nonisolated(unsafe) private static var hourCycle: [String: Bool] = [:]
+    private static let hourCycleLock = NSLock()
 
     /// "18:45" → "오후 6:45" or "18:45", following the device setting. Text in the app's language.
     static func display(_ value: String, uses24Hour: Bool = deviceUses24Hour()) -> String {
         guard let (hour, minute) = components(value) else { return value }
-        let formatter = DateFormatter()
-        formatter.locale = displayLocale
-        formatter.dateFormat = uses24Hour ? "HH:mm" : DateFormatter.dateFormat(fromTemplate: "hmm a", options: 0, locale: displayLocale)
+        let locale = displayLocale
+        let formatter = DayKey.formatter(template: uses24Hour ? "HHmm" : "hmma", locale: locale, fixed: uses24Hour ? "HH:mm" : nil)
+        return formatter.string(from: clock(hour, minute))
+    }
+
+    /// A fixed date carrying only the wall-clock time (formatting needs a Date).
+    private static func clock(_ hour: Int, _ minute: Int) -> Date {
         var parts = DateComponents()
+        parts.year = 2001; parts.month = 1; parts.day = 1
         parts.hour = hour
         parts.minute = minute
-        let date = Calendar(identifier: .gregorian).date(from: parts) ?? Date()
-        return formatter.string(from: date)
+        return Calendar(identifier: .gregorian).date(from: parts) ?? Date()
     }
 
     /// The app's display language with the person's region, so en-GB reads "25 Nov 2026" while the

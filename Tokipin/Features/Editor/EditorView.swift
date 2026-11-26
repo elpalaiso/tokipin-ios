@@ -126,7 +126,7 @@ struct EditorView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(Text(verbatim: model.day.label))
+                .accessibilityLabel(Text(verbatim: model.day.spokenLabel))
                 .accessibilityHint(Text("두 번 탭해 날짜를 바꿔요."))
                 HStack(spacing: 6) {
                     CircleIconButton(accessibilityLabel: "홈으로, 초안 보관", action: close) {

@@ -93,6 +93,31 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
 
     func label(locale: Locale) -> String { DayKey.labeler(locale: locale)(self) }
 
+    /// Full date for VoiceOver in the app language and the person's region
+    /// ("Wednesday 25 November 2026", "2026년 11월 25일 수요일").
+    var spokenLabel: String { spokenLabel(locale: TimeRules.displayLocale) }
+
+    func spokenLabel(locale: Locale) -> String {
+        DayKey.formatter(template: "yMMMMdEEEE", locale: locale).string(from: date)
+    }
+
+    /// Formatters are expensive; one per (template, locale), reused on the main actor's renders.
+    nonisolated(unsafe) private static var formatters: [String: DateFormatter] = [:]
+    private static let formattersLock = NSLock()
+
+    static func formatter(template: String, locale: Locale, fixed: String? = nil) -> DateFormatter {
+        let key = template + "|" + (fixed ?? "") + "|" + locale.identifier
+        formattersLock.lock()
+        defer { formattersLock.unlock() }
+        if let cached = formatters[key] { return cached }
+        let formatter = DateFormatter()
+        formatter.calendar = DayKey.calendar
+        formatter.locale = locale
+        formatter.dateFormat = fixed ?? DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: locale)
+        formatters[key] = formatter
+        return formatter
+    }
+
     /// Builds the label function once per locale (one formatter or one weekday table), so labelling
     /// thousands of days (the search index) doesn't create a formatter per day. The weekday comes
     /// from `locale`, not from the app bundle, so `label(locale: ko)` is Korean in any app language.
@@ -103,10 +128,7 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
             let symbols = calendar.shortStandaloneWeekdaySymbols
             return { "\($0.dotted)(\(symbols[$0.weekday]))" }
         }
-        let formatter = DateFormatter()
-        formatter.calendar = DayKey.calendar
-        formatter.locale = locale
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yMMMdEEE", options: 0, locale: locale)
+        let formatter = DayKey.formatter(template: "yMMMdEEE", locale: locale)
         return { formatter.string(from: $0.date) }
     }
 

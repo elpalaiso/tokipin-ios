@@ -323,11 +323,16 @@ final class RecordStore {
         if searchIndex == nil || searchIndexLocale != locale.identifier {
             searchIndexLocale = locale.identifier
             let labeler = DayKey.labeler(locale: locale)
+            let spoken = DayKey.formatter(template: "yMMMMdEEEE", locale: locale)
             searchIndex = sortedDays.flatMap { day in
                 let date = (day.dotted + " " + day.string) as NSString
-                // The date as the app shows it in this language ("Wed, Nov 25, 2026").
-                let label = labeler(day).lowercased(with: locale) as NSString
-                return (records[day] ?? []).map { (day, $0, $0.value.lowercased(with: locale) as NSString, date, label) }
+                // The date as the app shows and reads it ("Wed, 25 Nov 2026", "Wednesday 25 November 2026").
+                let label = (labeler(day) + "\n" + spoken.string(from: day.date)).lowercased(with: locale) as NSString
+                return (records[day] ?? []).map { item in
+                    // Times match as stored ("18:45") and as shown ("6:45 PM").
+                    let text = item.kind == .time ? item.value + "\n" + item.displayValue : item.value
+                    return (day, item, text.lowercased(with: locale) as NSString, date, label)
+                }
             }
         }
         var results: [SearchResult] = []

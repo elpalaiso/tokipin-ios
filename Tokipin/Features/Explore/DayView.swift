@@ -177,7 +177,7 @@ struct WeekRail: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(day.label)
+                .accessibilityLabel(day.spokenLabel)
                 .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }

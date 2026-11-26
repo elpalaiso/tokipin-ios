@@ -142,6 +142,21 @@ final class LocalizationRuntimeTests: XCTestCase {
         XCTAssertEqual(store.search("11.24", locale: en).map(\.item.value), ["Tea"])
     }
 
+    func testSpokenDateAndDisplayedTime() async throws {
+        let day = DayKey(year: 2026, month: 11, day: 25)
+        let gb = TimeRules.locale(localization: "en", region: Locale.Region("GB"))
+        XCTAssertEqual(day.spokenLabel(locale: gb), "Wednesday, 25 November 2026")
+        XCTAssertEqual(day.spokenLabel(locale: Locale(identifier: "ko_KR")), "2026년 11월 25일 수요일")
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)
+        await store.load()
+        try store.save(day: day, items: [RecordItem(kind: .time, value: "18:45")])
+        let shown = RecordItem(kind: .time, value: "18:45").displayValue.lowercased()
+        XCTAssertEqual(store.search(shown, locale: gb).count, 1, shown)
+        XCTAssertEqual(store.search("18:45", locale: gb).count, 1)
+        XCTAssertEqual(store.search("Wednesday, 25 November", locale: gb).count, 1)
+    }
+
     func testTurkishCaseRules() async throws {
         let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)

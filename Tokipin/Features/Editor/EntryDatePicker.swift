@@ -118,7 +118,7 @@ struct EntryDatePicker: View {
         .buttonStyle(.plain)
         .disabled(!enabled)
         .opacity(enabled ? 1 : 0.3)
-        .accessibilityLabel(Text(verbatim: day.label))
+        .accessibilityLabel(Text(verbatim: day.spokenLabel))
         .accessibilityAddTraits(chosen ? .isSelected : [])
     }
 
