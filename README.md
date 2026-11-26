@@ -67,7 +67,7 @@ Palette 세이지 차콜: Canvas `#39453D`, Surface `#252C29`, Primary `#F3F3EC`
 
 - Background gradient colors, card sizes and the view-menu icons were sampled by eye from Figma screenshots.
 - The time tool uses an inline 24-hour wheel with a "시간 추가" button.
-- Version 0.1.0; no signing team set.
+- Version 0.1.0; signed with the personal developer team (Hyeonwoo Cho, 9QA57R9ZML).
 - Korean only for now (Figma's global date/time formats are not yet applied).
 
 ## Localization
