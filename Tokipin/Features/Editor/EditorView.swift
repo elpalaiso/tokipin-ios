@@ -335,6 +335,7 @@ struct EditorView: View {
                 preferEmoji: model.kind == .emoji,
                 isFocused: keyboardWanted && model.selection == nil,
                 accessibilityLabel: String(localized: "\(model.kind.label) 입력"),
+                onBeginEditing: { keyboardWanted = true },
                 onReturn: commitField
             )
             .frame(height: size * 1.5)

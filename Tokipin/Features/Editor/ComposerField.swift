@@ -10,6 +10,8 @@ struct ComposerField: UIViewRepresentable {
     var preferEmoji: Bool
     var isFocused: Bool
     var accessibilityLabel: String
+    /// The person put the caret in the field themselves (e.g. after opening with the pencil).
+    var onBeginEditing: () -> Void = {}
     var onReturn: () -> Void
 
     func makeUIView(context: Context) -> InputField {
@@ -90,6 +92,11 @@ struct ComposerField: UIViewRepresentable {
                   let textRange = field.textRange(from: start, to: end) else { return false }
             field.replace(textRange, withText: emoji)
             return false
+        }
+
+        func textFieldDidBeginEditing(_ field: UITextField) {
+            // Without this the editor still wants the keyboard down and closes it on the next update.
+            if !parent.isFocused { parent.onBeginEditing() }
         }
 
         func textFieldShouldReturn(_ field: UITextField) -> Bool {
