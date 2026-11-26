@@ -1,6 +1,6 @@
 # Tokipin iOS
 
-Native iOS app for Tokipin (bundle ID `com.tokipin.app`) — leave a small mark (word, emoji, place, time) on the moments you want to remember. SwiftUI, iOS 17+, no account, no network, no location/calendar permissions.
+Native iOS app for Tokipin (bundle ID `com.tokipin.app`) — leave a small mark (word, emoji, place, time) on the moments you want to remember. SwiftUI, iOS 18+, no account, no network, no location/calendar permissions.
 
 Design source: Figma "Tokipin — Brand · Native App" (pages 02 기록 입력, 03 기록 탐색, 04 제품 기준). Copy and editor rules are shared with the homepage in `../tokipin`.
 
@@ -21,13 +21,18 @@ xcodebuild -project Tokipin.xcodeproj -scheme Tokipin -destination 'platform=iOS
 - **Settings**: touch feedback toggle, JSON export, storage note, privacy policy and terms (pre-launch drafts from the homepage).
 - **States**: empty home with the peek rabbit, empty day/month, loading skeleton (only when reading is slow), read-failure recovery with retry.
 
-## Native UX v0.1 (shared with Android)
+## Native UX v0.2 (shared with Android)
 
-Gesture, haptic, calendar, time and emoji behaviour follows "Tokipin Native UX v0.1".
-The spec has one copy for both apps, outside this repo, at `../tokipin/native-spec/v0.1/`
-(`Tokipin-Native-UX-v0.1.md` + `.json`). `TokipinTests/NativeUXSpecTests.swift` reads the JSON
-from that sibling path, checks its SHA-256 pin, and runs every shared case that applies to iOS
-(58 of 59; `emoji.externalIme` is Android-only). Clone the web repo next to this one to run the tests.
+Gesture, haptic, calendar, time and emoji behaviour follows "Tokipin Native UX v0.2" (v0.1 plus
+기록한 날 month paging). The spec has one copy for both apps, outside this repo, at
+`../tokipin/native-spec/v0.2/` (`Tokipin-Native-UX-v0.2.md` + `.json`, SHA-256 `418fbe56…05ea9`).
+`TokipinTests/NativeUXSpecTests.swift` reads the JSON from that sibling path, checks the pin, and runs
+every case that applies to iOS (81 of 82; `emoji.externalIme` is Android-only), including the 23
+`recordedMonths` cases. Clone the web repo next to this one to run the tests.
+
+- 기록한 날: one month per page (`RecordsView`), body swipe ±1 month with the day pager's thresholds,
+  a centred month rail (`MonthRail`) with native fling + snap, one tick per committed different month
+  (`AppModel.commitRecordsMonth`).
 
 - Product rules and thresholds: `Tokipin/Core/InteractionRules.swift` (swipe 0.22W / flick 0.06W + 0.9W/s,
   axis lock 1.3, pinch 1.25 / 0.80, settle 200ms / cancel 150ms / reduce motion 80ms, haptic events).

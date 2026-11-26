@@ -35,16 +35,22 @@ struct DayView: View {
 
 /// Three pages (previous, current, next) that follow a horizontal drag 1:1 and settle
 /// or snap back on release. Vertical drags are left to the scroll view inside.
+/// A pinch starting mid-drag cancels the move (v0.2: no month/day commit together with a pinch).
 struct SwipePager<Page: View>: View {
     let region: InteractionRules.SwipeRegion
+    /// Drag progress toward the next page (+1) or previous page (−1); mirrors the body for linked views.
+    var onProgress: ((CGFloat) -> Void)? = nil
     let onCommit: (Int) -> Void
     @ViewBuilder let page: (Int) -> Page
 
+    @Environment(AppModel.self) private var app
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var offset: CGFloat = 0
     @State private var axis: InteractionRules.Axis = .undecided
     @State private var fromEdge = false
     @State private var settling = false
+    @State private var cancelled = false
+    @GestureState private var touching = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -59,12 +65,20 @@ struct SwipePager<Page: View>: View {
             .simultaneousGesture(drag(width: width))
         }
         .clipped()
+        .onChange(of: app.isPinching) { _, pinching in
+            if pinching { cancelDrag() }
+        }
+        .onChange(of: touching) { _, isTouching in
+            // The system took the touch (e.g. pinch or call): settle back without committing.
+            if !isTouching && !settling && offset != 0 { cancelDrag() }
+        }
     }
 
     private func drag(width: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 10, coordinateSpace: .global)
+            .updating($touching) { _, state, _ in state = true }
             .onChanged { value in
-                guard !settling else { return }
+                guard !settling, !cancelled else { return }
                 if axis == .undecided {
                     axis = InteractionRules.axis(dx: value.translation.width, dy: value.translation.height)
                     // Screen coordinates: a drag starting at the leading edge belongs to the system.
@@ -72,26 +86,42 @@ struct SwipePager<Page: View>: View {
                 }
                 if axis == .horizontal && !fromEdge {
                     offset = value.translation.width
+                    onProgress?(-offset / max(width, 1))
                 }
             }
             .onEnded { value in
-                defer { axis = .undecided }
-                guard !settling, axis == .horizontal else { return }
+                defer { axis = .undecided; cancelled = false }
+                guard !settling, !cancelled, axis == .horizontal else { return }
                 let delta = InteractionRules.swipeDelta(
                     width: width, dx: value.translation.width, dy: value.translation.height,
-                    vx: value.velocity.width, region: region, systemEdgeBack: fromEdge)
+                    vx: value.velocity.width, region: region, systemEdgeBack: fromEdge,
+                    osCancel: app.isPinching)
                 settle(delta: delta, width: width)
             }
     }
 
+    private func cancelDrag() {
+        guard !settling else { return }
+        if touching { cancelled = true }
+        axis = .undecided
+        withAnimation(.easeOut(duration: InteractionRules.cancelDuration)) {
+            offset = 0
+            onProgress?(0)
+        }
+    }
+
     private func settle(delta: Int, width: CGFloat) {
         guard delta != 0 else {
-            withAnimation(.easeOut(duration: InteractionRules.cancelDuration)) { offset = 0 }
+            withAnimation(.easeOut(duration: InteractionRules.cancelDuration)) {
+                offset = 0
+                onProgress?(0)
+            }
             return
         }
         if reduceMotion {
             withAnimation(.easeOut(duration: InteractionRules.reduceMotionDuration)) {
                 offset = 0
+                onProgress?(0)
                 onCommit(delta)
             }
             return
@@ -99,12 +129,17 @@ struct SwipePager<Page: View>: View {
         settling = true
         withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
             offset = delta > 0 ? -width : width
-        } completion: {
+            onProgress?(delta > 0 ? 1 : -1)
+        }
+        // A timer rather than the animation's completion: the completion can be dropped when
+        // the linked view re-renders mid-animation, which would leave the pager stuck.
+        DispatchQueue.main.asyncAfter(deadline: .now() + InteractionRules.commitDuration) {
             var transaction = Transaction()
             transaction.disablesAnimations = true
             withTransaction(transaction) {
                 onCommit(delta)
                 offset = 0
+                onProgress?(0)
             }
             settling = false
         }

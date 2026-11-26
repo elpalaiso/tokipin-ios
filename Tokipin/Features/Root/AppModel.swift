@@ -64,6 +64,10 @@ final class AppModel {
     /// View that opened 일간; closing the day returns there.
     private(set) var dayReturnLevel: ExploreLevel = .month
     private(set) var reveal: RevealRequest?
+    /// 기록한 날: the one committed month (header year, body page, rail centre).
+    private(set) var recordsMonth: MonthKey = DayKey.today.monthKey
+    /// True while two fingers pinch; pagers cancel any unsettled horizontal move.
+    var isPinching = false
     /// On-screen frames (window coordinates) of dates and months, per level, for pinch anchoring.
     @ObservationIgnored var pinchFrames: [ExploreLevel: [PinchTarget: CGRect]] = [:]
 
@@ -74,9 +78,14 @@ final class AppModel {
     /// The one path every navigation takes. Changes the date and/or level together and
     /// requests at most one selection tick, only if something really changed.
     @discardableResult
-    func navigate(to day: DayKey? = nil, level newLevel: ExploreLevel? = nil, haptic: Bool = true) -> Bool {
+    func navigate(to day: DayKey? = nil, level newLevel: ExploreLevel? = nil, haptic: Bool = true,
+                  keepRecordsMonth: Bool = false) -> Bool {
         let dayChanged = day.map { $0 != selectedDay } ?? false
         let levelChanged = newLevel.map { $0 != level } ?? false
+        // Entering 기록한 날 opens the selected (or anchored) day's month; closing a day keeps it.
+        if newLevel == .records, levelChanged, !keepRecordsMonth {
+            recordsMonth = (day ?? selectedDay).monthKey
+        }
         if let day, dayChanged {
             selectedDay = day
             focusedMonth = day.monthKey
@@ -105,14 +114,25 @@ final class AppModel {
 
     /// Closing 일간 returns to the view it was opened from, with that view's scroll intact.
     func closeDay() {
-        navigate(level: dayReturnLevel == .day ? .month : dayReturnLevel, haptic: false)
+        navigate(level: dayReturnLevel == .day ? .month : dayReturnLevel, haptic: false, keepRecordsMonth: true)
+    }
+
+    /// The one place a 기록한 날 month is committed (body swipe, rail tap, rail settle).
+    /// Selected day stays; at most one tick, none for the same month.
+    @discardableResult
+    func commitRecordsMonth(_ month: MonthKey, haptic: Bool = true) -> Bool {
+        guard month != recordsMonth else { return false }
+        recordsMonth = month
+        if haptic, InteractionRules.ticks(for: [.recordedDaysMonthCommit], enabled: hapticsEnabled()) == 1 { hapticSink() }
+        return true
     }
 
     /// 오늘: same view, today selected and scrolled into view even if already selected. No tick.
-    func goToday() {
-        navigate(to: .today, haptic: false)
-        focusedMonth = DayKey.today.monthKey
-        requestReveal(.today)
+    func goToday(_ today: DayKey = .today) {
+        navigate(to: today, haptic: false)
+        focusedMonth = today.monthKey
+        if level == .records { commitRecordsMonth(today.monthKey, haptic: false) }
+        requestReveal(today)
     }
 
     func requestReveal(_ day: DayKey, anchorY: CGFloat? = nil) {
@@ -120,8 +140,9 @@ final class AppModel {
     }
 
     /// Target under (or nearest to) a point in the given level; ties keep the selected day.
-    func pinchTarget(at point: CGPoint, in level: ExploreLevel) -> (target: PinchTarget, frame: CGRect)? {
-        let frames = pinchFrames[level] ?? [:]
+    func pinchTarget(at point: CGPoint, in level: ExploreLevel, visibleIn bounds: CGRect? = nil) -> (target: PinchTarget, frame: CGRect)? {
+        var frames = pinchFrames[level] ?? [:]
+        if let bounds { frames = frames.filter { $0.value.intersects(bounds) } }
         if let hit = frames.first(where: { $0.value.contains(point) }) { return (hit.key, hit.value) }
         func distance(_ rect: CGRect) -> CGFloat {
             let dx = max(rect.minX - point.x, 0, point.x - rect.maxX)

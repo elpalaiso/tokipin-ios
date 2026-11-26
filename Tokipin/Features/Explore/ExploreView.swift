@@ -168,7 +168,11 @@ struct ExploreView: View {
     }
 
     private var headerTitle: String {
-        app.level == .day ? "\(app.selectedDay.month)" : "\(app.focusedMonth.year)"
+        switch app.level {
+        case .day: "\(app.selectedDay.month)"
+        case .records: "\(app.recordsMonth.year)"
+        default: "\(app.focusedMonth.year)"
+        }
     }
 
     // MARK: Content
@@ -227,8 +231,9 @@ struct ExploreView: View {
         // Only pinches that start on the calendar content count (not header or bottom bar).
         guard contentFrame.contains(point) else { pinchActive = false; return }
         pinchActive = true
+        app.isPinching = true
         pinchScale = 1
-        pinchAnchor = app.pinchTarget(at: point, in: app.level)
+        pinchAnchor = app.pinchTarget(at: point, in: app.level, visibleIn: contentFrame)
         let focus = pinchAnchor.map { CGPoint(x: $0.frame.midX, y: $0.frame.midY) } ?? point
         zoomAnchor = UnitPoint(
             x: (focus.x - contentFrame.minX) / max(contentFrame.width, 1),
@@ -238,6 +243,7 @@ struct ExploreView: View {
     /// Spread = more detail (연간 → 월간 → 기록한 날 → 일간), pinch = less, one level per gesture.
     /// The anchored date keeps its place on screen in the next view.
     private func finishPinch(_ scale: CGFloat) {
+        app.isPinching = false
         guard pinchActive else { return }
         pinchActive = false
         let from = app.level

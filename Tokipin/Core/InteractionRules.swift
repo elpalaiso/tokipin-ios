@@ -14,9 +14,10 @@ enum InteractionRules {
     /// Touches starting this close to the leading edge belong to the system back gesture.
     static let edgeReserve: CGFloat = 16
 
-    enum SwipeRegion { case dayBody, weekRail
+    /// dayBody ±1 day, weekRail ±7 days, recordsBody ±1 month (v0.2).
+    enum SwipeRegion { case dayBody, weekRail, recordsBody
 
-        var step: Int { self == .dayBody ? 1 : 7 }
+        var step: Int { self == .weekRail ? 7 : 1 }
     }
 
     enum Axis { case undecided, horizontal, vertical }
@@ -55,6 +56,25 @@ enum InteractionRules {
         return level
     }
 
+    // MARK: 기록한 날 month pager (v0.2)
+
+    /// Month shown as the candidate while the body or rail is dragged; the committed month
+    /// (header year, VoiceOver selection) changes only when the page settles.
+    static func previewMonth(committed: MonthKey, dragFraction: CGFloat) -> MonthKey {
+        guard abs(dragFraction) >= 0.5 else { return committed }
+        return committed.adding(months: dragFraction > 0 ? 1 : -1)
+    }
+
+    /// Month the rail rests on: the slot nearest the centre after the platform's momentum.
+    static func railSettleMonth(committed: MonthKey, projectedSlotOffset: CGFloat) -> MonthKey {
+        committed.adding(months: Int(projectedSlotOffset.rounded()))
+    }
+
+    /// Months visible around the committed month on the rail.
+    static func railWindow(committed: MonthKey, sideSlots: Int) -> [MonthKey] {
+        (-sideSlots...sideSlots).map { committed.adding(months: $0) }
+    }
+
     // MARK: Settling
 
     static let commitDuration: Double = 0.20      // 160–220ms
@@ -65,11 +85,14 @@ enum InteractionRules {
 
     enum NavigationEvent: String {
         case selectedDateTap, selectedDateChanged, daySwipeCommit, weekSwipeCommit, levelCommit, levelChanged
+        case recordedDaysMonthCommit
         case tapDate, dragProgress, pinchProgress, scroll, scrollCrossesMonthOrYear, cancel, levelLimit, reselect, today
+        case recordedDaysMonthPreview, recordedDaysRailCoast
     }
 
     private static let committing: Set<NavigationEvent> = [
-        .selectedDateTap, .selectedDateChanged, .daySwipeCommit, .weekSwipeCommit, .levelCommit, .levelChanged, .tapDate
+        .selectedDateTap, .selectedDateChanged, .daySwipeCommit, .weekSwipeCommit, .levelCommit, .levelChanged, .tapDate,
+        .recordedDaysMonthCommit
     ]
 
     /// App-requested selection ticks for one logical action: at most one, none when disabled.
