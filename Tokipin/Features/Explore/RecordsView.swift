@@ -19,7 +19,14 @@ struct RecordsView: View {
                 .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
-            .onAppear { proxy.scrollTo(app.focusedMonth, anchor: .top) }
+            .onAppear {
+                // Keep the anchored date in view (pinch, back from 일간); else the month header.
+                if store.records[app.selectedDay] != nil, app.selectedDay.monthKey == app.focusedMonth {
+                    proxy.scrollTo(app.selectedDay, anchor: .center)
+                } else {
+                    proxy.scrollTo(app.focusedMonth, anchor: .top)
+                }
+            }
             .onChange(of: app.focusedMonth) { _, month in
                 withAnimation { proxy.scrollTo(month, anchor: .top) }
             }
@@ -119,6 +126,8 @@ struct RecordsView: View {
         .frame(maxWidth: .infinity, minHeight: large ? 148 : 128, alignment: .topLeading)
         .glassCard(cornerRadius: 18, fill: Palette.surface.opacity(0.88))
         .contentShape(RoundedRectangle(cornerRadius: 18))
+        .pinchTarget(.day(day))
+        .id(day)
         .onTapGesture { app.openDay(day) }
         .onLongPressGesture(minimumDuration: 0.45) {
             Haptics.selection()

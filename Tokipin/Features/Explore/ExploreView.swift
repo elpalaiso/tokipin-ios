@@ -15,6 +15,7 @@ struct ExploreView: View {
     @State private var errorMessage: String?
     /// Live pinch scale, used only for visual feedback while fingers are down.
     @State private var pinchScale: CGFloat = 1
+    @State private var pinchAnchor: PinchTarget?
 
     var body: some View {
         @Bindable var app = app
@@ -30,6 +31,7 @@ struct ExploreView: View {
             .background(
                 PinchCatcher(
                     isEnabled: app.editorDay == nil && !app.isSearching && !app.isShowingSettings,
+                    onBegin: { pinchAnchor = app.pinchTarget(at: $0) },
                     onChange: { pinchScale = $0 },
                     onEnd: finishPinch
                 )
@@ -195,16 +197,32 @@ struct ExploreView: View {
     }
 
     /// Spread = more detail (연간 → 월간 → 기록한 날 → 일간), pinch = less.
-    /// The selected day stays the anchor, so zooming keeps the same date in view.
+    /// The date or month between the fingers becomes the anchor; otherwise the selected day stays.
+    /// Thresholds match Android (1.25× in, 0.8× out).
     private func finishPinch(_ scale: CGFloat) {
-        if scale > 1.2, let next = app.level.zoomedIn {
-            app.searchHighlight = nil
-            app.setLevel(next)
-        } else if scale < 0.83, let next = app.level.zoomedOut {
-            app.searchHighlight = nil
-            app.setLevel(next)
+        defer {
+            pinchAnchor = nil
+            withAnimation(.easeOut(duration: 0.2)) { pinchScale = 1 }
         }
-        withAnimation(.easeOut(duration: 0.2)) { pinchScale = 1 }
+        let next: ExploreLevel?
+        if scale >= 1.25 { next = app.level.zoomedIn }
+        else if scale <= 0.8 { next = app.level.zoomedOut }
+        else { next = nil }
+        guard let next else { return }
+
+        switch pinchAnchor {
+        case .day(let day):
+            app.select(day, haptic: false)
+            app.focusedMonth = day.monthKey
+        case .month(let month):
+            let recorded = store.days(in: month)
+            app.select(recorded.first ?? (month == DayKey.today.monthKey ? .today : month.firstDay), haptic: false)
+            app.focusedMonth = month
+        case nil:
+            break
+        }
+        app.searchHighlight = nil
+        app.setLevel(next)
     }
 
     // MARK: Actions

@@ -2,6 +2,12 @@ import SwiftUI
 import Observation
 
 /// The four explore levels, from least to most detail. Pinch moves along this order.
+/// Something a pinch can be anchored on: a date cell/card or a month in the year view.
+enum PinchTarget: Hashable {
+    case day(DayKey)
+    case month(MonthKey)
+}
+
 enum ExploreLevel: Int, CaseIterable, Identifiable {
     case year, month, records, day
 
@@ -48,6 +54,12 @@ final class AppModel {
     var isShowingSettings = false
     /// Which side the next day slides in from (left/right swipe feedback).
     var dayTransitionEdge: Edge = .trailing
+    /// On-screen frames (window coordinates) of dates and months, for pinch anchoring.
+    @ObservationIgnored var pinchFrames: [PinchTarget: CGRect] = [:]
+
+    func pinchTarget(at point: CGPoint) -> PinchTarget? {
+        pinchFrames.first { $0.value.contains(point) }?.key
+    }
 
     func setLevel(_ newLevel: ExploreLevel) {
         guard newLevel != level else { return }
@@ -78,5 +90,23 @@ final class AppModel {
     func openEditor(for day: DayKey, item: UUID? = nil) {
         editorFocusItem = item
         editorDay = day
+    }
+}
+
+/// Registers a view's frame as a pinch anchor while it is on screen.
+struct PinchTargetModifier: ViewModifier {
+    @Environment(AppModel.self) private var app
+    let target: PinchTarget
+
+    func body(content: Content) -> some View {
+        content
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { app.pinchFrames[target] = $0 }
+            .onDisappear { app.pinchFrames[target] = nil }
+    }
+}
+
+extension View {
+    func pinchTarget(_ target: PinchTarget) -> some View {
+        modifier(PinchTargetModifier(target: target))
     }
 }

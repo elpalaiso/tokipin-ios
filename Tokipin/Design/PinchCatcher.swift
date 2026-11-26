@@ -6,6 +6,8 @@ import UIKit
 /// UIKit recognizer that runs alongside scrolling.
 struct PinchCatcher: UIViewRepresentable {
     var isEnabled: Bool
+    /// Midpoint between the fingers, in window coordinates.
+    var onBegin: (CGPoint) -> Void
     var onChange: (CGFloat) -> Void
     var onEnd: (CGFloat) -> Void
 
@@ -54,6 +56,8 @@ struct PinchCatcher: UIViewRepresentable {
 
         @objc func handle(_ recognizer: UIPinchGestureRecognizer) {
             switch recognizer.state {
+            case .began:
+                parent.onBegin(recognizer.location(in: recognizer.view))
             case .changed:
                 parent.onChange(recognizer.scale)
             case .ended:

@@ -98,6 +98,7 @@ struct MiniMonth: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .pinchTarget(.month(month))
         .accessibilityLabel("\(month.month)월, 기록한 날 \(recorded.count)일")
     }
 }

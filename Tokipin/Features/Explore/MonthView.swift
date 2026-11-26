@@ -127,6 +127,7 @@ struct MonthGrid: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .pinchTarget(.day(day))
         .accessibilityLabel(items.isEmpty ? day.label : "\(day.label), \(items.map(\.value).joined(separator: ", "))")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
