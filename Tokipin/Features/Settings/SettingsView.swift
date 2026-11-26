@@ -56,6 +56,19 @@ struct SettingsView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom, 10)
                         }
+                        Rectangle().fill(Palette.line).frame(height: 1)
+                        // Available with or without records; back returns to this sheet as it was.
+                        NavigationLink { FeedbackView() } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "bubble.left").font(.system(size: 16))
+                                Text("Tokipin에 한마디").font(.brand(16, .medium))
+                                Spacer()
+                                Image(systemName: "chevron.right").font(.system(size: 14))
+                            }
+                            .foregroundStyle(Palette.primary)
+                            .frame(minHeight: 56)
+                            .contentShape(Rectangle())
+                        }
                     }
                     .padding(.horizontal, 18)
                     .glassCard(cornerRadius: 18, fill: Color.white.opacity(0.05))
