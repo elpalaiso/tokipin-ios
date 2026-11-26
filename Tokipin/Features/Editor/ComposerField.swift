@@ -37,7 +37,12 @@ struct ComposerField: UIViewRepresentable {
         ])
         if field.preferEmoji != preferEmoji {
             field.preferEmoji = preferEmoji
-            if field.isFirstResponder { field.reloadInputViews() }
+            // iOS reads textInputMode when a field becomes first responder, so switch
+            // keyboards by handing focus back and forth (reloadInputViews alone keeps the old one).
+            if field.isFirstResponder {
+                field.resignFirstResponder()
+                field.becomeFirstResponder()
+            }
         }
         if isFocused && !field.isFirstResponder {
             DispatchQueue.main.async { field.becomeFirstResponder() }
@@ -103,14 +108,28 @@ struct ComposerField: UIViewRepresentable {
 
     final class InputField: UITextField {
         var preferEmoji = false
+        /// The letter keyboard the person used last (e.g. Korean), restored after the emoji tool.
+        static var lastTextLanguage: String?
 
         override var textInputMode: UITextInputMode? {
-            // Ask for the enabled system emoji keyboard; without one, keep the current keyboard.
             let modes = UITextInputMode.activeInputModes
-            if preferEmoji, let index = EmojiKeyboard.preferredIndex(languages: modes.map(\.primaryLanguage)) {
+            let current = super.textInputMode
+            if preferEmoji {
+                // Ask for the enabled system emoji keyboard; without one, keep the current keyboard.
+                if let index = EmojiKeyboard.preferredIndex(languages: modes.map(\.primaryLanguage)) {
+                    return modes[index]
+                }
+                return current
+            }
+            // Word and place: a letter keyboard, never the emoji one left over from the emoji tool.
+            if let current, current.primaryLanguage != "emoji" {
+                Self.lastTextLanguage = current.primaryLanguage
+                return current
+            }
+            if let index = EmojiKeyboard.textIndex(languages: modes.map(\.primaryLanguage), lastUsed: Self.lastTextLanguage) {
                 return modes[index]
             }
-            return super.textInputMode
+            return current
         }
 
         override var intrinsicContentSize: CGSize {
@@ -125,5 +144,11 @@ enum EmojiKeyboard {
 
     static func preferredIndex(languages: [String?]) -> Int? {
         languages.firstIndex { $0 == "emoji" }
+    }
+
+    /// Letter keyboard for word/place: the one used last if still active, else the first non-emoji one.
+    static func textIndex(languages: [String?], lastUsed: String?) -> Int? {
+        if let lastUsed, let index = languages.firstIndex(where: { $0 == lastUsed }) { return index }
+        return languages.firstIndex { $0 != nil && $0 != "emoji" }
     }
 }

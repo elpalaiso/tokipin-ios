@@ -286,6 +286,9 @@ final class NativeUXSpecTests: XCTestCase {
             // With an emoji keyboard enabled we ask for it; without, the current keyboard stays.
             XCTAssertEqual(EmojiKeyboard.preferredIndex(languages: ["ko-KR", "emoji"]), 1)
             XCTAssertNil(EmojiKeyboard.preferredIndex(languages: ["ko-KR", "en-US"]))
+            // Word/place go back to a letter keyboard, preferring the one used last.
+            XCTAssertEqual(EmojiKeyboard.textIndex(languages: ["en-US", "emoji", "ko-KR"], lastUsed: "ko-KR"), 2)
+            XCTAssertEqual(EmojiKeyboard.textIndex(languages: ["emoji", "en-US"], lastUsed: nil), 1)
             XCTAssertEqual(EmojiKeyboard.appSuggestedPalette, e["appSuggestedPalette"] as? Bool)
             XCTAssertEqual(!EmojiRules.filter("☕").isEmpty, e["acceptEmojiPaste"] as? Bool)
         }
