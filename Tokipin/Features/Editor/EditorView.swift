@@ -282,14 +282,18 @@ struct EditorView: View {
         withAnimation(.easeOut(duration: 0.15)) { drag = nil }
     }
 
+    /// Every item has the same weight (Figma 5-2105 / 211-3000). Only the very first word typed
+    /// on an empty day is shown large while it is being written.
+    private func isFirstEntry(_ position: Int) -> Bool { position == 0 && model.items.isEmpty }
+
     private func fontSize(for kind: ItemKind, position: Int) -> CGFloat {
-        if kind == .emoji { return position == 0 ? 40 : 30 }
-        return position == 0 ? 34 : 23
+        if kind == .emoji { return isFirstEntry(position) ? 40 : 30 }
+        return isFirstEntry(position) ? 34 : 23
     }
 
     private func itemText(_ item: RecordItem, position: Int) -> some View {
         Text(item.displayValue)
-            .font(.brand(fontSize(for: item.kind, position: position), position == 0 ? .medium : .regular, relativeTo: .title1))
+            .font(.brand(fontSize(for: item.kind, position: position), .regular, relativeTo: .title1))
             .foregroundStyle(Palette.primary)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 4)
@@ -331,7 +335,7 @@ struct EditorView: View {
             ComposerField(
                 text: $model.raw,
                 placeholder: model.kind.label,
-                font: BrandFont.uiFont(size, position == 0 ? .medium : .regular, relativeTo: .title1),
+                font: BrandFont.uiFont(size, isFirstEntry(position) ? .medium : .regular, relativeTo: .title1),
                 preferEmoji: model.kind == .emoji,
                 isFocused: keyboardWanted && model.selection == nil,
                 accessibilityLabel: String(localized: "\(model.kind.label) 입력"),

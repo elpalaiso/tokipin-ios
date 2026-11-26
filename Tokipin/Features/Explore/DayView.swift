@@ -200,7 +200,7 @@ struct DayPage: View {
             } else {
                 DayBody(day: day, onUndo: onUndo, onError: onError)
                     .padding(.horizontal, 20)
-                    .padding(.top, 20)
+                    .padding(.top, 6)
                     .padding(.bottom, 24)
             }
         }
@@ -208,8 +208,8 @@ struct DayPage: View {
     }
 }
 
-/// One day's items in saved order: the first in a large card, the rest as rows. Read-only;
-/// editing goes through the bottom pencil.
+/// One day's items in saved order, all as rows of the same weight (Figma 5-2105: the first
+/// item is no longer a large card). Read-only; editing goes through the bottom pencil.
 struct DayBody: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
@@ -220,37 +220,10 @@ struct DayBody: View {
     var body: some View {
         let items = store.items(on: day)
         VStack(spacing: 0) {
-            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                if index == 0 {
-                    leadCard(item).padding(.bottom, 14)
-                } else {
-                    row(item)
-                }
+            ForEach(items) { item in
+                row(item)
             }
         }
-    }
-
-    private func leadCard(_ item: RecordItem) -> some View {
-        HStack(alignment: .top) {
-            HStack(spacing: 10) {
-                if item.kind == .place || item.kind == .time { KindIcon(kind: item.kind, size: 22) }
-                Text(item.displayValue)
-                    .font(.brand(item.kind == .emoji ? 40 : 32, .medium, relativeTo: .largeTitle))
-                    .foregroundStyle(Palette.primary)
-            }
-            .padding(.top, 34)
-            Spacer()
-        }
-        .padding(.leading, 22)
-        .padding(.trailing, 6)
-        .frame(minHeight: 128, alignment: .top)
-        .glassCard(cornerRadius: 20, fill: Palette.surface.opacity(0.9))
-        .overlay {
-            if app.searchHighlight == item.id {
-                RoundedRectangle(cornerRadius: 20).strokeBorder(Palette.secondary.opacity(0.8), lineWidth: 1.5)
-            }
-        }
-        .accessibilityElement(children: .combine)
     }
 
     private func row(_ item: RecordItem) -> some View {
