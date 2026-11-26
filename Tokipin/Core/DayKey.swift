@@ -91,9 +91,23 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
     /// locale's own date format (e.g. "Wed, Nov 25, 2026").
     var label: String { label(locale: TimeRules.displayLocale) }
 
-    func label(locale: Locale) -> String {
-        if locale.language.languageCode?.identifier == "ko" { return "\(dotted)(\(weekdaySymbol))" }
-        return DayKey.formatted(date, template: "yMMMdEEE", locale: locale)
+    func label(locale: Locale) -> String { DayKey.labeler(locale: locale)(self) }
+
+    /// Builds the label function once per locale (one formatter or one weekday table), so labelling
+    /// thousands of days (the search index) doesn't create a formatter per day. The weekday comes
+    /// from `locale`, not from the app bundle, so `label(locale: ko)` is Korean in any app language.
+    static func labeler(locale: Locale) -> (DayKey) -> String {
+        if locale.language.languageCode?.identifier == "ko" {
+            var calendar = DayKey.calendar
+            calendar.locale = locale
+            let symbols = calendar.shortStandaloneWeekdaySymbols
+            return { "\($0.dotted)(\(symbols[$0.weekday]))" }
+        }
+        let formatter = DateFormatter()
+        formatter.calendar = DayKey.calendar
+        formatter.locale = locale
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yMMMdEEE", options: 0, locale: locale)
+        return { formatter.string(from: $0.date) }
     }
 
     static func formatted(_ date: Date, template: String, locale: Locale) -> String {

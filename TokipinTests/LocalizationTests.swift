@@ -1,6 +1,10 @@
 import XCTest
 @testable import Tokipin
 
+/// Assertions on Korean copy run when the test host's app language is Korean (the default run);
+/// `-testLanguage en` runs check the rest. Translations are covered per .lproj below.
+var koreanHost: Bool { Bundle.main.preferredLocalizations.first == "ko" }
+
 /// Reads the compiled catalog per language (.lproj in the app bundle), like the system does
 /// for a person whose app language is set to that locale.
 final class LocalizationTests: XCTestCase {
@@ -136,6 +140,21 @@ final class LocalizationRuntimeTests: XCTestCase {
         XCTAssertEqual(store.search("Wed, 25 Nov 2026", locale: gb).map(\.item.value), ["Paris"])
         XCTAssertEqual(store.search("2026.11.25(수)", locale: Locale(identifier: "ko")).map(\.item.value), ["Paris"])
         XCTAssertEqual(store.search("11.24", locale: en).map(\.item.value), ["Tea"])
+    }
+
+    func testTurkishCaseRules() async throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)
+        await store.load()
+        try store.save(day: DayKey(year: 2026, month: 11, day: 25), items: [RecordItem(kind: .place, value: "İstanbul"),
+                                                                           RecordItem(kind: .word, value: "Çay")])
+        let tr = Locale(identifier: "tr_TR")
+        let turkish: (ItemKind) -> String = { ["word": "Kelime", "emoji": "Emoji", "place": "Yer", "time": "Saat"][$0.rawValue]! }
+        XCTAssertEqual(store.search("İstanbul", locale: tr, kindLabel: turkish).map(\.item.value), ["İstanbul"])
+        XCTAssertEqual(store.search("istanbul", locale: tr, kindLabel: turkish).map(\.item.value), ["İstanbul"])
+        XCTAssertEqual(store.search("İSTANBUL", locale: tr, kindLabel: turkish).map(\.item.value), ["İstanbul"])
+        XCTAssertEqual(store.search("Kelime", locale: tr, kindLabel: turkish).map(\.item.value), ["Çay"])
+        XCTAssertEqual(store.search("KELİME", locale: tr, kindLabel: turkish).map(\.item.value), ["Çay"])
     }
 
     func testThaiDeleteWordingNamesTheChosenDay() {

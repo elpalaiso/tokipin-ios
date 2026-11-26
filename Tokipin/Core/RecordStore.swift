@@ -313,7 +313,8 @@ final class RecordStore {
     /// Matches item text, a kind name ("장소"), or a date ("11.25", "2026.11").
     func search(_ query: String, locale: Locale = TimeRules.displayLocale,
                 kindLabel: (ItemKind) -> String = { $0.label }) -> [SearchResult] {
-        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        // One case rule for the query and everything indexed: the app locale's (Turkish İ/ı included).
+        let q = query.trimmingCharacters(in: .whitespaces).lowercased(with: locale)
         guard !q.isEmpty else { return [] }
         // Kind names match whatever their case on screen ("Place", "place", "Ort").
         let kind = ItemKind.allCases.first {
@@ -321,11 +322,12 @@ final class RecordStore {
         }
         if searchIndex == nil || searchIndexLocale != locale.identifier {
             searchIndexLocale = locale.identifier
+            let labeler = DayKey.labeler(locale: locale)
             searchIndex = sortedDays.flatMap { day in
                 let date = (day.dotted + " " + day.string) as NSString
                 // The date as the app shows it in this language ("Wed, Nov 25, 2026").
-                let label = day.label(locale: locale).lowercased() as NSString
-                return (records[day] ?? []).map { (day, $0, $0.value.lowercased() as NSString, date, label) }
+                let label = labeler(day).lowercased(with: locale) as NSString
+                return (records[day] ?? []).map { (day, $0, $0.value.lowercased(with: locale) as NSString, date, label) }
             }
         }
         var results: [SearchResult] = []

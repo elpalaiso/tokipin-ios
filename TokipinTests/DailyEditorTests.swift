@@ -162,7 +162,8 @@ final class DailyEditorTests: XCTestCase {
         XCTAssertLessThanOrEqual(short + 60, 150)
     }
 
-    func testEmptyStateStrings() {
+    func testEmptyStateStrings() throws {
+        try XCTSkipUnless(koreanHost, "Korean copy; other languages are checked in LocalizationTests")
         XCTAssertEqual(EmptyStateText.day, "이날 남긴 기록이 없어요.")
         XCTAssertEqual(EmptyStateText.month(MonthKey(year: 2026, month: 12)), "12월에 남긴 기록이 없어요.")
     }
