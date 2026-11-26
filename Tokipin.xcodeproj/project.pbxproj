@@ -106,7 +106,7 @@
 				};
 			};
 			buildConfigurationList = AA0000000000000000000600;
-			developmentRegion = ko;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				ko,
