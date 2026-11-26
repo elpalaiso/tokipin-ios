@@ -91,6 +91,13 @@ final class EditorModel {
         notice = nil
     }
 
+    /// 취소 in the time picker: drop the staged value and leave any edited item unchanged.
+    func cancelPending() {
+        raw = ""
+        editingID = nil
+        notice = nil
+    }
+
     func beginSelection(with id: UUID? = nil) {
         guard commitRaw() else { return }
         selection = id.map { [$0] } ?? []

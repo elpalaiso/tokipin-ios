@@ -5,6 +5,7 @@ struct RecordsView: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     let onLongPress: (DayKey) -> Void
+    @State private var didInitialScroll = false
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -20,23 +21,38 @@ struct RecordsView: View {
             }
             .scrollIndicators(.hidden)
             .onAppear {
-                // Keep the anchored date in view (pinch, back from 일간); else the month header.
-                if store.records[app.selectedDay] != nil, app.selectedDay.monthKey == app.focusedMonth {
-                    proxy.scrollTo(app.selectedDay, anchor: .center)
-                } else {
-                    proxy.scrollTo(app.focusedMonth, anchor: .top)
-                }
+                guard !didInitialScroll else { return }
+                didInitialScroll = true
+                scroll(proxy, to: app.selectedDay, anchorY: nil)
             }
-            .onChange(of: app.focusedMonth) { _, month in
-                withAnimation { proxy.scrollTo(month, anchor: .top) }
+            .onChange(of: app.reveal) { _, request in
+                guard let request, app.level == .records else { return }
+                withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+                    scroll(proxy, to: request.day, anchorY: request.anchorY)
+                }
             }
         }
     }
 
-    /// Months with records, plus the focused month so an empty month still opens.
+    /// Shows the day's card, or the nearest recorded day of that month, or the month header.
+    /// The selected day itself is not changed.
+    private func scroll(_ proxy: ScrollViewProxy, to day: DayKey, anchorY: CGFloat?) {
+        let anchor = UnitPoint(x: 0.5, y: anchorY ?? 0.4)
+        if store.records[day] != nil {
+            proxy.scrollTo(day, anchor: anchor)
+        } else if let nearest = store.days(in: day.monthKey).min(by: {
+            abs($0.date.timeIntervalSince(day.date)) < abs($1.date.timeIntervalSince(day.date))
+        }) {
+            proxy.scrollTo(nearest, anchor: anchor)
+        } else {
+            proxy.scrollTo(day.monthKey, anchor: .top)
+        }
+    }
+
+    /// Months with records, plus the selected day's month so an empty month still opens.
     private var months: [MonthKey] {
         var set = Set(store.records.keys.map(\.monthKey))
-        set.insert(app.focusedMonth)
+        set.insert(app.selectedDay.monthKey)
         return set.sorted(by: >)
     }
 
@@ -53,7 +69,10 @@ struct RecordsView: View {
                 Text("이달에 남긴 기록이 없어요.")
                     .font(.brand(15))
                     .foregroundStyle(Palette.secondary)
-                OutlineCapsuleButton(title: "달력 보기") { app.setLevel(.month) }
+                OutlineCapsuleButton(title: "달력 보기") {
+                    app.setLevel(.month)
+                    app.requestReveal(app.selectedDay)
+                }
             }
             .padding(.vertical, 8)
         } else {
@@ -89,13 +108,13 @@ struct RecordsView: View {
         let title = items.first { $0.kind != .emoji } ?? items.first
         let rest = items.filter { $0.id != title?.id }
         let emoji = rest.first { $0.kind == .emoji }
-        let detail = rest.filter { $0.kind != .emoji }.map(\.value)
+        let detail = rest.filter { $0.kind != .emoji }.map(\.displayValue)
 
         return VStack(alignment: .leading, spacing: 0) {
             Text(String(format: "%02d / %@", day.day, day.weekdaySymbol))
                 .font(.brand(13))
                 .foregroundStyle(Palette.secondary)
-            Text(title?.value ?? "")
+            Text(title?.displayValue ?? "")
                 .font(.brand(large ? 28 : 21, .medium))
                 .foregroundStyle(Palette.primary)
                 .lineLimit(1)
@@ -126,15 +145,12 @@ struct RecordsView: View {
         .frame(maxWidth: .infinity, minHeight: large ? 148 : 128, alignment: .topLeading)
         .glassCard(cornerRadius: 18, fill: Palette.surface.opacity(0.88))
         .contentShape(RoundedRectangle(cornerRadius: 18))
-        .pinchTarget(.day(day))
+        .pinchTarget(.day(day), in: .records)
         .id(day)
         .onTapGesture { app.openDay(day) }
-        .onLongPressGesture(minimumDuration: 0.45) {
-            Haptics.selection()
-            onLongPress(day)
-        }
+        .onLongPressGesture(minimumDuration: 0.45) { onLongPress(day) }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(day.label), \(items.map(\.value).joined(separator: ", "))")
+        .accessibilityLabel("\(day.label), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(.isButton)
         .accessibilityAction(named: "이날 기록 삭제") { onLongPress(day) }
     }

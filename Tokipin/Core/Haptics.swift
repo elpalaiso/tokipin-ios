@@ -1,6 +1,6 @@
 import UIKit
 
-/// One tick when a day or view level actually changes. Respects the settings toggle.
+/// Native haptic adapter. When to tick is decided in InteractionRules.
 enum Haptics {
     static let enabledKey = "tokipin.hapticsEnabled"
 
@@ -8,9 +8,10 @@ enum Haptics {
         UserDefaults.standard.object(forKey: enabledKey) as? Bool ?? true
     }
 
+    /// Native light selection tick. Call only through `AppModel.navigate`, which applies
+    /// the product rules (InteractionRules.ticks) and the settings toggle.
     @MainActor
-    static func selection() {
-        guard isEnabled else { return }
+    static func tick() {
         UISelectionFeedbackGenerator().selectionChanged()
     }
 }

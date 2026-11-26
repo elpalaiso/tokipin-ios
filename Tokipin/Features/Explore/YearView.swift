@@ -4,6 +4,8 @@ import SwiftUI
 struct YearView: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
+    @State private var visibleYear: Int?
+    @State private var didInitialScroll = false
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -13,13 +15,28 @@ struct YearView: View {
                         yearBlock(year).id(year)
                     }
                 }
+                .scrollTargetLayout()
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
-            .onAppear { proxy.scrollTo(app.focusedMonth.year, anchor: .top) }
-            .onChange(of: app.selectedDay) { _, day in
-                withAnimation { proxy.scrollTo(day.year, anchor: .top) }
+            .scrollPosition(id: $visibleYear, anchor: .top)
+            .onAppear {
+                guard !didInitialScroll else { return }
+                didInitialScroll = true
+                proxy.scrollTo(app.focusedMonth.year, anchor: .top)
+            }
+            .onChange(of: app.reveal) { _, request in
+                guard let request, app.level == .year else { return }
+                withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+                    proxy.scrollTo(request.day.year, anchor: .top)
+                }
+            }
+            .onChange(of: visibleYear) { _, year in
+                // Only the visible year changes while scrolling.
+                if let year, app.level == .year, year != app.focusedMonth.year {
+                    app.focusedMonth = MonthKey(year: year, month: app.focusedMonth.month)
+                }
             }
         }
     }
@@ -56,20 +73,19 @@ struct MiniMonth: View {
         let recorded = Set(store.days(in: month).map(\.day))
         let isFocused = month == app.selectedDay.monthKey
         Button {
+            // Keep the selected day if it is in this month; otherwise its latest record or the 1st.
+            let day = month == app.selectedDay.monthKey ? app.selectedDay
+                : recorded.max().map { DayKey(year: month.year, month: month.month, day: $0) } ?? month.firstDay
+            app.navigate(to: day, level: .month)
             app.focusedMonth = month
-            if !recorded.isEmpty, let latest = recorded.max() {
-                app.select(DayKey(year: month.year, month: month.month, day: latest), haptic: false)
-            } else if month != app.selectedDay.monthKey {
-                app.select(month.firstDay, haptic: false)
-            }
-            app.setLevel(.month)
+            app.requestReveal(day)
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(month.month)")
                     .font(.brand(15, .medium))
                     .foregroundStyle(Palette.primary)
                 Grid(horizontalSpacing: 0, verticalSpacing: 1) {
-                    ForEach(Array(month.weeks.enumerated()), id: \.offset) { _, week in
+                    ForEach(Array(month.weeks().enumerated()), id: \.offset) { _, week in
                         GridRow {
                             ForEach(Array(week.enumerated()), id: \.offset) { _, day in
                                 Text(day.map(String.init) ?? "")
@@ -98,7 +114,7 @@ struct MiniMonth: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .pinchTarget(.month(month))
+        .pinchTarget(.month(month), in: .year)
         .accessibilityLabel("\(month.month)월, 기록한 날 \(recorded.count)일")
     }
 }

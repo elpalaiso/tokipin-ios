@@ -25,9 +25,9 @@ final class DayKeyTests: XCTestCase {
     func testLabelsAndWeeks() {
         let day = DayKey(year: 2026, month: 11, day: 25)
         XCTAssertEqual(day.label, "2026.11.25(수)")
-        XCTAssertEqual(day.weekStart, DayKey(year: 2026, month: 11, day: 22))
+        XCTAssertEqual(day.weekStart(firstWeekday: 1), DayKey(year: 2026, month: 11, day: 22))
         XCTAssertEqual(DayKey(string: "2026-11-25"), day)
-        XCTAssertEqual(MonthKey(year: 2026, month: 11).weeks.count, 5)
+        XCTAssertEqual(MonthKey(year: 2026, month: 11).weeks(firstWeekday: 1).count, 5)
         XCTAssertEqual(MonthKey(year: 2026, month: 12).adding(months: 1), MonthKey(year: 2027, month: 1))
     }
 }

@@ -87,7 +87,7 @@ struct SearchView: View {
                 .foregroundStyle(Palette.secondary)
             HStack(spacing: 10) {
                 KindIcon(kind: result.item.kind, size: 16)
-                Text(result.item.value)
+                Text(result.item.displayValue)
                     .font(.brand(18))
                     .foregroundStyle(Palette.primary)
                 Spacer()
@@ -100,13 +100,14 @@ struct SearchView: View {
         .padding(.top, 18)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(result.day.label), \(result.item.kind.label) \(result.item.value)")
+        .accessibilityLabel("\(result.day.label), \(result.item.kind.label) \(result.item.displayValue)")
     }
 
     private func open(_ result: SearchResult) {
         focused = false
         app.searchHighlight = result.item.id
         app.openDay(result.day)
+        app.requestReveal(result.day)
         app.isSearching = false
     }
 
@@ -117,8 +118,8 @@ struct SearchView: View {
         app.searchHighlight = nil
         app.searchQuery = ""
         if let (level, day) = app.searchReturn {
-            app.select(day, haptic: false)
-            app.setLevel(level)
+            app.navigate(to: day, level: level, haptic: false)
+            app.requestReveal(day)
         }
         app.searchReturn = nil
     }

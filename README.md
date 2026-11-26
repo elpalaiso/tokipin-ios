@@ -21,6 +21,20 @@ xcodebuild -project Tokipin.xcodeproj -scheme Tokipin -destination 'platform=iOS
 - **Settings**: touch feedback toggle, JSON export, storage note, privacy policy and terms (pre-launch drafts from the homepage).
 - **States**: empty home with the peek rabbit, empty day/month, loading skeleton (only when reading is slow), read-failure recovery with retry.
 
+## Native UX v0.1 (shared with Android)
+
+Gesture, haptic, calendar, time and emoji behaviour follows "Tokipin Native UX v0.1".
+The spec has one copy for both apps, outside this repo, at `../tokipin/native-spec/v0.1/`
+(`Tokipin-Native-UX-v0.1.md` + `.json`). `TokipinTests/NativeUXSpecTests.swift` reads the JSON
+from that sibling path, checks its SHA-256 pin, and runs every shared case that applies to iOS
+(58 of 59; `emoji.externalIme` is Android-only). Clone the web repo next to this one to run the tests.
+
+- Product rules and thresholds: `Tokipin/Core/InteractionRules.swift` (swipe 0.22W / flick 0.06W + 0.9W/s,
+  axis lock 1.3, pinch 1.25 / 0.80, settle 200ms / cancel 150ms / reduce motion 80ms, haptic events).
+- Emoji and time rules: `Tokipin/Core/EmojiRules.swift`. Native adapters: `Haptics`, `PinchCatcher`,
+  `ComposerField`, `SwipePager`.
+- All navigation (tap, swipe, pinch, view menu) goes through `AppModel.navigate`, which requests at most one tick.
+
 ## Data format
 
 Stored at `Application Support/Tokipin/records.json` (atomic writes); the draft sits next to it in `draft.json`. Export writes the same JSON:

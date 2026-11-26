@@ -13,9 +13,17 @@ struct ExploreView: View {
     @State private var pendingUndo: PendingUndo?
     @State private var dayToDelete: DayKey?
     @State private var errorMessage: String?
-    /// Live pinch scale, used only for visual feedback while fingers are down.
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Live pinch scale of the current view while two fingers are down.
     @State private var pinchScale: CGFloat = 1
-    @State private var pinchAnchor: PinchTarget?
+    /// Date or month under the first valid two-finger midpoint; kept for the whole pinch.
+    @State private var pinchAnchor: (target: PinchTarget, frame: CGRect)?
+    /// Point the zoom grows from, relative to the content area.
+    @State private var zoomAnchor: UnitPoint = .center
+    /// Per-level scale used for the settle animation after a level change.
+    @State private var layerScale: [ExploreLevel: CGFloat] = [:]
+    @State private var contentFrame: CGRect = .zero
+    @State private var pinchActive = false
 
     var body: some View {
         @Bindable var app = app
@@ -25,14 +33,13 @@ struct ExploreView: View {
                 header
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .scaleEffect(min(max(pinchScale, 0.9), 1.1))
-                    .opacity(1 - min(abs(pinchScale - 1), 0.3))
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { contentFrame = $0 }
             }
             .background(
                 PinchCatcher(
                     isEnabled: app.editorDay == nil && !app.isSearching && !app.isShowingSettings,
-                    onBegin: { pinchAnchor = app.pinchTarget(at: $0) },
-                    onChange: { pinchScale = $0 },
+                    onBegin: beginPinch,
+                    onChange: { scale in if pinchActive { pinchScale = scale } },
                     onEnd: finishPinch
                 )
             )
@@ -66,7 +73,6 @@ struct ExploreView: View {
         } message: {
             Text(errorMessage ?? "")
         }
-        .animation(.easeOut(duration: 0.2), value: app.level)
         .animation(.easeOut(duration: 0.2), value: pendingUndo?.id)
         .animation(.easeOut(duration: 0.18), value: app.isSearching)
     }
@@ -78,7 +84,12 @@ struct ExploreView: View {
             if let parent = parentLevel {
                 Button {
                     app.searchHighlight = nil
-                    app.setLevel(parent)
+                    if app.level == .day {
+                        app.closeDay()
+                    } else {
+                        app.setLevel(parent, haptic: false)
+                        app.requestReveal(app.selectedDay)
+                    }
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "chevron.left").font(.system(size: 17, weight: .regular))
@@ -130,7 +141,11 @@ struct ExploreView: View {
 
     private var viewMenu: some View {
         Menu {
-            Picker("탐색 보기", selection: Binding(get: { app.level }, set: { app.searchHighlight = nil; app.setLevel($0) })) {
+            Picker("탐색 보기", selection: Binding(get: { app.level }, set: {
+                app.searchHighlight = nil
+                app.setLevel($0)
+                app.requestReveal(app.selectedDay)
+            })) {
                 ForEach(ExploreLevel.allCases.reversed()) { level in
                     Label(level.title, systemImage: level.systemImage).tag(level)
                 }
@@ -146,7 +161,7 @@ struct ExploreView: View {
 
     private var parentLevel: ExploreLevel? {
         switch app.level {
-        case .day: .month
+        case .day: app.dayReturnLevel
         case .records, .month: .year
         case .year: nil
         }
@@ -158,22 +173,32 @@ struct ExploreView: View {
 
     // MARK: Content
 
-    @ViewBuilder
+    /// All four views stay alive so each keeps its own scroll position when you come back
+    /// (UX v0.1 §2: closing a day returns to the view and place it was opened from).
     private var content: some View {
-        switch app.level {
-        case .day:
-            DayView(onUndo: showUndo, onError: showError)
-        case .records:
-            if store.isEmpty {
-                EmptyHome()
-            } else {
-                RecordsView(onLongPress: { dayToDelete = $0 })
+        ZStack {
+            layer(.year) { YearView() }
+            layer(.month) { MonthView() }
+            layer(.records) {
+                if store.isEmpty {
+                    EmptyHome()
+                } else {
+                    RecordsView(onLongPress: { dayToDelete = $0 })
+                }
             }
-        case .month:
-            MonthView()
-        case .year:
-            YearView()
+            layer(.day) { DayView(onUndo: showUndo, onError: showError) }
         }
+    }
+
+    private func layer<Content: View>(_ level: ExploreLevel, @ViewBuilder _ content: () -> Content) -> some View {
+        let active = app.level == level
+        let liveScale = active && pinchActive && !reduceMotion ? min(max(pinchScale, 0.5), 2.0) : 1
+        return content()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .scaleEffect(liveScale * (layerScale[level] ?? 1), anchor: zoomAnchor)
+            .opacity(active ? 1 : 0)
+            .allowsHitTesting(active)
+            .accessibilityHidden(!active)
     }
 
     private var bottomBar: some View {
@@ -196,33 +221,71 @@ struct ExploreView: View {
         .padding(.bottom, 6)
     }
 
-    /// Spread = more detail (연간 → 월간 → 기록한 날 → 일간), pinch = less.
-    /// The date or month between the fingers becomes the anchor; otherwise the selected day stays.
-    /// Thresholds match Android (1.25× in, 0.8× out).
-    private func finishPinch(_ scale: CGFloat) {
-        defer {
-            pinchAnchor = nil
-            withAnimation(.easeOut(duration: 0.2)) { pinchScale = 1 }
-        }
-        let next: ExploreLevel?
-        if scale >= 1.25 { next = app.level.zoomedIn }
-        else if scale <= 0.8 { next = app.level.zoomedOut }
-        else { next = nil }
-        guard let next else { return }
+    // MARK: Pinch (UX v0.1 §2)
 
-        switch pinchAnchor {
-        case .day(let day):
-            app.select(day, haptic: false)
-            app.focusedMonth = day.monthKey
+    private func beginPinch(at point: CGPoint) {
+        // Only pinches that start on the calendar content count (not header or bottom bar).
+        guard contentFrame.contains(point) else { pinchActive = false; return }
+        pinchActive = true
+        pinchScale = 1
+        pinchAnchor = app.pinchTarget(at: point, in: app.level)
+        let focus = pinchAnchor.map { CGPoint(x: $0.frame.midX, y: $0.frame.midY) } ?? point
+        zoomAnchor = UnitPoint(
+            x: (focus.x - contentFrame.minX) / max(contentFrame.width, 1),
+            y: (focus.y - contentFrame.minY) / max(contentFrame.height, 1))
+    }
+
+    /// Spread = more detail (연간 → 월간 → 기록한 날 → 일간), pinch = less, one level per gesture.
+    /// The anchored date keeps its place on screen in the next view.
+    private func finishPinch(_ scale: CGFloat) {
+        guard pinchActive else { return }
+        pinchActive = false
+        let from = app.level
+        let to = InteractionRules.pinchLevel(from: from, scale: scale)
+        guard to != from else {
+            // Neutral release, cancel or first/last level: back to where it was, no tick.
+            withAnimation(.easeOut(duration: InteractionRules.cancelDuration)) { pinchScale = 1 }
+            pinchAnchor = nil
+            return
+        }
+
+        var day = app.selectedDay
+        switch pinchAnchor?.target {
+        case .day(let anchored):
+            day = anchored
         case .month(let month):
-            let recorded = store.days(in: month)
-            app.select(recorded.first ?? (month == DayKey.today.monthKey ? .today : month.firstDay), haptic: false)
-            app.focusedMonth = month
+            day = month == app.selectedDay.monthKey ? app.selectedDay
+                : store.days(in: month).first ?? (month == DayKey.today.monthKey ? .today : month.firstDay)
         case nil:
             break
         }
+        let anchorY = pinchAnchor.map { ($0.frame.midY - contentFrame.minY) / max(contentFrame.height, 1) }
+        pinchAnchor = nil
         app.searchHighlight = nil
-        app.setLevel(next)
+
+        if reduceMotion {
+            withAnimation(.easeOut(duration: InteractionRules.reduceMotionDuration)) {
+                pinchScale = 1
+                app.navigate(to: day, level: to)
+            }
+            app.requestReveal(day, anchorY: anchorY)
+            return
+        }
+
+        // Grow the old view on through the release scale while the new one settles to 100%
+        // from the matching size, both around the anchored date.
+        let zoomingIn = to.rawValue > from.rawValue
+        layerScale[to] = zoomingIn ? 1 / max(scale, 1) : 1 / min(scale, 1)
+        layerScale[from] = scale
+        pinchScale = 1
+        app.requestReveal(day, anchorY: anchorY)
+        withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+            app.navigate(to: day, level: to)
+            layerScale[to] = 1
+            layerScale[from] = zoomingIn ? scale * 1.2 : scale * 0.8
+        } completion: {
+            layerScale[from] = 1
+        }
     }
 
     // MARK: Actions

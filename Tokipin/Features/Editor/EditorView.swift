@@ -8,6 +8,7 @@ struct EditorView: View {
 
     @State private var model: EditorModel
     @State private var time = Date()
+    @State private var syncingPicker = false
     @State private var keyboardWanted = true
     @State private var undoID: UUID?
     private let focusItem: UUID?
@@ -32,7 +33,8 @@ struct EditorView: View {
             store.updateDraft(model.changed || !model.raw.isEmpty ? draft : nil)
         }
         .onChange(of: time) { _, value in
-            if model.kind == .time { model.raw = Self.timeFormatter.string(from: value) }
+            // Only an explicit wheel change stages a time; opening the tool adds nothing.
+            if model.kind == .time, !syncingPicker { model.raw = TimeRules.canonical(from: value) }
         }
         .animation(.easeOut(duration: 0.18), value: model.selection != nil)
         .animation(.easeOut(duration: 0.18), value: undoID)
@@ -113,7 +115,6 @@ struct EditorView: View {
                             itemText(item, position: index)
                                 .onTapGesture { model.edit(item); syncTimePicker(); keyboardWanted = true }
                                 .onLongPressGesture(minimumDuration: 0.45) {
-                                    Haptics.selection()
                                     model.beginSelection(with: item.id)
                                     keyboardWanted = false
                                 }
@@ -157,13 +158,13 @@ struct EditorView: View {
     }
 
     private func itemText(_ item: RecordItem, position: Int) -> some View {
-        Text(item.value)
+        Text(item.displayValue)
             .font(.brand(fontSize(for: item.kind, position: position), position == 0 ? .medium : .regular, relativeTo: .title1))
             .foregroundStyle(Palette.primary)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 4)
             .contentShape(Rectangle())
-            .accessibilityLabel("\(item.kind.label) \(item.value)")
+            .accessibilityLabel("\(item.kind.label) \(item.displayValue)")
     }
 
     private func selectableRow(_ item: RecordItem, selected: Bool) -> some View {
@@ -172,7 +173,7 @@ struct EditorView: View {
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 20))
                     .foregroundStyle(selected ? Palette.secondary : Palette.secondary.opacity(0.7))
-                Text(item.value)
+                Text(item.displayValue)
                     .font(.brand(item.kind == .emoji ? 24 : 21))
                     .foregroundStyle(Palette.primary)
                 Spacer()
@@ -191,11 +192,11 @@ struct EditorView: View {
     private func composer(position: Int) -> some View {
         let size = fontSize(for: model.kind, position: position)
         if model.kind == .time {
-            (model.raw.isEmpty ? Text("시간") : Text(verbatim: model.raw))
+            (model.raw.isEmpty ? Text("시간") : Text(verbatim: TimeRules.display(model.raw)))
                 .font(.brand(size, .medium))
                 .foregroundStyle(model.raw.isEmpty ? Palette.secondary.opacity(0.5) : Palette.primary)
                 .padding(.vertical, 4)
-                .accessibilityLabel(model.raw.isEmpty ? Text("시간 입력, 아래 선택기에서 골라요") : Text("시간 \(model.raw)"))
+                .accessibilityLabel(model.raw.isEmpty ? Text("시간 입력, 아래 선택기에서 골라요") : Text("시간 \(TimeRules.display(model.raw))"))
         } else {
             ComposerField(
                 text: $model.raw,
@@ -285,43 +286,49 @@ struct EditorView: View {
         .accessibilityLabel("입력 종류")
     }
 
+    /// Native wheel in the device's 12/24-hour style. Scrolling it only stages a value;
+    /// + confirms one time fragment, ✓ saves the day, 취소 keeps everything as it was.
     private var timePanel: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 4) {
+            HStack {
+                Button("취소") {
+                    model.cancelPending()
+                    syncTimePicker()
+                }
+                .font(.brand(15))
+                .foregroundStyle(Palette.secondary)
+                .frame(minWidth: 44, minHeight: 44)
+                .disabled(model.raw.isEmpty && model.editingID == nil)
+                Spacer()
+                Button {
+                    model.raw = TimeRules.canonical(from: time)
+                    commitField()
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Palette.onFocus)
+                        .frame(width: 44, height: 44)
+                        .background(Palette.focus, in: Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(model.editingID == nil ? Text("시간 추가") : Text("시간 수정"))
+            }
+            .padding(.horizontal, 20)
             DatePicker("시간", selection: $time, displayedComponents: .hourAndMinute)
                 .datePickerStyle(.wheel)
                 .labelsHidden()
-                .environment(\.locale, Locale(identifier: "en_GB")) // 24-hour wheel, matches HH:mm items
                 .frame(height: 170)
                 .clipped()
-            Button {
-                model.raw = Self.timeFormatter.string(from: time)
-                commitField()
-            } label: {
-                (model.editingID == nil ? Text("시간 추가") : Text("시간 수정"))
-                    .font(.brand(15, .medium))
-                    .foregroundStyle(Palette.onFocus)
-                    .frame(maxWidth: .infinity, minHeight: 46)
-                    .background(Palette.focus, in: RoundedRectangle(cornerRadius: 14))
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 20)
         }
     }
 
     // MARK: Actions
 
-    private static let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "HH:mm"
-        return formatter
-    }()
-
     private func syncTimePicker() {
-        if model.kind == .time, let date = Self.timeFormatter.date(from: model.raw) {
-            let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
-            time = Calendar.current.date(bySettingHour: parts.hour ?? 0, minute: parts.minute ?? 0, second: 0, of: Date()) ?? Date()
-        }
+        guard model.kind == .time, let (hour, minute) = TimeRules.components(model.raw) else { return }
+        syncingPicker = true
+        time = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: Date()) ?? Date()
+        DispatchQueue.main.async { syncingPicker = false }
     }
 
     private func switchKind(_ kind: ItemKind) {
@@ -371,7 +378,6 @@ struct EditorView: View {
             try store.save(day: model.day, items: items)
             model.saveFailed = false
             store.updateDraft(nil)
-            Haptics.selection()
             leave(to: items.isEmpty ? nil : model.day)
         } catch {
             model.saveFailed = true
@@ -388,9 +394,9 @@ struct EditorView: View {
     private func leave(to day: DayKey?) {
         keyboardWanted = false
         if let day {
-            app.select(day, haptic: false)
+            app.navigate(to: day, level: app.level == .day ? .day : .records, haptic: false)
             app.focusedMonth = day.monthKey
-            if app.level != .day { app.setLevel(.records) }
+            app.requestReveal(day)
         }
         app.editorDay = nil
         dismiss()

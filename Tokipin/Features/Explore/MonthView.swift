@@ -1,22 +1,24 @@
 import SwiftUI
 
-/// 월간 달력: every day of every month, scrolling vertically, with up to three entries per date.
+/// 월간 달력: every day of every month, scrolling vertically with native momentum.
+/// The weekday row stays fixed; each month number sits outside its card above the 1st.
 struct MonthView: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     @State private var visibleMonth: MonthKey?
+    @State private var didInitialScroll = false
 
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                ForEach(DayKey.weekdaySymbols, id: \.self) { symbol in
+                ForEach(DayKey.orderedWeekdaySymbols(), id: \.self) { symbol in
                     Text(symbol)
                         .font(.brand(12))
                         .foregroundStyle(Palette.secondary)
                         .frame(maxWidth: .infinity)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
             .padding(.bottom, 6)
             .accessibilityHidden(true)
 
@@ -33,15 +35,22 @@ struct MonthView: View {
                 }
                 .scrollIndicators(.hidden)
                 .scrollPosition(id: $visibleMonth, anchor: .top)
-                .onAppear { proxy.scrollTo(app.focusedMonth, anchor: .top) }
-                .onChange(of: app.selectedDay) { _, day in
-                    withAnimation { proxy.scrollTo(day.monthKey, anchor: .top) }
+                .onAppear {
+                    guard !didInitialScroll else { return }
+                    didInitialScroll = true
+                    proxy.scrollTo(app.focusedMonth, anchor: .top)
+                }
+                .onChange(of: app.reveal) { _, request in
+                    guard let request, app.level == .month else { return }
+                    withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
+                        proxy.scrollTo(request.day.monthKey, anchor: UnitPoint(x: 0.5, y: request.anchorY ?? 0))
+                    }
                 }
             }
         }
         .onChange(of: visibleMonth) { _, month in
-            // Keep the header year in step with the scrolled month without moving selection.
-            if let month { app.focusedMonth = month }
+            // Scrolling only changes the visible period; the selected day stays (UX v0.1 §2).
+            if let month, app.level == .month { app.focusedMonth = month }
         }
     }
 
@@ -60,21 +69,45 @@ struct MonthView: View {
     }
 }
 
+/// What a month cell shows: up to three fragments in entry order, then "+N".
+enum MonthCellPreview {
+    static let maxFragments = 3
+
+    static func fragments(_ items: [RecordItem]) -> (shown: [RecordItem], overflow: String?) {
+        let shown = Array(items.prefix(maxFragments))
+        let rest = items.count - shown.count
+        return (shown, rest > 0 ? "+\(rest)" : nil)
+    }
+}
+
 struct MonthGrid: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     let month: MonthKey
 
     var body: some View {
+        let firstColumn = month.firstDay.column()
         VStack(alignment: .leading, spacing: 6) {
-            Text("\(month.month)")
-                .font(.brand(20, .medium))
-                .foregroundStyle(Palette.primary)
-                .padding(.leading, 6)
-                .accessibilityLabel("\(month.year)년 \(month.month)월")
-                .accessibilityAddTraits(.isHeader)
+            // Month number above the weekday column of the 1st, outside the card.
+            HStack(spacing: 0) {
+                ForEach(0..<7, id: \.self) { column in
+                    Group {
+                        if column == firstColumn {
+                            Text("\(month.month)")
+                                .font(.brand(20, .medium))
+                                .foregroundStyle(Palette.primary)
+                                .fixedSize()
+                                .accessibilityLabel("\(month.year)년 \(month.month)월")
+                                .accessibilityAddTraits(.isHeader)
+                        } else {
+                            Color.clear.frame(height: 1)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
             VStack(spacing: 0) {
-                ForEach(Array(month.weeks.enumerated()), id: \.offset) { index, week in
+                ForEach(Array(month.weeks().enumerated()), id: \.offset) { index, week in
                     if index > 0 { Rectangle().fill(Palette.line).frame(height: 1).padding(.horizontal, 8) }
                     HStack(spacing: 0) {
                         ForEach(Array(week.enumerated()), id: \.offset) { _, day in
@@ -94,6 +127,7 @@ struct MonthGrid: View {
 
     private func cell(_ day: DayKey) -> some View {
         let items = store.items(on: day)
+        let preview = MonthCellPreview.fragments(items)
         let selected = day == app.selectedDay
         return Button { app.openDay(day) } label: {
             VStack(spacing: 3) {
@@ -101,14 +135,15 @@ struct MonthGrid: View {
                     .font(.brand(14, items.isEmpty ? .regular : .semibold))
                     .foregroundStyle(selected ? Palette.focus : Palette.primary)
                     .padding(.top, 8)
-                ForEach(items.prefix(items.count > 3 ? 2 : 3)) { item in
-                    Text(item.value)
+                ForEach(preview.shown) { item in
+                    Text(item.displayValue)
                         .font(.brand(item.kind == .emoji ? 11 : 9.5))
                         .foregroundStyle(Palette.secondary)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
-                if items.count > 3 {
-                    Text("+\(items.count - 2)")
+                if let overflow = preview.overflow {
+                    Text(overflow)
                         .font(.brand(9.5))
                         .foregroundStyle(Palette.secondary)
                 }
@@ -127,8 +162,8 @@ struct MonthGrid: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .pinchTarget(.day(day))
-        .accessibilityLabel(items.isEmpty ? day.label : "\(day.label), \(items.map(\.value).joined(separator: ", "))")
+        .pinchTarget(.day(day), in: .month)
+        .accessibilityLabel(items.isEmpty ? day.label : "\(day.label), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

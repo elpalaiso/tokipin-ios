@@ -62,8 +62,25 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
         DayKey(date: Self.calendar.date(byAdding: .day, value: days, to: date)!)
     }
 
-    /// Sunday of this day's week.
-    var weekStart: DayKey { adding(days: -weekday) }
+    /// Device week start (1 = Sunday, 2 = Monday …), from the region settings even when
+    /// the app language is Korean.
+    static var deviceFirstWeekday: Int { Calendar.autoupdatingCurrent.firstWeekday }
+
+    /// 0-based column of this day in a week that starts on `firstWeekday`.
+    func column(firstWeekday: Int = DayKey.deviceFirstWeekday) -> Int {
+        (weekday - (firstWeekday - 1) + 7) % 7
+    }
+
+    /// First day of this day's week.
+    func weekStart(firstWeekday: Int = DayKey.deviceFirstWeekday) -> DayKey {
+        adding(days: -column(firstWeekday: firstWeekday))
+    }
+
+    /// Weekday names in display order for the given week start.
+    static func orderedWeekdaySymbols(firstWeekday: Int = DayKey.deviceFirstWeekday) -> [String] {
+        let symbols = weekdaySymbols
+        return (0..<7).map { symbols[($0 + firstWeekday - 1) % 7] }
+    }
 
     var string: String { String(format: "%04d-%02d-%02d", year, month, day) }
 
@@ -117,9 +134,9 @@ struct MonthKey: Hashable, Comparable, Identifiable, Sendable {
         return MonthKey(year: total / 12, month: total % 12 + 1)
     }
 
-    /// Day numbers laid out in Sunday-first weeks; nil for leading/trailing blanks.
-    var weeks: [[Int?]] {
-        let lead = firstDay.weekday
+    /// Day numbers laid out in weeks; nil for leading/trailing blanks.
+    func weeks(firstWeekday: Int = DayKey.deviceFirstWeekday) -> [[Int?]] {
+        let lead = firstDay.column(firstWeekday: firstWeekday)
         var cells: [Int?] = Array(repeating: nil, count: lead) + (1...numberOfDays).map { $0 }
         while cells.count % 7 != 0 { cells.append(nil) }
         return stride(from: 0, to: cells.count, by: 7).map { Array(cells[$0..<$0 + 7]) }

@@ -64,7 +64,9 @@ enum ItemValidator {
         case .time:
             return isTime(value) ? .value(value) : .invalid
         case .emoji:
-            return containsEmoji(value) ? .value(value) : .invalid
+            // Mixed input keeps only its emoji, in order ("비☕" → "☕").
+            let emoji = EmojiRules.filter(value)
+            return emoji.isEmpty ? .invalid : .value(emoji)
         case .word, .place:
             return .value(value)
         }
@@ -72,15 +74,6 @@ enum ItemValidator {
 
     static func isTime(_ value: String) -> Bool {
         value.range(of: #"^([01]\d|2[0-3]):[0-5]\d$"#, options: .regularExpression) != nil
-    }
-
-    static func containsEmoji(_ value: String) -> Bool {
-        value.unicodeScalars.contains { scalar in
-            let p = scalar.properties
-            if p.isEmojiPresentation { return true }
-            if scalar.value == 0x20E3 { return true } // keycap
-            return p.isEmoji && scalar.value > 0xFF
-        }
     }
 
     static func invalidMessage(for kind: ItemKind) -> String {

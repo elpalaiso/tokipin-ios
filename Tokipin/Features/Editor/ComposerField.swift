@@ -48,28 +48,51 @@ struct ComposerField: UIViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
 
+    /// Edits pass through untouched outside the emoji tool and during IME composition.
+    static func shouldPassThroughEdit(preferEmoji: Bool, isComposing: Bool) -> Bool {
+        !preferEmoji || isComposing
+    }
+
+    /// Return confirms an item unless the emoji field is mid-composition.
+    static func shouldCommitOnReturn(preferEmoji: Bool, isComposing: Bool) -> Bool {
+        !(preferEmoji && isComposing)
+    }
+
     final class Coordinator: NSObject, UITextFieldDelegate {
         var parent: ComposerField
 
         init(parent: ComposerField) { self.parent = parent }
 
         @objc func changed(_ field: UITextField) {
+            // After an IME composition ends, drop anything that is not emoji (UX v0.1 §4).
+            if parent.preferEmoji, field.markedTextRange == nil, let text = field.text {
+                let cleaned = EmojiRules.filter(text)
+                if cleaned != text { field.text = cleaned }
+            }
             parent.text = field.text ?? ""
         }
 
-        /// With the emoji tool, only emoji get in, even if the person switches to another keyboard.
+        /// With the emoji tool only emoji get in, from any keyboard or paste. Invalid-only
+        /// input leaves the text and selection untouched; composition is never rewritten.
         func textField(_ field: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            guard parent.preferEmoji, !string.isEmpty else { return true }
-            let emoji = String(string.filter { ItemValidator.containsEmoji(String($0)) })
+            guard !ComposerField.shouldPassThroughEdit(preferEmoji: parent.preferEmoji, isComposing: field.markedTextRange != nil),
+                  !string.isEmpty else { return true }
+            let emoji = EmojiRules.filter(string)
             if emoji == string { return true }
-            if !emoji.isEmpty, let current = field.text, let swiftRange = Range(range, in: current) {
-                field.text = current.replacingCharacters(in: swiftRange, with: emoji)
-                parent.text = field.text ?? ""
-            }
+            guard !emoji.isEmpty,
+                  let start = field.position(from: field.beginningOfDocument, offset: range.location),
+                  let end = field.position(from: start, offset: range.length),
+                  let textRange = field.textRange(from: start, to: end) else { return false }
+            field.replace(textRange, withText: emoji)
             return false
         }
 
         func textFieldShouldReturn(_ field: UITextField) -> Bool {
+            guard ComposerField.shouldCommitOnReturn(preferEmoji: parent.preferEmoji,
+                                                     isComposing: field.markedTextRange != nil) else {
+                // Still composing (e.g. Hangul) in the emoji field: let the IME finish, add nothing.
+                return false
+            }
             // Finish any Hangul composition before reading the value.
             field.unmarkText()
             parent.text = field.text ?? ""
@@ -82,8 +105,10 @@ struct ComposerField: UIViewRepresentable {
         var preferEmoji = false
 
         override var textInputMode: UITextInputMode? {
-            if preferEmoji, let emoji = UITextInputMode.activeInputModes.first(where: { $0.primaryLanguage == "emoji" }) {
-                return emoji
+            // Ask for the enabled system emoji keyboard; without one, keep the current keyboard.
+            let modes = UITextInputMode.activeInputModes
+            if preferEmoji, let index = EmojiKeyboard.preferredIndex(languages: modes.map(\.primaryLanguage)) {
+                return modes[index]
             }
             return super.textInputMode
         }
@@ -91,5 +116,14 @@ struct ComposerField: UIViewRepresentable {
         override var intrinsicContentSize: CGSize {
             CGSize(width: UIView.noIntrinsicMetric, height: super.intrinsicContentSize.height)
         }
+    }
+}
+
+/// Which active keyboard the emoji tool asks for. The app never shows its own palette.
+enum EmojiKeyboard {
+    static let appSuggestedPalette = false
+
+    static func preferredIndex(languages: [String?]) -> Int? {
+        languages.firstIndex { $0 == "emoji" }
     }
 }
