@@ -32,10 +32,10 @@ struct EntryDatePicker: View {
                 CircleIconButton(accessibilityLabel: "날짜 선택 취소", action: onCancel) {
                     Image(systemName: "xmark").resizable().scaledToFit().padding(3)
                 }
-                chip(String(month.year), label: "연도 \(String(month.year))", active: mode == .years) {
+                chip(String(month.year), label: String(localized: "연도 \(MonthKey.spokenYear(month.year))"), active: mode == .years) {
                     mode = mode == .years ? .days : .years
                 }
-                chip(mode == .months && candidate == nil ? "—" : "\(month.month)", label: "\(month.month)월", active: mode == .months) {
+                chip(mode == .months && candidate == nil ? "—" : "\(month.month)", label: month.monthName, active: mode == .months) {
                     mode = mode == .months ? .days : .months
                 }
                 Spacer()

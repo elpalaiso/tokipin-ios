@@ -338,7 +338,7 @@ struct EditorView: View {
                 font: BrandFont.uiFont(size, isFirstEntry(position) ? .medium : .regular, relativeTo: .title1),
                 preferEmoji: model.kind == .emoji,
                 isFocused: keyboardWanted && model.selection == nil,
-                accessibilityLabel: String(localized: "\(model.kind.label) 입력"),
+                accessibilityLabel: model.kind.inputLabel,
                 onBeginEditing: { keyboardWanted = true },
                 onReturn: commitField
             )

@@ -17,8 +17,8 @@ struct YearView: View {
                             yearBlock(year).id(year)
                         case .gap(let first, let last):
                             FoldRow(label: first == last ? String(first) : "\(first) – \(last)",
-                                    spoken: first == last ? String(localized: "\(String(first))년, 기록 없는 해")
-                                        : String(localized: "\(String(first))년부터 \(String(last))년까지 기록 없는 \(last - first + 1)년"),
+                                    spoken: first == last ? String(localized: "\(MonthKey.spokenYear(first)), 기록 없는 해")
+                                        : String(localized: "\(MonthKey.spokenYear(first))부터 \(MonthKey.spokenYear(last))까지 기록 없는 \(last - first + 1)년"),
                                     expanded: app.expandedYearGaps.contains(first)) {
                                 withAnimation(.easeOut(duration: InteractionRules.commitDuration)) {
                                     if app.expandedYearGaps.contains(first) { app.expandedYearGaps.remove(first) } else { app.expandedYearGaps.insert(first) }
@@ -89,7 +89,7 @@ struct YearView: View {
                 if recordedYears.contains(year) { SummaryDot(size: 6).padding(.top, 8) }
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(recordedYears.contains(year) ? Text("\(String(year))년, 기록 있음") : Text("\(String(year))년"))
+            .accessibilityLabel(recordedYears.contains(year) ? Text("\(MonthKey.spokenYear(year)), 기록 있음") : Text(verbatim: MonthKey.spokenYear(year)))
             .accessibilityAddTraits(.isHeader)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: columns), spacing: 16) {
                 ForEach(1...12, id: \.self) { month in
@@ -172,7 +172,7 @@ struct MiniMonth: View {
         .disabled(!inRange)
         .opacity(inRange ? 1 : 0.35)
         .modifier(PinchTargetIf(enabled: inRange, target: .month(month)))
-        .accessibilityLabel(inRange ? Text("\(month.month)월, 기록한 날 \(recorded.count)일") : Text("\(month.month)월, 범위 밖"))
+        .accessibilityLabel(inRange ? Text("\(month.spokenLabel), 기록한 날 \(recorded.count)일") : Text("\(month.spokenLabel), 범위 밖"))
         .accessibilityAddTraits(isFocused ? .isSelected : [])
     }
 }

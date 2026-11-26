@@ -160,7 +160,7 @@ struct MonthGrid: View {
                                 .font(.brand(20, .medium))
                                 .foregroundStyle(Palette.primary)
                                 .fixedSize()
-                                .accessibilityLabel("\(month.year)년 \(month.month)월")
+                                .accessibilityLabel(Text(verbatim: month.spokenLabel))
                                 .accessibilityAddTraits(.isHeader)
                         } else {
                             Color.clear.frame(height: 1)

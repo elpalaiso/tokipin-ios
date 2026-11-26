@@ -15,6 +15,16 @@ enum ItemKind: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// The input field's name, as one phrase per kind (word order differs by language).
+    var inputLabel: String {
+        switch self {
+        case .word: String(localized: "단어 입력")
+        case .emoji: String(localized: "이모지 입력")
+        case .place: String(localized: "장소 입력")
+        case .time: String(localized: "시간 입력")
+        }
+    }
+
     /// Asset catalog name of the pictogram.
     var iconName: String {
         switch self {

@@ -87,8 +87,21 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
     /// 2026.11.25
     var dotted: String { String(format: "%04d.%02d.%02d", year, month, day) }
 
-    /// 2026.11.25(수)
-    var label: String { "\(dotted)(\(weekdaySymbol))" }
+    /// Full date for VoiceOver and titles. Korean keeps "2026.11.25(수)"; other languages use the
+    /// locale's own date format (e.g. "Wed, Nov 25, 2026").
+    var label: String {
+        let locale = TimeRules.displayLocale
+        if locale.language.languageCode?.identifier == "ko" { return "\(dotted)(\(weekdaySymbol))" }
+        return DayKey.formatted(date, template: "yMMMdEEE", locale: locale)
+    }
+
+    static func formatted(_ date: Date, template: String, locale: Locale) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = DayKey.calendar
+        formatter.locale = locale
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: locale)
+        return formatter.string(from: date)
+    }
 
     /// 2026.11.25 (수) — editor header.
     var spacedLabel: String { "\(dotted) (\(weekdaySymbol))" }

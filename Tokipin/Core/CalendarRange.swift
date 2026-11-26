@@ -179,6 +179,14 @@ extension MonthKey {
         first == last ? first.dotted : "\(first.dotted) – \(last.dotted)"
     }
 
-    /// Spoken month, e.g. "2017년 6월", localized.
-    var spokenLabel: String { String(localized: "\(String(year))년 \(month)월") }
+    /// Spoken year and month from the locale's formatter ("2017년 6월", "June 2017").
+    var spokenLabel: String { DayKey.formatted(firstDay.date, template: "yMMMM", locale: TimeRules.displayLocale) }
+
+    /// Month name alone ("6월", "June").
+    var monthName: String { DayKey.formatted(firstDay.date, template: "LLLL", locale: TimeRules.displayLocale) }
+
+    /// Spoken year ("2017년", "2017"), without digit grouping.
+    static func spokenYear(_ year: Int) -> String {
+        DayKey.formatted(MonthKey(year: year, month: 1).firstDay.date, template: "y", locale: TimeRules.displayLocale)
+    }
 }

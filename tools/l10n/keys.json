@@ -1,0 +1,687 @@
+{
+ "%lld개 선택": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "취소": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "선택한 항목 삭제": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "두 번 탭해 날짜를 바꿔요.": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "홈으로, 초안 보관": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "항목 선택": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "기록 저장": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "두 번 탭해 수정해요.": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "위로 이동": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "아래로 이동": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "삭제": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "시간": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "시간 입력, 아래 선택기에서 골라요": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "시간 %@": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "%@ %@": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "항목을 수정했어요.": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "항목을 추가했어요.": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "항목을 삭제했어요.": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "저장하지 못했어요.\n입력은 이 화면에 남아 있어요.\n저장 공간을 확인해 주세요.": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "다시 시도": [
+  "RootView.stringsdata",
+  "",
+  null
+ ],
+ "입력 종류": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "Aa": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "시간 추가": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "시간 수정": [
+  "EditorView.stringsdata",
+  "",
+  null
+ ],
+ "저장 및 개인정보": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "기록과 초안은 이 기기에 저장돼요. 앱 데이터를 지우면 함께 삭제돼요. 위치와 캘린더에 접근하지 않아요.": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "설정": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "닫기": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "진동": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "날짜를 넘기거나 보기를 바꿀 때 가볍게 진동해요.": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "내보내지 못했어요. 다시 시도해 주세요.": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "기록 내보내기": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "저장한 기록을 JSON 파일로 내려받아요.": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "Tokipin에 한마디": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "개인정보 처리방침": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "이용약관": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "기록을 내보냈어요.": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "기록을 불러오는 중이에요.": [
+  "RootView.stringsdata",
+  "",
+  null
+ ],
+ "기록을 불러오지 못했어요": [
+  "RootView.stringsdata",
+  "",
+  null
+ ],
+ "기기에 저장된 기록을 읽을 수 없어요.\n잠시 후 다시 시도해 주세요.": [
+  "RootView.stringsdata",
+  "",
+  null
+ ],
+ "kind.word": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "kind.emoji": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "kind.place": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "kind.time": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "단어 입력": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "이모지 입력": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "장소 입력": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "시간 입력": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "시간을 선택해 주세요.": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "이모지를 입력해 주세요.": [
+  "Models.stringsdata",
+  "",
+  null
+ ],
+ "%@부터 %@까지 기록 없는 %lld개월": [
+  "MonthView.stringsdata",
+  "",
+  null
+ ],
+ "펼침": [
+  "MonthView.stringsdata",
+  "",
+  null
+ ],
+ "접힘": [
+  "MonthView.stringsdata",
+  "",
+  null
+ ],
+ "두 번 탭해 접어요.": [
+  "MonthView.stringsdata",
+  "",
+  null
+ ],
+ "두 번 탭해 펼쳐요.": [
+  "MonthView.stringsdata",
+  "",
+  null
+ ],
+ "%lld": [
+  "EntryDatePicker.stringsdata",
+  "",
+  null
+ ],
+ "검색 닫기": [
+  "SearchView.stringsdata",
+  "",
+  null
+ ],
+ "단어, 장소, 날짜 검색": [
+  "SearchView.stringsdata",
+  "",
+  null
+ ],
+ "": [
+  "SearchView.stringsdata",
+  "",
+  null
+ ],
+ "검색어 지우기": [
+  "SearchView.stringsdata",
+  "",
+  null
+ ],
+ "검색 결과가 없어요.": [
+  "SearchView.stringsdata",
+  "",
+  null
+ ],
+ "%@, %@ %@": [
+  "SearchView.stringsdata",
+  "",
+  null
+ ],
+ "Tokipin은 회원가입 없이 사용하는 iOS·Android 기록 앱이에요. 기록과 작성 중인 초안은 기기의 앱 저장공간에 보관해요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "어떤 정보를 저장하나요?": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "직접 입력한 단어, 이모지, 장소, 시간과 기록 날짜, 입력 순서를 저장해요. 이 정보와 작성 중인 초안은 오프라인에서 기록을 이어 쓰고, 날짜별로 찾고 수정하는 데 사용해요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "장소와 캘린더에 접근하나요?": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "장소는 직접 입력해요. Tokipin은 기기의 위치나 캘린더에 대한 접근 권한을 요청하지 않아요. 앱의 달력에는 내가 남긴 기록이 표시돼요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "기록을 어떻게 보관하고 지우나요?": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "달력이나 검색에서 기록을 확인하고 항목 하나 또는 하루 전체를 지울 수 있어요. 직접 지우거나 기기에서 앱 데이터를 삭제할 때까지 기록을 보관해요. 앱 데이터를 삭제하면 그 기기의 기록과 초안이 함께 지워져요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "내보낸 파일과 기기 백업": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "설정에서 저장한 기록을 JSON 파일로 내보낼 수 있어요. 내보낸 파일은 앱에서 기록을 지운 뒤에도 남으니, 저장한 위치에서 직접 관리해 주세요. Tokipin은 계정 동기화를 제공하지 않아요. 기기 백업·복원에 기록이 포함되는지는 운영체제와 앱의 백업 설정에 따라 달라져요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "운영자 및 개인정보 문의": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "운영자 정보, 문의처와 시행일은 정식 출시 때 안내할 예정이에요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "이 약관은 iOS·Android용 Tokipin 앱에서 개인 기록을 작성하고 열어볼 때 적용되는 이용 기준이에요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "앱 이용": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "회원가입 없이 단어, 이모지, 장소, 시간을 원하는 순서로 남길 수 있어요. 연간, 월간, 기록한 날, 일간 보기에서 다시 열거나 검색하고, 직접 수정·삭제할 수 있어요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "기록에 대한 권리": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "직접 만든 기록에 대한 권리는 작성자에게 있어요. 다른 사람의 글이나 개인정보가 담긴 기록을 외부에 공유할 때에는 그 사람의 권리와 사생활을 존중해 주세요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "기기를 바꾸거나 앱 데이터를 지울 때": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "Tokipin은 계정으로 기록을 동기화하지 않아요. 기기를 바꾸거나 앱 데이터를 지우기 전에 보관하고 싶은 기록은 설정에서 JSON 파일로 내보내 주세요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "운영자 및 이용 문의": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "뒤로": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "출시 전 초안 · iOS·Android 앱 기준": [
+  "PolicyView.stringsdata",
+  "",
+  null
+ ],
+ "저장하지 못했어요": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "이날 기록 %lld개 삭제": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "이날 기록 %lld개를 삭제했어요.": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "확인": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "이날 더보기": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "검색 결과로 돌아가기": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "기록 검색": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "연간 달력으로": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "월간 달력으로": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "기록한 날로": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "일간으로": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "이날 기록 삭제": [
+  "RecordsView.stringsdata",
+  "",
+  null
+ ],
+ "탐색 보기, %@": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "탐색 보기": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "저장 공간을 확인한 뒤 다시 시도해 주세요.": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "오늘": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "이날 기록 편집": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "아직 남긴 기록이 없어요.": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "첫 기록 남기기": [
+  "ExploreView.stringsdata",
+  "",
+  null
+ ],
+ "level.day": [
+  "AppModel.stringsdata",
+  "",
+  null
+ ],
+ "level.records": [
+  "AppModel.stringsdata",
+  "",
+  null
+ ],
+ "level.month": [
+  "AppModel.stringsdata",
+  "",
+  null
+ ],
+ "level.year": [
+  "AppModel.stringsdata",
+  "",
+  null
+ ],
+ "실행 취소": [
+  "Components.stringsdata",
+  "",
+  null
+ ],
+ "기록 추가": [
+  "Components.stringsdata",
+  "",
+  null
+ ],
+ "이날 남긴 기록이 없어요.": [
+  "Components.stringsdata",
+  "",
+  null
+ ],
+ "%@에 남긴 기록이 없어요.": [
+  "Components.stringsdata",
+  "",
+  null
+ ],
+ "%@, %@": [
+  "RecordsView.stringsdata",
+  "",
+  null
+ ],
+ "%lld / %@": [
+  "RecordsView.stringsdata",
+  "",
+  null
+ ],
+ "월 선택": [
+  "RecordsView.stringsdata",
+  "",
+  null
+ ],
+ "weekday.sun": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "weekday.mon": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "weekday.tue": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "weekday.wed": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "weekday.thu": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "weekday.fri": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "weekday.sat": [
+  "DayKey.stringsdata",
+  "",
+  null
+ ],
+ "%@, 기록 없는 해": [
+  "YearView.stringsdata",
+  "",
+  null
+ ],
+ "%@부터 %@까지 기록 없는 %lld년": [
+  "YearView.stringsdata",
+  "",
+  null
+ ],
+ "%@, 기록 있음": [
+  "YearView.stringsdata",
+  "",
+  null
+ ],
+ "%@, 기록한 날 %lld일": [
+  "YearView.stringsdata",
+  "",
+  null
+ ],
+ "%@, 범위 밖": [
+  "YearView.stringsdata",
+  "",
+  null
+ ],
+ "다음 날": [
+  "DayView.stringsdata",
+  "",
+  null
+ ],
+ "이전 날": [
+  "DayView.stringsdata",
+  "",
+  null
+ ],
+ "설정으로": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "쓰면서 떠오른 생각이 있나요?\n어떤 이야기든 반가워요.": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "주소를 복사했어요": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "주소 복사": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "메일로 보내기": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "메일 앱을 열 수 없어요. 아래 주소로 보내주세요.": [
+  "FeedbackView.stringsdata",
+  "",
+  null
+ ],
+ "연도 %@": [
+  "EntryDatePicker.stringsdata",
+  "",
+  null
+ ],
+ "날짜 선택 취소": [
+  "EntryDatePicker.stringsdata",
+  "",
+  null
+ ],
+ "이 날짜로 바꾸기": [
+  "EntryDatePicker.stringsdata",
+  "",
+  null
+ ],
+ "두 번 탭해 골라요.": [
+  "EntryDatePicker.stringsdata",
+  "",
+  null
+ ]
+}

@@ -218,8 +218,8 @@ struct ExploreView: View {
     private var headerSpokenTitle: String? {
         switch app.level {
         case .day: app.selectedDay.monthKey.spokenLabel
-        case .records: String(localized: "\(String(app.recordsMonth.year))년")
-        case .month: String(localized: "\(String(app.focusedMonth.year))년")
+        case .records: MonthKey.spokenYear(app.recordsMonth.year)
+        case .month: MonthKey.spokenYear(app.focusedMonth.year)
         case .year: nil
         }
     }

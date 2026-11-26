@@ -180,11 +180,11 @@ struct DebugSampleSection: View {
                 Text(verbatim: message).font(.brand(13)).foregroundStyle(Palette.focus)
             }
         }
-        .alert("달력 범위 예시로 교체할까요?", isPresented: $confirmingRangeSamples) {
-            Button("취소", role: .cancel) {}
-            Button("교체", role: .destructive) { loadRangeSamples() }
+        .alert(Text(verbatim: "달력 범위 예시로 교체할까요?"), isPresented: $confirmingRangeSamples) {
+            Button(role: .cancel) {} label: { Text(verbatim: "취소") }
+            Button(role: .destructive) { loadRangeSamples() } label: { Text(verbatim: "교체") }
         } message: {
-            Text("이 기기의 기존 기록과 초안을 교체해요.")
+            Text(verbatim: "이 기기의 기존 기록과 초안을 교체해요.")
         }
     }
 
