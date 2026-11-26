@@ -574,6 +574,9 @@ final class NativeUXSpecTests: XCTestCase {
                 XCTAssertEqual(window.map { $0?.id }, (e["visibleMonthKeys"] as? [Any])?.map { $0 as? String }, name)
                 XCTAssertEqual(window.map { $0?.month }, (e["visibleMonthNumbers"] as? [Any])?.map { $0 as? Int }, name)
                 XCTAssertEqual(hints, (e["hintsBySlot"] as? [Any])?.map { $0 as? String }, name)
+                // The rail computes hints over the whole list (as Android does); on screen they match.
+                let whole = RecordedMonths.hints(committed: app.recordsMonth, in: months)
+                XCTAssertEqual(window.map { $0.flatMap { whole[$0] } }, hints, "\(name): whole-list hints")
             case "inspectRailAccessibility":
                 let target = month(g["targetMonth"])
                 let value = e["monthValue"] as? [String: Int]

@@ -25,6 +25,7 @@ struct ExploreView: View {
     @State private var contentFrame: CGRect = .zero
     @State private var pinchActive = false
     @State private var headerWidth: CGFloat = 390
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         @Bindable var app = app
@@ -83,18 +84,42 @@ struct ExploreView: View {
     /// The date title sits on the screen's centre line (safe area included), not between the
     /// buttons; back, search-result return and the menus stay separate 44pt targets (v0.3 §1).
     private var header: some View {
-        ZStack {
-            if let title = headerTitle {
-                Text(verbatim: title)
-                    .font(.brand(22, .medium, relativeTo: .title2))
-                    .foregroundStyle(Palette.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                    // Never under the side buttons: at most the width left between the widest side.
-                    .frame(maxWidth: max(headerWidth - 2 * sideReserve, 60))
-                    .accessibilityLabel(Text(verbatim: headerSpokenTitle ?? title))
-                    .accessibilityAddTraits(.isHeader)
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                // Large text: the title takes its own line under the buttons instead of shrinking.
+                VStack(spacing: 2) {
+                    buttonsRow.frame(height: 56)
+                    titleView.frame(maxWidth: .infinity).padding(.bottom, 6)
+                }
+            } else {
+                ZStack {
+                    titleView
+                    buttonsRow
+                }
+                .frame(height: 56)
             }
+        }
+        .padding(.leading, 10)
+        .padding(.trailing, 10)
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { headerWidth = $0 }
+    }
+
+    @ViewBuilder
+    private var titleView: some View {
+            if let title = headerTitle {
+            Text(verbatim: title)
+                .font(.brand(22, .medium, relativeTo: .title2))
+                .foregroundStyle(Palette.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                // Never under the side buttons: at most the width left between the widest side.
+                .frame(maxWidth: dynamicTypeSize.isAccessibilitySize ? .infinity : max(headerWidth - 2 * sideReserve, 60))
+                .accessibilityLabel(Text(verbatim: headerSpokenTitle ?? title))
+                .accessibilityAddTraits(.isHeader)
+        }
+    }
+
+    private var buttonsRow: some View {
             HStack(spacing: 0) {
                 if let parent = parentLevel {
                     Button {
@@ -137,11 +162,6 @@ struct ExploreView: View {
                 }
                 viewMenu
             }
-        }
-        .padding(.leading, 10)
-        .padding(.trailing, 10)
-        .frame(height: 56)
-        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { headerWidth = $0 }
     }
 
     /// Widest side of the header row (three 44pt buttons plus padding).

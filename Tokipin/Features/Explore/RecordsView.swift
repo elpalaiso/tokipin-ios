@@ -206,22 +206,13 @@ struct MonthRail: View {
     @State private var position = ScrollPosition(idType: MonthKey.self)
     @State private var centerOffset: CGFloat = 0
     @State private var userScrolling = false
-    @State private var width: CGFloat = 0
 
     private func month(at index: Int) -> MonthKey {
         months[min(max(index, 0), months.count - 1)]
     }
 
-    /// Year hints for the slots on screen, keyed by month.
-    private var hints: [MonthKey: String] {
-        let side = RecordedMonths.sideSlots(railWidth: width, slot: slot)
-        let window = RecordedMonths.window(committed: committed, sideSlots: side, in: months)
-        var result: [MonthKey: String] = [:]
-        for (month, hint) in zip(window, RecordedMonths.hints(window: window, committed: committed)) {
-            if let month, let hint { result[month] = hint }
-        }
-        return result
-    }
+    /// Year hints over the whole list (same on screen as the visible-window rule).
+    private var hints: [MonthKey: String] { RecordedMonths.hints(committed: committed, in: months) }
 
     var body: some View {
         let hints = hints
@@ -254,11 +245,7 @@ struct MonthRail: View {
                     position.scrollTo(id: committed, anchor: .center)
                 }
             }
-            .onAppear {
-                width = geometry.size.width
-                position.scrollTo(id: committed, anchor: .center)
-            }
-            .onChange(of: geometry.size.width) { _, value in width = value }
+            .onAppear { position.scrollTo(id: committed, anchor: .center) }
             .onChange(of: committed) { _, month in
                 if reduceMotion || userScrolling {
                     var transaction = Transaction()

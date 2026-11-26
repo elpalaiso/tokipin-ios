@@ -52,6 +52,19 @@ enum RecordedMonths {
         }
     }
 
+    /// Hints over the whole list, keyed by month: for each other year, the month nearest the
+    /// committed slot. On screen this equals `hints(window:)`, and months scrolled in by hand
+    /// already carry the right year before the rail settles.
+    static func hints(committed: MonthKey, in months: [MonthKey]) -> [MonthKey: String] {
+        guard let centre = months.firstIndex(of: committed) else { return [:] }
+        var nearest: [Int: Int] = [:]
+        for (index, month) in months.enumerated() where month.year != committed.year {
+            if let current = nearest[month.year], abs(current - centre) <= abs(index - centre) { continue }
+            nearest[month.year] = index
+        }
+        return Dictionary(uniqueKeysWithValues: nearest.map { (months[$0.value], String($0.key)) })
+    }
+
     /// Fully visible side slots for a rail of this width.
     static func sideSlots(railWidth: CGFloat, slot: CGFloat) -> Int {
         guard slot > 0 else { return 0 }
