@@ -24,6 +24,7 @@ struct ExploreView: View {
     @State private var layerScale: [ExploreLevel: CGFloat] = [:]
     @State private var contentFrame: CGRect = .zero
     @State private var pinchActive = false
+    @State private var headerWidth: CGFloat = 390
 
     var body: some View {
         @Bindable var app = app
@@ -79,62 +80,80 @@ struct ExploreView: View {
 
     // MARK: Header
 
+    /// The date title sits on the screen's centre line (safe area included), not between the
+    /// buttons; back, search-result return and the menus stay separate 44pt targets (v0.3 §1).
     private var header: some View {
-        HStack(spacing: 0) {
-            if let parent = parentLevel {
-                Button {
-                    app.searchHighlight = nil
-                    if app.level == .day {
-                        app.closeDay()
-                    } else {
-                        app.setLevel(parent, haptic: false)
-                        app.requestReveal(app.selectedDay)
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "chevron.left").font(.system(size: 17, weight: .regular))
-                        Text(headerTitle).font(.brand(22, .medium, relativeTo: .title2))
-                    }
+        ZStack {
+            if let title = headerTitle {
+                Text(verbatim: title)
+                    .font(.brand(22, .medium, relativeTo: .title2))
                     .foregroundStyle(Palette.primary)
-                    .frame(minHeight: 44)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(parent == .month ? Text("\(headerTitle)월 달력으로") : Text("\(headerTitle)년으로"))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    // Never under the side buttons: at most the width left between the widest side.
+                    .frame(maxWidth: max(headerWidth - 2 * sideReserve, 60))
+                    .accessibilityLabel(Text(verbatim: headerSpokenTitle ?? title))
+                    .accessibilityAddTraits(.isHeader)
             }
-            Spacer()
-            // Adding and editing live in the bottom +/pencil; the menu keeps deleting a whole day.
-            if app.level == .day && !store.items(on: app.selectedDay).isEmpty {
-                Menu {
-                    Button(role: .destructive) { dayToDelete = app.selectedDay } label: {
-                        Label("이날 기록 삭제", systemImage: "trash")
+            HStack(spacing: 0) {
+                if let parent = parentLevel {
+                    Button {
+                        app.searchHighlight = nil
+                        if app.level == .day {
+                            app.closeDay()
+                        } else {
+                            app.setLevel(parent, haptic: false)
+                            app.requestReveal(app.selectedDay)
+                        }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 19, weight: .regular))
+                            .foregroundStyle(Palette.primary)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
-                } label: { HeaderIcon(systemName: "ellipsis") }
-                .accessibilityLabel("이날 더보기")
-            }
-            if app.searchHighlight != nil && app.level == .day {
-                Button {
-                    app.isSearching = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "magnifyingglass").font(.system(size: 13))
-                        Text("검색 결과").font(.brand(13))
-                    }
-                    .foregroundStyle(Palette.primary)
-                    .frame(minHeight: 44)
-                    .padding(.horizontal, 6)
-                }
-                .buttonStyle(.plain)
-            } else {
-                Button { app.isSearching = true } label: { HeaderIcon(systemName: "magnifyingglass") }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("기록 검색")
+                    .accessibilityLabel(Text(backLabel(parent)))
+                }
+                Spacer()
+                // Adding and editing live in the bottom +/pencil; the menu keeps deleting a whole day.
+                if app.level == .day && !store.items(on: app.selectedDay).isEmpty {
+                    Menu {
+                        Button(role: .destructive) { dayToDelete = app.selectedDay } label: {
+                            Label("이날 기록 삭제", systemImage: "trash")
+                        }
+                    } label: { HeaderIcon(systemName: "ellipsis") }
+                    .accessibilityLabel("이날 더보기")
+                }
+                if app.searchHighlight != nil && app.level == .day {
+                    // Icon-only so the centred title never collides with it.
+                    Button { app.isSearching = true } label: { HeaderIcon(systemName: "text.magnifyingglass") }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("검색 결과로 돌아가기")
+                } else {
+                    Button { app.isSearching = true } label: { HeaderIcon(systemName: "magnifyingglass") }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("기록 검색")
+                }
+                viewMenu
             }
-            viewMenu
         }
-        .padding(.leading, 20)
+        .padding(.leading, 10)
         .padding(.trailing, 10)
         .frame(height: 56)
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { headerWidth = $0 }
+    }
+
+    /// Widest side of the header row (three 44pt buttons plus padding).
+    private var sideReserve: CGFloat { 10 + 44 * 3 }
+
+    private func backLabel(_ parent: ExploreLevel) -> String {
+        switch parent {
+        case .year: String(localized: "연간 달력으로")
+        case .month: String(localized: "월간 달력으로")
+        case .records: String(localized: "기록한 날로")
+        case .day: String(localized: "일간으로")
+        }
     }
 
     private var viewMenu: some View {
@@ -165,11 +184,23 @@ struct ExploreView: View {
         }
     }
 
-    private var headerTitle: String {
+    /// 일간 "2017.05", 기록한 날 the committed month's year, 월간 the visible month's year,
+    /// 연간 none (each year block carries its own).
+    private var headerTitle: String? {
         switch app.level {
-        case .day: "\(app.selectedDay.month)"
-        case .records: "\(app.recordsMonth.year)"
-        default: "\(app.focusedMonth.year)"
+        case .day: DateHeader.day(app.selectedDay)
+        case .records: DateHeader.year(app.recordsMonth)
+        case .month: DateHeader.year(app.focusedMonth)
+        case .year: nil
+        }
+    }
+
+    private var headerSpokenTitle: String? {
+        switch app.level {
+        case .day: app.selectedDay.monthKey.spokenLabel
+        case .records: String(localized: "\(String(app.recordsMonth.year))년")
+        case .month: String(localized: "\(String(app.focusedMonth.year))년")
+        case .year: nil
         }
     }
 

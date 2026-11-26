@@ -9,21 +9,35 @@ struct RecordsView: View {
     /// Body drag progress (−1…1) mirrored by the rail while the finger is down.
     @State private var progress: CGFloat = 0
 
+    /// Months with saved items plus this month (v0.3); every move steps through this list.
+    private var months: [MonthKey] {
+        RecordedMonths.visible(recordedDays: store.records.keys, today: app.today)
+    }
+
     var body: some View {
+        let months = months
         VStack(spacing: 0) {
-            MonthRail(committed: app.recordsMonth, progress: progress, range: range) { month in
-                app.commitRecordsMonth(min(max(month, range.lowerBound), range.upperBound))
+            MonthRail(committed: app.recordsMonth, progress: progress, months: months) { month in
+                app.commitRecordsMonth(month)
             }
-            .frame(height: 52)
+            .frame(height: 66)
             SwipePager(region: .recordsBody, onProgress: { progress = $0 },
-                       canMove: { range.contains(app.recordsMonth.adding(months: $0)) }, onCommit: { delta in
-                app.commitRecordsMonth(app.recordsMonth.adding(months: delta))
+                       canMove: { RecordedMonths.neighbour(of: app.recordsMonth, step: $0, in: months) != nil },
+                       onCommit: { delta in
+                if let next = RecordedMonths.neighbour(of: app.recordsMonth, step: delta, in: months) {
+                    app.commitRecordsMonth(next)
+                }
             }) { page in
-                RecordsMonthPage(month: app.recordsMonth.adding(months: page), onLongPress: onLongPress)
+                if let month = RecordedMonths.neighbour(of: app.recordsMonth, step: page, in: months) {
+                    RecordsMonthPage(month: month, onLongPress: onLongPress)
+                } else {
+                    Color.clear   // past either end: empty margin, nothing to focus
+                }
             }
         }
-        .onAppear(perform: clampMonth)
-        .onChange(of: range) { _, _ in clampMonth() }
+        .onAppear { reconcile(months) }
+        .onChange(of: months) { _, list in reconcile(list) }
+        .onChange(of: app.level) { _, level in if level == .records { reconcile(months) } }
         .onChange(of: app.recordsMonth) { _, month in
             // Only a settled month is announced; previews and cancelled drags never are.
             if app.level == .records, store.days(in: month).isEmpty, UIAccessibility.isVoiceOverRunning {
@@ -31,17 +45,12 @@ struct RecordsView: View {
             }
         }
     }
-}
 
-extension RecordsView {
-    /// Months 기록한 날 can show: first explorable month … this month.
-    var range: ClosedRange<MonthKey> {
-        CalendarRange.firstMonth(today: app.today, earliestRecord: store.records.keys.min())...CalendarRange.lastMonth(today: app.today)
-    }
-
-    func clampMonth() {
-        let clamped = min(max(app.recordsMonth, range.lowerBound), range.upperBound)
-        if clamped != app.recordsMonth { app.commitRecordsMonth(clamped, haptic: false) }
+    /// The committed month stays while it is shown; otherwise the nearest shown month (the more
+    /// recent on a tie). Silent: no haptic and the selected day is untouched.
+    private func reconcile(_ list: [MonthKey]) {
+        let resolved = RecordedMonths.resolve(app.recordsMonth, in: list)
+        if resolved != app.recordsMonth { app.commitRecordsMonth(resolved, haptic: false) }
     }
 }
 
@@ -180,15 +189,16 @@ struct RecordCard: View {
     }
 }
 
-/// Month numbers flowing across years (… 11 12 1 2 …) with the committed month fixed at the
-/// centre. Native horizontal scrolling with view-aligned snapping handles flings; the body's
-/// drag moves it by the same fraction so both travel together.
+/// The shown months as a row of numbers with the committed month fixed at the centre. Native
+/// horizontal scrolling with view-aligned snapping handles flings across many months; the body's
+/// drag moves it by the same fraction so both travel together. A small year sits over the slot
+/// nearest the centre for each other year; its space is always reserved so nothing shifts.
 struct MonthRail: View {
     let committed: MonthKey
-    /// Body drag progress, in months (−1…1).
+    /// Body drag progress, in slots (−1…1).
     let progress: CGFloat
-    /// Explorable months; the rail holds only these.
-    let range: ClosedRange<MonthKey>
+    /// Shown months, oldest first.
+    let months: [MonthKey]
     let onSelect: (MonthKey) -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -196,18 +206,30 @@ struct MonthRail: View {
     @State private var position = ScrollPosition(idType: MonthKey.self)
     @State private var centerOffset: CGFloat = 0
     @State private var userScrolling = false
+    @State private var width: CGFloat = 0
 
-    private var count: Int { CalendarRange.monthCount(range.lowerBound, range.upperBound) }
     private func month(at index: Int) -> MonthKey {
-        range.lowerBound.adding(months: min(max(index, 0), count - 1))
+        months[min(max(index, 0), months.count - 1)]
+    }
+
+    /// Year hints for the slots on screen, keyed by month.
+    private var hints: [MonthKey: String] {
+        let side = RecordedMonths.sideSlots(railWidth: width, slot: slot)
+        let window = RecordedMonths.window(committed: committed, sideSlots: side, in: months)
+        var result: [MonthKey: String] = [:]
+        for (month, hint) in zip(window, RecordedMonths.hints(window: window, committed: committed)) {
+            if let month, let hint { result[month] = hint }
+        }
+        return result
     }
 
     var body: some View {
+        let hints = hints
         GeometryReader { geometry in
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
-                    ForEach(0..<count, id: \.self) { index in
-                        label(month(at: index)).id(month(at: index))
+                    ForEach(months, id: \.self) { month in
+                        label(month, hint: hints[month]).id(month)
                     }
                 }
                 .scrollTargetLayout()
@@ -232,7 +254,11 @@ struct MonthRail: View {
                     position.scrollTo(id: committed, anchor: .center)
                 }
             }
-            .onAppear { position.scrollTo(id: committed, anchor: .center) }
+            .onAppear {
+                width = geometry.size.width
+                position.scrollTo(id: committed, anchor: .center)
+            }
+            .onChange(of: geometry.size.width) { _, value in width = value }
             .onChange(of: committed) { _, month in
                 if reduceMotion || userScrolling {
                     var transaction = Transaction()
@@ -244,40 +270,51 @@ struct MonthRail: View {
                     }
                 }
             }
+            .onChange(of: months) { _, _ in position.scrollTo(id: committed, anchor: .center) }
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel("월 선택")
         .accessibilityAdjustableAction { direction in
-            switch direction {
-            case .increment: if committed < range.upperBound { onSelect(committed.adding(months: 1)) }
-            case .decrement: if committed > range.lowerBound { onSelect(committed.adding(months: -1)) }
-            @unknown default: break
-            }
+            // Same neighbours as the body swipe.
+            let step = direction == .increment ? 1 : direction == .decrement ? -1 : 0
+            if step != 0, let next = RecordedMonths.neighbour(of: committed, step: step, in: months) { onSelect(next) }
         }
     }
 
     /// Month shown in the centre right now: the rail's own position while it is flung,
     /// otherwise the body-drag preview.
     private var centred: MonthKey {
-        userScrolling ? month(at: Int((centerOffset / slot).rounded()))
-            : InteractionRules.previewMonth(committed: committed, dragFraction: progress)
+        if userScrolling { return month(at: Int((centerOffset / slot).rounded())) }
+        guard abs(progress) >= 0.5 else { return committed }
+        return RecordedMonths.neighbour(of: committed, step: progress > 0 ? 1 : -1, in: months) ?? committed
     }
 
-    private func label(_ month: MonthKey) -> some View {
+    private func label(_ month: MonthKey, hint: String?) -> some View {
         let isCentre = month == centred
         return Button {
             onSelect(month)
         } label: {
-            Text("\(month.month)")
-                .font(.brand(isCentre ? 20 : 16, isCentre ? .semibold : .regular))
-                .foregroundStyle(isCentre ? Palette.onFocus : Palette.secondary)
-                .frame(width: 40, height: 40)
-                .background(isCentre ? Palette.focus : .clear, in: Circle())
-                .frame(width: slot, height: 52)
-                .contentShape(Rectangle())
+            VStack(spacing: 0) {
+                // Reserved line: the hint never moves the number's baseline or the capsule.
+                Text(verbatim: hint ?? " ")
+                    .font(.brand(10))
+                    .foregroundStyle(Palette.secondary)
+                    .opacity(hint == nil ? 0 : 1)
+                    .animation(reduceMotion ? nil : .easeOut(duration: InteractionRules.commitDuration), value: hint)
+                    .frame(height: 14)
+                Text("\(month.month)")
+                    .font(.brand(isCentre ? 20 : 16, isCentre ? .semibold : .regular))
+                    .foregroundStyle(isCentre ? Palette.onFocus : Palette.secondary)
+                    .frame(width: 40, height: 40)
+                    .background(isCentre ? Palette.focus : .clear, in: Circle())
+            }
+            .frame(width: slot, height: 66)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Text("\(String(month.year))년 \(month.month)월"))
-        .accessibilityAddTraits(month == committed ? .isSelected : [])
+        // One element per slot: the full year and month, selected state; the hint is merged in.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(month.spokenLabel))
+        .accessibilityAddTraits(month == committed ? [.isButton, .isSelected] : .isButton)
     }
 }

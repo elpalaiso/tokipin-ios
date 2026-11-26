@@ -49,6 +49,13 @@ every case that applies to iOS (81 of 82; `emoji.externalIme` is Android-only), 
 - **Editor**: long press and release in place → 삭제 menu; long press and drag up/down → reorder across kinds; swipe to delete with undo. VoiceOver actions: 위로 이동, 아래로 이동, 삭제.
 - Changes are saved only with ✓. The first saved item replaces the rabbit; saving with the last item deleted returns to the same day's empty screen. Drafts are kept per day.
 
+## Native UX v0.3 (date headers, 기록한 날 months)
+
+- Shared spec: `../tokipin/native-spec/v0.3/Tokipin-Native-UX-v0.3.json` (109 cases, SHA-256 6bddea73…5599512), run by `TokipinTests/NativeUXSpecTests.swift`.
+- Header titles sit on the screen's centre line: 일간 "2017.05" (selected day), 기록한 날 the committed month's year, 월간 the visible month's year, 연간 none (each block carries its year), editor "2017.05.14 ⌄".
+- 기록한 날 pages = months with saved items + this month (`RecordedMonths`). Body swipe, rail, taps, flings and VoiceOver all step through that list; past either end is empty. When the committed month disappears (delete, import, month change) the nearest shown month opens, the more recent on a tie, silently.
+- The rail reserves a hint line: for each other year, the slot nearest the centre shows its 4-digit year.
+
 ## Calendar range
 
 - The device's local month is the last month; new records can go up to its last day. Explore starts at the earlier of 11 months ago and the oldest saved record's month (recent 12 months with no records). Only saved records move the range; drafts and the picker never do.

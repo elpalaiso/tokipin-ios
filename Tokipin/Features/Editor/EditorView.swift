@@ -116,7 +116,7 @@ struct EditorView: View {
             ZStack {
                 Button(action: openPicker) {
                     HStack(spacing: 4) {
-                        Text(model.day.spacedLabel)
+                        Text(verbatim: DateHeader.editor(model.day))
                             .font(.brand(15))
                         Image(systemName: "chevron.down").font(.system(size: 10, weight: .semibold))
                     }

@@ -2,28 +2,29 @@ import CryptoKit
 import XCTest
 @testable import Tokipin
 
-/// Runs the shared cases of "Tokipin Native UX v0.2" (59 carried over from v0.1 + 23 for
-/// 기록한 날) against the iOS rules.
+/// Runs the shared cases of "Tokipin Native UX v0.3" (81 kept from v0.2, 1 replaced, 27 new for
+/// the date headers and 기록한 날's shown-month list) against the iOS rules.
 ///
-/// The spec has a single copy, shared with Android, at `../tokipin/native-spec/v0.2/`
+/// The spec has a single copy, shared with Android, at `../tokipin/native-spec/v0.3/`
 /// next to this repository. It is pinned by SHA-256 so both apps test the same version.
 @MainActor
 final class NativeUXSpecTests: XCTestCase {
-    static let pinnedSHA256 = "418fbe56ed8127f591a295b6fb924b683a94825e2d322d535a23f2b2c0105ea9"
+    static let pinnedSHA256 = "6bddea73872758395ec047089b96a96ba996fa0cdaef11117363347655599512"
 
     static var specURL: URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()      // TokipinTests
             .deletingLastPathComponent()      // tokipin-ios
             .deletingLastPathComponent()      // parent folder
-            .appendingPathComponent("tokipin/native-spec/v0.2/Tokipin-Native-UX-v0.2.json")
+            .appendingPathComponent("tokipin/native-spec/v0.3/Tokipin-Native-UX-v0.3.json")
     }
 
     private static var cachedCases: [[String: Any]]?
     /// Groups this file runs. `capability` cases for Android are filtered inside.
     static let handledGroups: Set<String> = [
         "swipe", "pinch", "pinchAnchor", "calendar", "emojiCommit", "emojiComposition", "emojiSelection",
-        "emojiEdit", "migration", "capability", "timeDisplay", "timeEdit", "haptic", "recordedMonths"
+        "emojiEdit", "migration", "capability", "timeDisplay", "timeEdit", "haptic", "recordedMonths",
+        "visibleMonthIndex", "monthYearHints", "dateHeaders"
     ]
 
     private func cases(_ group: String) throws -> [[String: Any]] {
@@ -57,16 +58,19 @@ final class NativeUXSpecTests: XCTestCase {
 
     // MARK: Coverage
 
-    /// Every case in the pinned file belongs to a group with a runner here (82 cases, 81 on iOS).
+    /// Every case in the pinned file belongs to a group with a runner here (109 cases, 108 on iOS).
     func testEveryCaseHasARunner() throws {
         _ = try cases("swipe")
         let all = Self.cachedCases!
-        XCTAssertEqual(all.count, 82)
+        XCTAssertEqual(all.count, 109)
         let groups = Set(all.compactMap { $0["group"] as? String })
         XCTAssertEqual(groups.subtracting(Self.handledGroups), [], "Unhandled groups")
         let androidOnly = all.filter { ($0["given"] as? [String: Any])?["platform"] as? String == "Android" }
         XCTAssertEqual(androidOnly.map { $0["id"] as? String }, ["emoji.externalIme"])
         XCTAssertEqual(all.filter { $0["group"] as? String == "recordedMonths" }.count, 23)
+        XCTAssertEqual(all.filter { $0["group"] as? String == "visibleMonthIndex" }.count, 15)
+        XCTAssertEqual(all.filter { $0["group"] as? String == "monthYearHints" }.count, 7)
+        XCTAssertEqual(all.filter { $0["group"] as? String == "dateHeaders" }.count, 5)
     }
 
     // MARK: Constants
@@ -379,18 +383,41 @@ final class NativeUXSpecTests: XCTestCase {
         return store
     }
 
+    /// The shared "달력 범위 예시" (512 days), used by `fixture: calendarRangeArchive`.
+    private static var archiveDays: [DayKey]?
+    private func archiveDays() throws -> [DayKey] {
+        if let days = Self.archiveDays { return days }
+        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Tokipin/DebugFixtures/calendar-range-records.json")
+        let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: Data(contentsOf: url))
+        let days = archive.days.filter { !$0.items.isEmpty }.map(\.date)
+        Self.archiveDays = days
+        return days
+    }
+
+    /// Saved days for a case: the shared archive or the listed dates.
+    private func recordedDays(_ g: [String: Any]) throws -> [DayKey] {
+        if g["fixture"] as? String == "calendarRangeArchive" { return try archiveDays() }
+        return ((g["availableRecordDates"] as? [String]) ?? []).map(day)
+    }
+
+    private func today(_ g: [String: Any]) -> DayKey { g["deviceToday"].map(day) ?? DayKey(year: 2026, month: 11, day: 26) }
+
     func testRecordedMonthsCases() async throws {
         var ran: [String] = []
         for test in try cases("recordedMonths") {
             let g = given(test), e = expected(test), name = id(test)
-            let start = g["committedMonth"].map(month) ?? DayKey.today.monthKey
+            let deviceToday = today(g)
+            let start = g["committedMonth"].map(month) ?? deviceToday.monthKey
             let selected = g["selectedDay"].map(day) ?? start.firstDay
             let app = AppModel.forTesting(level: level(g["level"] as? String ?? "recordedDays"), day: selected)
+            app.today = deviceToday
             app.commitRecordsMonth(start, haptic: false)
             var ticks = 0
             app.hapticSink = { ticks += 1 }
             if let enabled = g["appHapticsEnabled"] as? Bool { app.hapticsEnabled = { enabled } }
             let data = try await store(with: (g["availableRecordDates"] as? [String]) ?? [])
+            let months = RecordedMonths.visible(recordedDays: data.records.keys, today: deviceToday)
             var preview: MonthKey?
             var monthCommits = 0
 
@@ -400,44 +427,44 @@ final class NativeUXSpecTests: XCTestCase {
                     width: number(g["W"]), dx: number(g["dx"]), dy: number(g["dy"]), vx: number(g["vx"]),
                     region: .recordsBody, systemEdgeBack: g["systemEdgeBack"] as? Bool ?? false,
                     osCancel: g["osCancel"] as? Bool ?? false)
-                XCTAssertLessThanOrEqual(abs(delta), 1, "\(name): one month per page")
-                if delta != 0 { app.commitRecordsMonth(app.recordsMonth.adding(months: delta)) }
+                XCTAssertLessThanOrEqual(abs(delta), 1, "\(name): one page per swipe")
+                if delta != 0, let next = RecordedMonths.neighbour(of: app.recordsMonth, step: delta, in: months) {
+                    app.commitRecordsMonth(next)
+                }
             case "bodyDrag":
                 let fraction = number(g["dragFraction"])
-                preview = InteractionRules.previewMonth(committed: start, dragFraction: fraction)
-                // RecordsView hands the same progress value to the body pager and the rail.
+                preview = abs(fraction) >= 0.5 ? RecordedMonths.neighbour(of: start, step: fraction > 0 ? 1 : -1, in: months) : start
                 XCTAssertEqual(number(e["bodyProgress"]), fraction)
                 XCTAssertEqual(number(e["railProgress"]), fraction)
                 XCTAssertEqual(preview, month(g["neighborMonth"]), name)
             case "renderRail":
-                let window = InteractionRules.railWindow(committed: start, sideSlots: g["sideSlotsInThisFixture"] as? Int ?? 2)
-                XCTAssertEqual(window.map(\.id), e["visibleMonthKeys"] as? [String], name)
-                XCTAssertEqual(window.map(\.month), e["visibleMonthNumbers"] as? [Int], name)
+                let window = RecordedMonths.window(committed: start, sideSlots: g["sideSlotsInThisFixture"] as? Int ?? 2, in: months)
+                XCTAssertEqual(window.map { $0?.id }, (e["visibleMonthKeys"] as? [String])?.map(Optional.init), name)
+                XCTAssertEqual(window.map { $0?.month }, (e["visibleMonthNumbers"] as? [Int])?.map(Optional.init), name)
             case "tapRailMonth":
                 app.commitRecordsMonth(month(g["tappedMonth"]))
                 if let spatial = e["spatialTransition"] as? Bool {
-                    // Reduce motion: MonthRail scrolls without animation and the body swaps in place.
                     XCTAssertEqual(spatial, !(g["reduceMotion"] as? Bool ?? false), name)
                 }
             case "railCoast":
                 preview = month(g["nearestCandidate"])       // highlighted only; nothing committed mid-coast
             case "railSettle":
-                app.commitRecordsMonth(InteractionRules.railSettleMonth(
-                    committed: start, projectedSlotOffset: number(g["projectedSlotOffsetAtRest"])))
+                let steps = Int(number(g["projectedSlotOffsetAtRest"]).rounded())
+                let index = months.firstIndex(of: start)! + steps
+                app.commitRecordsMonth(months[min(max(index, 0), months.count - 1)])
             case "cancelRail":
-                break                                        // released back on the committed month
+                break
             case "today":
-                app.goToday(day(g["deviceToday"]))
+                app.goToday(deviceToday)
             case "openDay":
                 app.openDay(day(g["openedDay"]))
                 XCTAssertEqual(app.level, .day, name)
                 app.closeDay()
             case "beginBodyDrag":
-                // A second finger turns the gesture into a pinch: the unsettled month move is cancelled.
                 app.isPinching = true
                 let delta = InteractionRules.swipeDelta(width: 390, dx: -120, dy: 0, vx: -500,
                                                          region: .recordsBody, osCancel: app.isPinching)
-                if delta != 0 { app.commitRecordsMonth(app.recordsMonth.adding(months: delta)); monthCommits += 1 }
+                if delta != 0 { monthCommits += 1 }
                 app.isPinching = false
                 let to = InteractionRules.pinchLevel(from: app.level, scale: number(g["scaleAtRelease"]))
                 app.navigate(to: day(g["firstHit"]), level: to)
@@ -450,7 +477,7 @@ final class NativeUXSpecTests: XCTestCase {
             if let level = e["level"] as? String { XCTAssertEqual(app.level, self.level(level), name) }
             if let committed = e["committedMonth"] { XCTAssertEqual(app.recordsMonth, month(committed), name) }
             if let centred = e["centeredMonth"] { XCTAssertEqual(app.recordsMonth, month(centred), "\(name): rail centre = committed") }
-            if let year = e["headerYear"] as? Int { XCTAssertEqual(app.recordsMonth.year, year, name) }
+            if let year = e["headerYear"] as? Int { XCTAssertEqual(DateHeader.year(app.recordsMonth), String(year), name) }
             if let previewMonth = e["previewMonth"] { XCTAssertEqual(preview, month(previewMonth), name) }
             if let selectedDay = e["selectedDay"] { XCTAssertEqual(app.selectedDay, day(selectedDay), name) }
             if let cards = e["visibleCardDates"] as? [String] {
@@ -463,6 +490,133 @@ final class NativeUXSpecTests: XCTestCase {
             ran.append(name)
         }
         XCTAssertEqual(ran.count, 23)
+    }
+
+    // MARK: Shown-month list (v0.3)
+
+    func testVisibleMonthIndexCases() throws {
+        var ran = 0
+        for test in try cases("visibleMonthIndex") {
+            let g = given(test), e = expected(test), name = id(test)
+            var deviceToday = today(g)
+            var days = Set(try recordedDays(g))
+            var months = RecordedMonths.visible(recordedDays: days, today: deviceToday)
+            // Drafts never add a month.
+            for draft in ((g["draftOnlyDates"] as? [String]) ?? []).map(day) where draft.monthKey != deviceToday.monthKey {
+                XCTAssertFalse(months.contains(draft.monthKey), name)
+            }
+            let selected = g["selectedDay"].map(day) ?? deviceToday
+            let app = AppModel.forTesting(level: .records, day: selected)
+            app.today = deviceToday
+            if let committed = g["committedMonth"] { app.commitRecordsMonth(month(committed), haptic: false) }
+            var ticks = 0
+            app.hapticSink = { ticks += 1 }
+            let reconcile = {
+                let resolved = RecordedMonths.resolve(app.recordsMonth, in: months)
+                if resolved != app.recordsMonth { app.commitRecordsMonth(resolved, haptic: false) }
+            }
+
+            switch g["action"] as? String {
+            case "buildVisibleMonths":
+                break
+            case "bodySlotStep":
+                if let next = RecordedMonths.neighbour(of: app.recordsMonth, step: g["direction"] as? Int ?? 0, in: months) {
+                    app.commitRecordsMonth(next)
+                }
+            case "resolveAnchor":
+                // Entering 기록한 날 from an empty past month (e.g. a pinch from 월간).
+                app.navigate(to: selected, level: .month, haptic: false)
+                app.navigate(level: .records, haptic: false)
+                app.commitRecordsMonth(month(g["requestedMonth"]), haptic: false)
+                reconcile()
+                XCTAssertEqual(ticks, e["monthTicks"] as? Int ?? 0, name)
+            case "refresh":
+                for removed in (g["remove"] as? [String]) ?? [] { days.remove(day(removed)) }
+                for inserted in (g["insert"] as? [String]) ?? [] { days.insert(day(inserted)) }
+                if let newToday = g["newDeviceToday"] { deviceToday = day(newToday); app.today = deviceToday }
+                months = RecordedMonths.visible(recordedDays: days, today: deviceToday)
+                reconcile()
+            case "cancelBodyDrag":
+                // The preview showed another year; releasing without a commit leaves everything.
+                XCTAssertEqual(RecordedMonths.neighbour(of: app.recordsMonth, step: 1, in: months), month(g["previewMonth"]), name)
+            default:
+                XCTFail("Unknown action in \(name)")
+            }
+
+            if let list = e["visibleMonths"] as? [String] { XCTAssertEqual(months.map(\.id), list, name) }
+            if let committed = e["committedMonth"] { XCTAssertEqual(app.recordsMonth, month(committed), name) }
+            if let selectedDay = e["selectedDay"] { XCTAssertEqual(app.selectedDay, day(selectedDay), name) }
+            if let year = e["headerYear"] as? Int { XCTAssertEqual(DateHeader.year(app.recordsMonth), String(year), name) }
+            if let empty = e["showMonthEmptyState"] as? Bool {
+                XCTAssertEqual(!days.contains { $0.monthKey == app.recordsMonth }, empty, name)
+            }
+            if let expectedTicks = e["appTicks"] as? Int { XCTAssertEqual(ticks, expectedTicks, "\(name) ticks") }
+            ran += 1
+        }
+        XCTAssertEqual(ran, 15)
+    }
+
+    func testMonthYearHintCases() throws {
+        var ran = 0
+        for test in try cases("monthYearHints") {
+            let g = given(test), e = expected(test), name = id(test)
+            let months = RecordedMonths.visible(recordedDays: try recordedDays(g), today: today(g))
+            let app = AppModel.forTesting(level: .records, day: today(g))
+            app.today = today(g)
+            app.commitRecordsMonth(month(g["committedMonth"]), haptic: false)
+            var ticks = 0
+            app.hapticSink = { ticks += 1 }
+
+            switch g["action"] as? String {
+            case "renderHints":
+                let window = RecordedMonths.window(committed: app.recordsMonth, sideSlots: g["sideSlotsInThisFixture"] as? Int ?? 2, in: months)
+                let hints = RecordedMonths.hints(window: window, committed: app.recordsMonth)
+                XCTAssertEqual(window.map { $0?.id }, (e["visibleMonthKeys"] as? [Any])?.map { $0 as? String }, name)
+                XCTAssertEqual(window.map { $0?.month }, (e["visibleMonthNumbers"] as? [Any])?.map { $0 as? Int }, name)
+                XCTAssertEqual(hints, (e["hintsBySlot"] as? [Any])?.map { $0 as? String }, name)
+            case "inspectRailAccessibility":
+                let target = month(g["targetMonth"])
+                let value = e["monthValue"] as? [String: Int]
+                XCTAssertEqual(target.year, value?["year"]); XCTAssertEqual(target.month, value?["month"])
+                XCTAssertEqual(target.spokenLabel, "2023년 4월", name)
+                XCTAssertEqual(target == app.recordsMonth, e["isSelected"] as? Bool, name)
+                // MonthRail merges the hint into the slot's single accessibility element.
+                XCTAssertEqual(e["hintIsSeparateAccessibleElement"] as? Bool, false)
+            case "tapRailMonth":
+                app.commitRecordsMonth(month(g["tappedMonth"]))
+                // Rail and hint: fixed 14pt hint line and fixed capsule frame, so nothing shifts.
+                XCTAssertEqual(number(e["baselineShift"]), 0); XCTAssertEqual(number(e["capsuleCenterShift"]), 0)
+                XCTAssertEqual(e["spatialTransition"] as? Bool, !(g["reduceMotion"] as? Bool ?? false), name)
+            default:
+                XCTFail("Unknown action in \(name)")
+            }
+            if let committed = e["centeredMonth"] ?? e["committedMonth"] { XCTAssertEqual(app.recordsMonth, month(committed), name) }
+            if let year = e["headerYear"] as? Int { XCTAssertEqual(DateHeader.year(app.recordsMonth), String(year), name) }
+            if let expectedTicks = e["appTicks"] as? Int { XCTAssertEqual(ticks, expectedTicks, "\(name) ticks") }
+            ran += 1
+        }
+        XCTAssertEqual(ran, 7)
+    }
+
+    func testDateHeaderCases() throws {
+        for test in try cases("dateHeaders") {
+            let g = given(test), e = expected(test), name = id(test)
+            let title: String?
+            switch g["level"] as? String {
+            case "day": title = DateHeader.day(day(g["selectedDay"]))
+            case "recordedDays": title = DateHeader.year(month(g["committedMonth"]))
+            case "month": title = DateHeader.year(month(g["visibleMonth"]))
+            case "editor": title = DateHeader.editor(day(g["draftDay"]))
+            default: title = nil   // 연간: each year block carries its year
+            }
+            XCTAssertEqual(title, e["globalTitle"] as? String, name)
+            // ExploreView/EditorView centre the title in a full-width ZStack with equal side padding,
+            // so its centre is the viewport centre whatever the side buttons measure.
+            if let centre = e["titleCenterX"] as? Double {
+                XCTAssertEqual(number(g["width"]) / 2, CGFloat(centre), name)
+                XCTAssertEqual(e["anchor"] as? String, "viewportCenter", name)
+            }
+        }
     }
 
     // MARK: Haptics

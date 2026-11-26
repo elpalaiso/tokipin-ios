@@ -56,24 +56,9 @@ enum InteractionRules {
         return level
     }
 
-    // MARK: 기록한 날 month pager (v0.2)
+    // MARK: 기록한 날 months
 
-    /// Month shown as the candidate while the body or rail is dragged; the committed month
-    /// (header year, VoiceOver selection) changes only when the page settles.
-    static func previewMonth(committed: MonthKey, dragFraction: CGFloat) -> MonthKey {
-        guard abs(dragFraction) >= 0.5 else { return committed }
-        return committed.adding(months: dragFraction > 0 ? 1 : -1)
-    }
-
-    /// Month the rail rests on: the slot nearest the centre after the platform's momentum.
-    static func railSettleMonth(committed: MonthKey, projectedSlotOffset: CGFloat) -> MonthKey {
-        committed.adding(months: Int(projectedSlotOffset.rounded()))
-    }
-
-    /// Months visible around the committed month on the rail.
-    static func railWindow(committed: MonthKey, sideSlots: Int) -> [MonthKey] {
-        (-sideSlots...sideSlots).map { committed.adding(months: $0) }
-    }
+    // The shown-month list, neighbours and year hints live in `RecordedMonths` (v0.3).
 
     // MARK: Settling
 
@@ -87,7 +72,7 @@ enum InteractionRules {
         case selectedDateTap, selectedDateChanged, daySwipeCommit, weekSwipeCommit, levelCommit, levelChanged
         case recordedDaysMonthCommit
         case tapDate, dragProgress, pinchProgress, scroll, scrollCrossesMonthOrYear, cancel, levelLimit, reselect, today
-        case recordedDaysMonthPreview, recordedDaysRailCoast
+        case recordedDaysMonthPreview, recordedDaysRailCoast, recordedDaysDataReconciliation, recordedDaysHintChange
     }
 
     private static let committing: Set<NavigationEvent> = [
