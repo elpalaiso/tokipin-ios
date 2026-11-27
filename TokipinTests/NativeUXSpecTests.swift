@@ -182,7 +182,8 @@ final class NativeUXSpecTests: XCTestCase {
             let column = month.firstDay.column(firstWeekday: firstWeekday)
             XCTAssertEqual(column, e["firstDayColumnIndexZeroBased"] as? Int, id(test))
             let symbols = DayKey.orderedWeekdaySymbols(firstWeekday: firstWeekday)
-            XCTAssertEqual(symbols[column], "목", id(test)) // monthLabelAboveWeekday: thursday
+            // monthLabelAboveWeekday: thursday (Korean copy; other languages: LocalizationTests)
+            if koreanHost { XCTAssertEqual(symbols[column], "목", id(test)) }
             XCTAssertEqual(month.weeks(firstWeekday: firstWeekday).first?[column], 1, id(test))
             if let entries = g["entries"] as? [String] {
                 let items = entries.map { RecordItem(kind: ItemValidator.isTime($0) ? .time : .word, value: $0) }
@@ -335,7 +336,7 @@ final class NativeUXSpecTests: XCTestCase {
             XCTAssertTrue(shown.contains(cycle == 24 ? String(format: "%02d:%02d", parts.hour, parts.minute)
                                                        : String(format: "%d:%02d", parts.hour, parts.minute)), "\(id(test)): \(shown)")
         }
-        XCTAssertEqual(TimeRules.display("18:45", uses24Hour: false), "오후 6:45")
+        if koreanHost { XCTAssertEqual(TimeRules.display("18:45", uses24Hour: false), "오후 6:45") }
         XCTAssertEqual(TimeRules.display("18:45", uses24Hour: true), "18:45")
     }
 
@@ -581,7 +582,7 @@ final class NativeUXSpecTests: XCTestCase {
                 let target = month(g["targetMonth"])
                 let value = e["monthValue"] as? [String: Int]
                 XCTAssertEqual(target.year, value?["year"]); XCTAssertEqual(target.month, value?["month"])
-                XCTAssertEqual(target.spokenLabel, "2023년 4월", name)
+                if koreanHost { XCTAssertEqual(target.spokenLabel, "2023년 4월", name) }
                 XCTAssertEqual(target == app.recordsMonth, e["isSelected"] as? Bool, name)
                 // MonthRail merges the hint into the slot's single accessibility element.
                 XCTAssertEqual(e["hintIsSeparateAccessibleElement"] as? Bool, false)

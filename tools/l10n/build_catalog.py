@@ -10,7 +10,7 @@ import glob, json, os, re, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from native_tr import T as NATIVE, LANGS
 
-WEB = os.path.join(os.path.dirname(__file__), '../../../tokipin/locales')
+WEB = os.environ.get('TOKIPIN_WEB_LOCALES') or os.path.join(os.path.dirname(__file__), '../../../tokipin/locales')
 HERE = os.path.dirname(__file__)
 OUT = os.path.join(os.path.dirname(__file__), '../../Tokipin/Localizable.xcstrings')
 
@@ -103,6 +103,21 @@ def localization(key, v):
             "argNum": num, "formatSpecifier": "lld",
             "variations": {"plural": {cat: unit(text.replace(pos, '%arg')) for cat, text in v.items()}}}}}
 
+def korean(key):
+    """Korean value for a key (the key itself, or the stable-key default). Every key gets one so
+    ko.lproj is complete and a Korean app never falls through to the English fallback tables."""
+    if key in KO_DEFAULT:
+        return unit(KO_DEFAULT[key])
+    specs = SPEC.findall(key)
+    if 'lld' not in specs:
+        return unit(key)
+    # Korean has only the "other" plural category; keep the same shape as the other languages.
+    counter = iter(range(1, len(specs) + 1))
+    positional = SPEC.sub(lambda m: f'%{next(counter)}${m.group(1)}', key)
+    if len(specs) == 1:
+        return {"variations": {"plural": {"other": unit(key)}}}
+    return localization(key, {"other": positional})
+
 strings = {}
 missing = []
 for key in sorted(keys):
@@ -110,19 +125,22 @@ for key in sorted(keys):
     if key in NO_TRANSLATE:
         strings[key] = {"shouldTranslate": False}
         continue
-    if key in KO_DEFAULT:
-        entry.setdefault("localizations", {})["ko"] = unit(KO_DEFAULT[key])
+    entry["localizations"] = {"ko": korean(key)}
     for lang in LANGS:
         v = value_for(key, lang)
         if v is None:
             missing.append((key, lang))
             continue
-        entry.setdefault("localizations", {})[APPLE[lang]] = localization(key, v)
+        entry["localizations"][APPLE[lang]] = localization(key, v)
     strings[key] = entry
+
+# Never write a catalog with holes: keep the last verified one and say what is missing.
+if missing:
+    for m in missing: print('MISSING', m, file=sys.stderr)
+    sys.exit(f'{len(missing)} translations missing; {OUT} left unchanged')
 
 catalog = {"sourceLanguage": "ko", "strings": strings, "version": "1.0"}
 with open(OUT, 'w') as f:
     json.dump(catalog, f, ensure_ascii=False, indent=2, separators=(',', ' : '), sort_keys=True)
     f.write('\n')
-print(len(strings), 'keys;', len(missing), 'missing')
-for m in missing: print('MISSING', m)
+print(len(strings), 'keys; 0 missing')

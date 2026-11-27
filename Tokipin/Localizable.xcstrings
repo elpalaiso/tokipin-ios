@@ -54,6 +54,12 @@
             "value" : "%1$@、%2$@"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -152,6 +158,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@、%2$@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %@"
           }
         },
         "pt-BR" : {
@@ -254,6 +266,12 @@
             "value" : "%1$@、%2$@、%3$@"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %@ %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -354,6 +372,12 @@
             "value" : "%@、記録のない年"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, 기록 없는 해"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -452,6 +476,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@、記録あり"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, 기록 있음"
           }
         },
         "pt-BR" : {
@@ -670,6 +700,28 @@
             "value" : "%1$@、記録のある日は%2$lld日"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@count@"
+          },
+          "substitutions" : {
+            "count" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%1$@, 기록한 날 %arg일"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -824,6 +876,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@、範囲外"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, 범위 밖"
           }
         },
         "pt-BR" : {
@@ -1052,6 +1110,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@から%2$@まで、記録のない%3$lldか月"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@count@"
+          },
+          "substitutions" : {
+            "count" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%1$@부터 %2$@까지 기록 없는 %arg개월"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "pt-BR" : {
@@ -1344,6 +1424,28 @@
             "value" : "%1$@から%2$@まで、記録のない%3$lld年"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@count@"
+          },
+          "substitutions" : {
+            "count" : {
+              "argNum" : 3,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%1$@부터 %2$@까지 기록 없는 %arg년"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1506,6 +1608,12 @@
             "value" : "%@の記録はありません。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@에 남긴 기록이 없어요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1609,6 +1717,28 @@
             "value" : "%1$lld / %2$@"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@count@"
+          },
+          "substitutions" : {
+            "count" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg / %2$@"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1707,6 +1837,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld件選択中"
+          }
+        },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld개 선택"
+                }
+              }
+            }
           }
         },
         "pt-BR" : {
@@ -1812,6 +1954,12 @@
             "value" : "Tokipinにひとこと"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin에 한마디"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1912,6 +2060,12 @@
             "value" : "Tokipin はアカウント経由で記録を同期しません。機種変更やアプリデータの消去の前に、残したい記録を設定から JSON ファイルに書き出してください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin은 계정으로 기록을 동기화하지 않아요. 기기를 바꾸거나 앱 데이터를 지우기 전에 보관하고 싶은 기록은 설정에서 JSON 파일로 내보내 주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2010,6 +2164,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tokipinは、会員登録なしで使えるiOS・Android向けの記録アプリです。記録や書きかけの下書きは、お使いの端末のアプリ専用領域に保存します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin은 회원가입 없이 사용하는 iOS·Android 기록 앱이에요. 기록과 작성 중인 초안은 기기의 앱 저장공간에 보관해요."
           }
         },
         "pt-BR" : {
@@ -3702,6 +3862,12 @@
             "value" : "プライバシーポリシー"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개인정보 처리방침"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3800,6 +3966,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "該当する記録はありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색 결과가 없어요."
           }
         },
         "pt-BR" : {
@@ -3902,6 +4074,12 @@
             "value" : "検索結果に戻る"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색 결과로 돌아가기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4000,6 +4178,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "検索を閉じる"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색 닫기"
           }
         },
         "pt-BR" : {
@@ -4102,6 +4286,12 @@
             "value" : "検索キーワードを消去"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "검색어 지우기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4200,6 +4390,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "機種変更やアプリデータの消去の前に"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기를 바꾸거나 앱 데이터를 지울 때"
           }
         },
         "pt-BR" : {
@@ -4302,6 +4498,12 @@
             "value" : "この端末に保存された記録を読み込めません。\nしばらくしてからもう一度お試しください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기에 저장된 기록을 읽을 수 없어요.\n잠시 후 다시 시도해 주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4400,6 +4602,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録を検索"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록 검색"
           }
         },
         "pt-BR" : {
@@ -4502,6 +4710,12 @@
             "value" : "記録を書き出す"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록 내보내기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4600,6 +4814,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録を保存"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록 저장"
           }
         },
         "pt-BR" : {
@@ -4702,6 +4922,12 @@
             "value" : "記録を追加"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록 추가"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4800,6 +5026,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録と下書きはこの端末に保存され、アプリのデータを削除すると一緒に削除されます。位置情報やカレンダーにはアクセスしません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록과 초안은 이 기기에 저장돼요. 앱 데이터를 지우면 함께 삭제돼요. 위치와 캘린더에 접근하지 않아요."
           }
         },
         "pt-BR" : {
@@ -4902,6 +5134,12 @@
             "value" : "記録に関する権利"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록에 대한 권리"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5000,6 +5238,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録を書き出しました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록을 내보냈어요."
           }
         },
         "pt-BR" : {
@@ -5102,6 +5346,12 @@
             "value" : "記録を読み込んでいます。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록을 불러오는 중이에요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5200,6 +5450,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録を読み込めませんでした"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록을 불러오지 못했어요"
           }
         },
         "pt-BR" : {
@@ -5302,6 +5558,12 @@
             "value" : "記録はいつまで保存され、どうすれば削除できますか？"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록을 어떻게 보관하고 지우나요?"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5400,6 +5662,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録のある日に戻る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록한 날로"
           }
         },
         "pt-BR" : {
@@ -5502,6 +5770,12 @@
             "value" : "日付の選択をキャンセル"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "날짜 선택 취소"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5600,6 +5874,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "日付や表示を切り替えると、軽く振動します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "날짜를 넘기거나 보기를 바꿀 때 가볍게 진동해요."
           }
         },
         "pt-BR" : {
@@ -5702,6 +5982,12 @@
             "value" : "書き出せませんでした。もう一度お試しください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보내지 못했어요. 다시 시도해 주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5800,6 +6086,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "書き出したファイルと端末のバックアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내보낸 파일과 기기 백업"
           }
         },
         "pt-BR" : {
@@ -5902,6 +6194,12 @@
             "value" : "もう一度試す"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다시 시도"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6000,6 +6298,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "翌日"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 날"
           }
         },
         "pt-BR" : {
@@ -6102,6 +6406,12 @@
             "value" : "ことばを入力"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단어 입력"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6200,6 +6510,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ことば・場所・日付を検索"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단어, 장소, 날짜 검색"
           }
         },
         "pt-BR" : {
@@ -6302,6 +6618,12 @@
             "value" : "閉じる"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "닫기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6400,6 +6722,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "カレンダーや検索から記録を確認し、項目をひとつずつ、または1日分まとめて削除できます。記録は、ご自身で削除するか、端末でアプリのデータを消去するまで保存されます。アプリのデータを消去すると、その端末の記録と下書きが削除されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "달력이나 검색에서 기록을 확인하고 항목 하나 또는 하루 전체를 지울 수 있어요. 직접 지우거나 기기에서 앱 데이터를 삭제할 때까지 기록을 보관해요. 앱 데이터를 삭제하면 그 기기의 기록과 초안이 함께 지워져요."
           }
         },
         "pt-BR" : {
@@ -6502,6 +6830,12 @@
             "value" : "ダブルタップで選択します。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "두 번 탭해 골라요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6600,6 +6934,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ダブルタップで日付を変更します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "두 번 탭해 날짜를 바꿔요."
           }
         },
         "pt-BR" : {
@@ -6702,6 +7042,12 @@
             "value" : "ダブルタップで編集します。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "두 번 탭해 수정해요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6800,6 +7146,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ダブルタップで折りたたみます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "두 번 탭해 접어요."
           }
         },
         "pt-BR" : {
@@ -6902,6 +7254,12 @@
             "value" : "ダブルタップで展開します。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "두 번 탭해 펼쳐요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7000,6 +7358,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "戻る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "뒤로"
           }
         },
         "pt-BR" : {
@@ -7102,6 +7466,12 @@
             "value" : "メールアプリを開けません。下のアドレスに送ってください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메일 앱을 열 수 없어요. 아래 주소로 보내주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7200,6 +7570,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "メールで送る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메일로 보내기"
           }
         },
         "pt-BR" : {
@@ -7302,6 +7678,12 @@
             "value" : "削除"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7400,6 +7782,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "選択した項目を削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택한 항목 삭제"
           }
         },
         "pt-BR" : {
@@ -7502,6 +7890,12 @@
             "value" : "設定"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7600,6 +7994,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "設定から、保存済みの記録を JSON ファイルに書き出せます。アプリ内の記録を削除しても、書き出したファイルは残るため、保存先で管理してください。Tokipin にアカウントを通じた同期機能はありません。端末のバックアップや復元に記録が含まれるかどうかは、OS とアプリのバックアップ設定によって異なります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정에서 저장한 기록을 JSON 파일로 내보낼 수 있어요. 내보낸 파일은 앱에서 기록을 지운 뒤에도 남으니, 저장한 위치에서 직접 관리해 주세요. Tokipin은 계정 동기화를 제공하지 않아요. 기기 백업·복원에 기록이 포함되는지는 운영체제와 앱의 백업 설정에 따라 달라져요."
           }
         },
         "pt-BR" : {
@@ -7702,6 +8102,12 @@
             "value" : "設定に戻る"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정으로"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7800,6 +8206,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "時刻"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간"
           }
         },
         "pt-BR" : {
@@ -7902,6 +8314,12 @@
             "value" : "時刻 %@"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 %@"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8000,6 +8418,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "時刻を変更"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 수정"
           }
         },
         "pt-BR" : {
@@ -8102,6 +8526,12 @@
             "value" : "時刻を入力"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 입력"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8200,6 +8630,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "時刻の入力。下のピッカーで選びます"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 입력, 아래 선택기에서 골라요"
           }
         },
         "pt-BR" : {
@@ -8302,6 +8738,12 @@
             "value" : "時刻を追加"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간 추가"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8400,6 +8842,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "時刻を選んでください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간을 선택해 주세요."
           }
         },
         "pt-BR" : {
@@ -8502,6 +8950,12 @@
             "value" : "元に戻す"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실행 취소"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8600,6 +9054,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "記録しながら思いついたことはありますか？\nどんなことでも大歓迎です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "쓰면서 떠오른 생각이 있나요?\n어떤 이야기든 반가워요."
           }
         },
         "pt-BR" : {
@@ -8702,6 +9162,12 @@
             "value" : "下へ移動"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아래로 이동"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8800,6 +9266,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "まだ記録がありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아직 남긴 기록이 없어요."
           }
         },
         "pt-BR" : {
@@ -8902,6 +9374,12 @@
             "value" : "アプリの利用"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 이용"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9000,6 +9478,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "どのような情報を保存しますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "어떤 정보를 저장하나요?"
           }
         },
         "pt-BR" : {
@@ -9102,6 +9586,12 @@
             "value" : "年間カレンダーに戻る"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연간 달력으로"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9200,6 +9690,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "年 %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연도 %@"
           }
         },
         "pt-BR" : {
@@ -9302,6 +9798,12 @@
             "value" : "今日"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "오늘"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9400,6 +9902,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "運営者情報とプライバシーに関するお問い合わせ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "운영자 및 개인정보 문의"
           }
         },
         "pt-BR" : {
@@ -9502,6 +10010,12 @@
             "value" : "運営者情報と利用に関するお問い合わせ"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "운영자 및 이용 문의"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9600,6 +10114,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "運営者情報、お問い合わせ先、適用開始日は、アプリの正式リリース時にお知らせします。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "운영자 정보, 문의처와 시행일은 정식 출시 때 안내할 예정이에요."
           }
         },
         "pt-BR" : {
@@ -9702,6 +10222,12 @@
             "value" : "月を選択"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "월 선택"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9800,6 +10326,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "月間カレンダーに戻る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "월간 달력으로"
           }
         },
         "pt-BR" : {
@@ -9902,6 +10434,12 @@
             "value" : "上へ移動"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위로 이동"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10002,6 +10540,12 @@
             "value" : "この日付に変更"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 날짜로 바꾸기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10100,6 +10644,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "この規約は、iOS・Android版のTokipinで個人の記録を作成・閲覧するときに適用されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 약관은 iOS·Android용 Tokipin 앱에서 개인 기록을 작성하고 열어볼 때 적용되는 이용 기준이에요."
           }
         },
         "pt-BR" : {
@@ -10280,6 +10830,18 @@
             "value" : "この日の記録%lld件を削除"
           }
         },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "이날 기록 %lld개 삭제"
+                }
+              }
+            }
+          }
+        },
         "pt-BR" : {
           "variations" : {
             "plural" : {
@@ -10337,7 +10899,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ลบ %lld รายการของวันนี้"
+            "value" : "ลบ %lld รายการของวันที่เลือก"
           }
         },
         "tr" : {
@@ -10500,6 +11062,18 @@
             "value" : "この日の記録%lld件を削除しました。"
           }
         },
+        "ko" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "이날 기록 %lld개를 삭제했어요."
+                }
+              }
+            }
+          }
+        },
         "pt-BR" : {
           "variations" : {
             "plural" : {
@@ -10557,7 +11131,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ลบ %lld รายการของวันนี้แล้ว"
+            "value" : "ลบ %lld รายการของวันที่เลือกแล้ว"
           }
         },
         "tr" : {
@@ -10640,6 +11214,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "この日の記録を削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이날 기록 삭제"
           }
         },
         "pt-BR" : {
@@ -10742,6 +11322,12 @@
             "value" : "この日の記録を編集"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이날 기록 편집"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10840,6 +11426,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "この日の記録はありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이날 남긴 기록이 없어요."
           }
         },
         "pt-BR" : {
@@ -10942,6 +11534,12 @@
             "value" : "この日のメニュー"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이날 더보기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11040,6 +11638,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "絵文字を入力"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이모지 입력"
           }
         },
         "pt-BR" : {
@@ -11142,6 +11746,12 @@
             "value" : "絵文字を入力してください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이모지를 입력해 주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11240,6 +11850,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "利用規約"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이용약관"
           }
         },
         "pt-BR" : {
@@ -11342,6 +11958,12 @@
             "value" : "前日"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이전 날"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11440,6 +12062,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "日別に戻る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일간으로"
           }
         },
         "pt-BR" : {
@@ -11542,6 +12170,12 @@
             "value" : "入力の種類"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입력 종류"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11640,6 +12274,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "場所を入力"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장소 입력"
           }
         },
         "pt-BR" : {
@@ -11742,6 +12382,12 @@
             "value" : "場所は自分で入力します。Tokipinが端末の位置情報やカレンダーへのアクセス許可を求めることはありません。アプリのカレンダーには、自分で残した記録が表示されます。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장소는 직접 입력해요. Tokipin은 기기의 위치나 캘린더에 대한 접근 권한을 요청하지 않아요. 앱의 달력에는 내가 남긴 기록이 표시돼요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11840,6 +12486,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "位置情報やカレンダーにアクセスしますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장소와 캘린더에 접근하나요?"
           }
         },
         "pt-BR" : {
@@ -11942,6 +12594,12 @@
             "value" : "ストレージの空き容量を確認して、もう一度お試しください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장 공간을 확인한 뒤 다시 시도해 주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12040,6 +12698,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存とプライバシー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장 및 개인정보"
           }
         },
         "pt-BR" : {
@@ -12142,6 +12806,12 @@
             "value" : "保存できませんでした"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장하지 못했어요"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12240,6 +12910,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存できませんでした。\n入力した内容はこの画面に残っています。\nストレージの空き容量を確認してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장하지 못했어요.\n입력은 이 화면에 남아 있어요.\n저장 공간을 확인해 주세요."
           }
         },
         "pt-BR" : {
@@ -12342,6 +13018,12 @@
             "value" : "保存した記録をJSONファイルとして保存します。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장한 기록을 JSON 파일로 내려받아요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12440,6 +13122,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "折りたたみ中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "접힘"
           }
         },
         "pt-BR" : {
@@ -12542,6 +13230,12 @@
             "value" : "アドレスをコピー"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주소 복사"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12640,6 +13334,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "アドレスをコピーしました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주소를 복사했어요"
           }
         },
         "pt-BR" : {
@@ -12742,6 +13442,12 @@
             "value" : "自分で作成した記録の権利は、作成者にあります。他の方の文章や個人情報を含む記録をアプリの外で共有する際は、その方の権利とプライバシーを尊重してください。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직접 만든 기록에 대한 권리는 작성자에게 있어요. 다른 사람의 글이나 개인정보가 담긴 기록을 외부에 공유할 때에는 그 사람의 권리와 사생활을 존중해 주세요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12840,6 +13546,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "入力したことば、絵文字、場所、時刻に加え、記録の日付と入力順を保存します。これらの情報と下書きは、オフラインで続きを書いたり、日付から記録を探して編集したりするために使います。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "직접 입력한 단어, 이모지, 장소, 시간과 기록 날짜, 입력 순서를 저장해요. 이 정보와 작성 중인 초안은 오프라인에서 기록을 이어 쓰고, 날짜별로 찾고 수정하는 데 사용해요."
           }
         },
         "pt-BR" : {
@@ -12942,6 +13654,12 @@
             "value" : "振動"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "진동"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13040,6 +13758,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最初の記録を残す"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "첫 기록 남기기"
           }
         },
         "pt-BR" : {
@@ -13142,6 +13866,12 @@
             "value" : "公開前の草案（iOS・Androidアプリ対象）"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "출시 전 초안 · iOS·Android 앱 기준"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13240,6 +13970,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "キャンセル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
           }
         },
         "pt-BR" : {
@@ -13342,6 +14078,12 @@
             "value" : "表示を切り替え"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탐색 보기"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13440,6 +14182,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "表示の切り替え。現在は%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탐색 보기, %@"
           }
         },
         "pt-BR" : {
@@ -13542,6 +14290,12 @@
             "value" : "展開中"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "펼침"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13640,6 +14394,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "項目を選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "항목 선택"
           }
         },
         "pt-BR" : {
@@ -13742,6 +14502,12 @@
             "value" : "項目を削除しました。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "항목을 삭제했어요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13840,6 +14606,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "項目を更新しました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "항목을 수정했어요."
           }
         },
         "pt-BR" : {
@@ -13942,6 +14714,12 @@
             "value" : "項目を追加しました。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "항목을 추가했어요."
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14040,6 +14818,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "下書きを残して戻る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "홈으로, 초안 보관"
           }
         },
         "pt-BR" : {
@@ -14142,6 +14926,12 @@
             "value" : "OK"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14240,6 +15030,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "会員登録なしで、ことば、絵文字、場所、時刻を好きな順に残せます。記録は年別、月別、記録のある日、日別の各表示で見返せます。検索や編集、削除もできます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "회원가입 없이 단어, 이모지, 장소, 시간을 원하는 순서로 남길 수 있어요. 연간, 월간, 기록한 날, 일간 보기에서 다시 열거나 검색하고, 직접 수정·삭제할 수 있어요."
           }
         },
         "pt-BR" : {

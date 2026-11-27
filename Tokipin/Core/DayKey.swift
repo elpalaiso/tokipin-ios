@@ -89,10 +89,47 @@ struct DayKey: Hashable, Comparable, Identifiable, Sendable {
 
     /// Full date for VoiceOver and titles. Korean keeps "2026.11.25(수)"; other languages use the
     /// locale's own date format (e.g. "Wed, Nov 25, 2026").
-    var label: String {
-        let locale = TimeRules.displayLocale
-        if locale.language.languageCode?.identifier == "ko" { return "\(dotted)(\(weekdaySymbol))" }
-        return DayKey.formatted(date, template: "yMMMdEEE", locale: locale)
+    var label: String { label(locale: TimeRules.displayLocale) }
+
+    func label(locale: Locale) -> String { DayKey.labeler(locale: locale)(self) }
+
+    /// Full date for VoiceOver in the app language and the person's region
+    /// ("Wednesday 25 November 2026", "2026년 11월 25일 수요일").
+    var spokenLabel: String { spokenLabel(locale: TimeRules.displayLocale) }
+
+    func spokenLabel(locale: Locale) -> String {
+        DayKey.formatter(template: "yMMMMdEEEE", locale: locale).string(from: date)
+    }
+
+    /// Formatters are expensive; one per (template, locale), reused on the main actor's renders.
+    nonisolated(unsafe) private static var formatters: [String: DateFormatter] = [:]
+    private static let formattersLock = NSLock()
+
+    static func formatter(template: String, locale: Locale, fixed: String? = nil) -> DateFormatter {
+        let key = template + "|" + (fixed ?? "") + "|" + locale.identifier
+        formattersLock.lock()
+        defer { formattersLock.unlock() }
+        if let cached = formatters[key] { return cached }
+        let formatter = DateFormatter()
+        formatter.calendar = DayKey.calendar
+        formatter.locale = locale
+        formatter.dateFormat = fixed ?? DateFormatter.dateFormat(fromTemplate: template, options: 0, locale: locale)
+        formatters[key] = formatter
+        return formatter
+    }
+
+    /// Builds the label function once per locale (one formatter or one weekday table), so labelling
+    /// thousands of days (the search index) doesn't create a formatter per day. The weekday comes
+    /// from `locale`, not from the app bundle, so `label(locale: ko)` is Korean in any app language.
+    static func labeler(locale: Locale) -> (DayKey) -> String {
+        if locale.language.languageCode?.identifier == "ko" {
+            var calendar = DayKey.calendar
+            calendar.locale = locale
+            let symbols = calendar.shortStandaloneWeekdaySymbols
+            return { "\($0.dotted)(\(symbols[$0.weekday]))" }
+        }
+        let formatter = DayKey.formatter(template: "yMMMdEEE", locale: locale)
+        return { formatter.string(from: $0.date) }
     }
 
     static func formatted(_ date: Date, template: String, locale: Locale) -> String {

@@ -4,6 +4,8 @@
 pt-BR, es (Spain), es-419, zh-Hans, zh-Hant (Taiwan), zh-HK. Web codes map to Apple identifiers as
 es-ES → `es`, zh-Hant-TW → `zh-Hant`, zh-Hant-HK → `zh-HK`.
 
+- The app follows the device language (or the per-app language in iOS Settings). A language the app
+  does not support falls back to English (`developmentRegion = en`); the catalog's source stays Korean.
 - Strings live in `Tokipin/Localizable.xcstrings` (source language ko). Rows follow the Figma
   [iOS handoff table](https://www.figma.com/design/DCXIvwQgfRlhz65FdjZJ5n/Tokipin?node-id=311-1097):
   그대로 = web dictionary value, 조정 = web term adapted to iOS arguments, 별도 = iOS-only translation.

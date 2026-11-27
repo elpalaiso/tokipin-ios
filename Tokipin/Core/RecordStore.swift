@@ -41,7 +41,8 @@ final class RecordStore {
     private(set) var recordedYears: Set<Int> = []
     private(set) var earliestDay: DayKey?
     /// Lower-cased search text, built on the first search after a change.
-    @ObservationIgnored private var searchIndex: [(day: DayKey, item: RecordItem, text: NSString, date: NSString)]?
+    @ObservationIgnored private var searchIndex: [(day: DayKey, item: RecordItem, text: NSString, date: NSString, label: NSString)]?
+    @ObservationIgnored private var searchIndexLocale = ""
     /// Encoded JSON per saved day (see `write`).
     @ObservationIgnored private var dayJSON: [DayKey: Data] = [:]
     /// Bumped on every write so a background cache fill never lands on newer data.
@@ -310,26 +311,61 @@ final class RecordStore {
     func days(in month: MonthKey) -> [DayKey] { monthIndex[month] ?? [] }
 
     /// Matches item text, a kind name ("장소"), or a date ("11.25", "2026.11").
-    func search(_ query: String) -> [SearchResult] {
-        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+    func search(_ query: String, locale: Locale = TimeRules.displayLocale,
+                kindLabel: (ItemKind) -> String = { $0.label }) -> [SearchResult] {
+        // One case rule for the query and everything indexed: the app locale's (Turkish İ/ı included).
+        let q = Self.searchForm(query.trimmingCharacters(in: .whitespaces), locale: locale)
         guard !q.isEmpty else { return [] }
-        let kind = ItemKind.allCases.first { $0.label == q }
-        if searchIndex == nil {
+        // Kind names match whatever their case on screen ("Place", "place", "Ort").
+        let kind = ItemKind.allCases.first {
+            kindLabel($0).compare(q, options: .caseInsensitive, range: nil, locale: locale) == .orderedSame
+        }
+        if searchIndex == nil || searchIndexLocale != locale.identifier {
+            searchIndexLocale = locale.identifier
+            let labeler = DayKey.labeler(locale: locale)
+            let spoken = DayKey.formatter(template: "yMMMMdEEEE", locale: locale)
             searchIndex = sortedDays.flatMap { day in
                 let date = (day.dotted + " " + day.string) as NSString
-                return (records[day] ?? []).map { (day, $0, $0.value.lowercased() as NSString, date) }
+                // The date as the app shows and reads it ("Wed, 25 Nov 2026", "Wednesday 25 November 2026").
+                let label = Self.searchForm(labeler(day) + "\n" + spoken.string(from: day.date), locale: locale) as NSString
+                return (records[day] ?? []).map { item in
+                    // Times match as stored ("18:45") and as shown ("6:45 PM").
+                    let text = item.kind == .time ? item.value + "\n" + item.displayValue : item.value
+                    return (day, item, Self.searchForm(text, locale: locale) as NSString, date, label)
+                }
             }
         }
         var results: [SearchResult] = []
         // Dates only match queries made of digits and separators ("11.25", "2026.11").
         let datelike = q.count >= 2 && q.allSatisfy { $0.isNumber || $0 == "." || $0 == "-" }
+        let labelLike = q.count >= 3
         for entry in searchIndex! {
-            let dateMatch = datelike && entry.date.range(of: q, options: .literal).location != NSNotFound
+            let dateMatch = (datelike && entry.date.range(of: q, options: .literal).location != NSNotFound)
+                || (labelLike && entry.label.range(of: q, options: .literal).location != NSNotFound)
             if dateMatch || entry.item.kind == kind || entry.text.range(of: q, options: .literal).location != NSNotFound {
                 results.append(SearchResult(day: entry.day, item: entry.item))
             }
         }
         return results
+    }
+
+    /// Lower-cased in the app locale, with formatter spaces (narrow/no-break, thin) turned into
+    /// plain spaces so a typed "6:45 PM" matches the formatted "6:45\u{202F}PM".
+    static func searchForm(_ text: String, locale: Locale) -> String {
+        let lowered = text.lowercased(with: locale)
+        // Most strings hold none of these spaces: one scan, no copy.
+        guard lowered.unicodeScalars.contains(where: isSpecialSpace) else { return lowered }
+        var plain = String.UnicodeScalarView()
+        plain.append(contentsOf: lowered.unicodeScalars.lazy.map { isSpecialSpace($0) ? " " : $0 })
+        return String(plain)
+    }
+
+    /// Narrow no-break, no-break, thin and figure spaces that formatters put in dates and times.
+    private static func isSpecialSpace(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.value {
+        case 0x202F, 0x00A0, 0x2009, 0x2007: true
+        default: false
+        }
     }
 
     func exportData() throws -> Data {

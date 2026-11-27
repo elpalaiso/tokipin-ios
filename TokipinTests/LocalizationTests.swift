@@ -1,6 +1,10 @@
 import XCTest
 @testable import Tokipin
 
+/// Assertions on Korean copy run when the test host's app language is Korean (the default run);
+/// `-testLanguage en` runs check the rest. Translations are covered per .lproj below.
+var koreanHost: Bool { Bundle.main.preferredLocalizations.first == "ko" }
+
 /// Reads the compiled catalog per language (.lproj in the app bundle), like the system does
 /// for a person whose app language is set to that locale.
 final class LocalizationTests: XCTestCase {
@@ -74,5 +78,117 @@ final class LocalizationTests: XCTestCase {
         XCTAssertEqual(try text("%lld / %@", "en", 26, "Thu"), "Thu 26")
         XCTAssertEqual(try text("%lld / %@", "ja", 10, "火"), "10 / 火")
         XCTAssertEqual(try text("%lld / %@", "ko", 26, "목"), "26 / 목")
+    }
+}
+
+/// Review fixes for tokipin-ios#1: the app's own lookup path, search by translated names and
+/// displayed dates, and the person's region in date formats.
+@MainActor
+final class LocalizationRuntimeTests: XCTestCase {
+    /// Same path as `String(localized:)` in the app, with the app language set to `language`.
+    private func resolved(_ value: String.LocalizationValue, _ language: String) -> String {
+        String(localized: LocalizedStringResource(value, locale: Locale(identifier: language),
+                                                  bundle: .forClass(RecordStore.self)))
+    }
+
+    func testKoreanCountsStayKoreanWithEnglishFallback() {
+        let count = 2
+        XCTAssertEqual(resolved("이날 기록 \(count)개를 삭제했어요.", "ko"), "이날 기록 2개를 삭제했어요.")
+        XCTAssertEqual(resolved("이날 기록 \(count)개 삭제", "ko"), "이날 기록 2개 삭제")
+        XCTAssertEqual(resolved("\("11월"), 기록한 날 \(count)일", "ko"), "11월, 기록한 날 2일")
+        XCTAssertEqual(resolved("\("2017년 6월")부터 \("2023년 3월")까지 기록 없는 \(70)개월", "ko"),
+                       "2017년 6월부터 2023년 3월까지 기록 없는 70개월")
+        XCTAssertEqual(resolved("이날 기록 \(count)개를 삭제했어요.", "en"), "Deleted 2 items from this day.")
+        // A language the app does not ship falls back to English.
+        XCTAssertEqual(resolved("진동", "it"), "Vibration")
+    }
+
+    func testRegionShapesDates() {
+        let day = DayKey(year: 2026, month: 11, day: 25)
+        XCTAssertEqual(day.label(locale: TimeRules.locale(localization: "en", region: Locale.Region("US"))), "Wed, Nov 25, 2026")
+        XCTAssertEqual(day.label(locale: TimeRules.locale(localization: "en", region: Locale.Region("GB"))), "Wed, 25 Nov 2026")
+        // A localization with its own region keeps it.
+        XCTAssertEqual(TimeRules.locale(localization: "zh-HK", region: Locale.Region("TW")).region, Locale.Region("HK"))
+        XCTAssertEqual(day.label(locale: Locale(identifier: "ko")), "2026.11.25(수)")
+    }
+
+    private func store() async throws -> RecordStore {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)
+        await store.load()
+        try store.save(day: DayKey(year: 2026, month: 11, day: 25), items: [RecordItem(kind: .place, value: "Paris")])
+        try store.save(day: DayKey(year: 2026, month: 11, day: 24), items: [RecordItem(kind: .word, value: "Tea")])
+        return store
+    }
+
+    func testSearchByTranslatedKindName() async throws {
+        let store = try await store()
+        let english: (ItemKind) -> String = { ["word": "Word", "emoji": "Emoji", "place": "Place", "time": "Time"][$0.rawValue]! }
+        let german: (ItemKind) -> String = { ["word": "Wort", "emoji": "Emoji", "place": "Ort", "time": "Uhrzeit"][$0.rawValue]! }
+        let en = Locale(identifier: "en_US"), de = Locale(identifier: "de_DE")
+        XCTAssertEqual(store.search("Place", locale: en, kindLabel: english).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("place", locale: en, kindLabel: english).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("ort", locale: de, kindLabel: german).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("Paris", locale: en, kindLabel: english).count, 1)
+    }
+
+    func testSearchByDisplayedDate() async throws {
+        let store = try await store()
+        let en = Locale(identifier: "en_US"), gb = Locale(identifier: "en_GB")
+        XCTAssertEqual(store.search("2026-11-25", locale: en).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("Wed, Nov 25, 2026", locale: en).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("Wed, 25 Nov 2026", locale: gb).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("2026.11.25(수)", locale: Locale(identifier: "ko")).map(\.item.value), ["Paris"])
+        XCTAssertEqual(store.search("11.24", locale: en).map(\.item.value), ["Tea"])
+    }
+
+    func testSpokenDateAndDisplayedTime() async throws {
+        let day = DayKey(year: 2026, month: 11, day: 25)
+        let gb = TimeRules.locale(localization: "en", region: Locale.Region("GB"))
+        XCTAssertEqual(day.spokenLabel(locale: gb), "Wednesday, 25 November 2026")
+        XCTAssertEqual(day.spokenLabel(locale: Locale(identifier: "ko_KR")), "2026년 11월 25일 수요일")
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)
+        await store.load()
+        try store.save(day: day, items: [RecordItem(kind: .time, value: "18:45")])
+        // Copy the time exactly as the app shows it in the current hour cycle ("18:45" or "6:45 PM"),
+        // then as typed with plain spaces.
+        let host = TimeRules.displayLocale
+        let shown = RecordItem(kind: .time, value: "18:45").displayValue
+        let typed = String(shown.map { $0.isWhitespace ? " " : $0 })
+        XCTAssertEqual(store.search(shown, locale: host).count, 1, shown)
+        XCTAssertEqual(store.search(typed, locale: host).count, 1, typed)
+        XCTAssertEqual(store.search(typed.lowercased(), locale: host).count, 1, typed)
+        if TimeRules.deviceUses24Hour() {
+            XCTAssertEqual(store.search("18:45", locale: host).count, 1)
+        } else {
+            // 12-hour: the formatter puts U+202F before AM/PM; a typed plain space must match too.
+            XCTAssertTrue(shown.unicodeScalars.contains { $0.value == 0x202F } || shown == typed, shown)
+        }
+        let us = TimeRules.locale(localization: "en", region: Locale.Region("US"))
+        XCTAssertEqual(RecordStore.searchForm("6:45\u{202F}PM", locale: us), "6:45 pm")
+        XCTAssertEqual(store.search("18:45", locale: gb).count, 1)
+        XCTAssertEqual(store.search("Wednesday, 25 November", locale: gb).count, 1)
+    }
+
+    func testTurkishCaseRules() async throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)
+        await store.load()
+        try store.save(day: DayKey(year: 2026, month: 11, day: 25), items: [RecordItem(kind: .place, value: "İstanbul"),
+                                                                           RecordItem(kind: .word, value: "Çay")])
+        let tr = Locale(identifier: "tr_TR")
+        let turkish: (ItemKind) -> String = { ["word": "Kelime", "emoji": "Emoji", "place": "Yer", "time": "Saat"][$0.rawValue]! }
+        XCTAssertEqual(store.search("İstanbul", locale: tr, kindLabel: turkish).map(\.item.value), ["İstanbul"])
+        XCTAssertEqual(store.search("istanbul", locale: tr, kindLabel: turkish).map(\.item.value), ["İstanbul"])
+        XCTAssertEqual(store.search("İSTANBUL", locale: tr, kindLabel: turkish).map(\.item.value), ["İstanbul"])
+        XCTAssertEqual(store.search("Kelime", locale: tr, kindLabel: turkish).map(\.item.value), ["Çay"])
+        XCTAssertEqual(store.search("KELİME", locale: tr, kindLabel: turkish).map(\.item.value), ["Çay"])
+    }
+
+    func testThaiDeleteWordingNamesTheChosenDay() {
+        let format = Bundle(path: Bundle(for: RecordStore.self).path(forResource: "th", ofType: "lproj")!)!
+            .localizedString(forKey: "이날 기록 %lld개 삭제", value: nil, table: nil)
+        XCTAssertFalse(format.contains("วันนี้"), format)
     }
 }

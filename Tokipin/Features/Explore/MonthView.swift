@@ -226,7 +226,7 @@ struct MonthGrid: View {
         }
         .buttonStyle(.plain)
         .pinchTarget(.day(day), in: .month)
-        .accessibilityLabel(items.isEmpty ? day.label : "\(day.label), \(items.map(\.displayValue).joined(separator: ", "))")
+        .accessibilityLabel(items.isEmpty ? day.spokenLabel : "\(day.spokenLabel), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

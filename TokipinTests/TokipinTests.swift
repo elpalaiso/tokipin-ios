@@ -24,7 +24,7 @@ final class ValidatorTests: XCTestCase {
 final class DayKeyTests: XCTestCase {
     func testLabelsAndWeeks() {
         let day = DayKey(year: 2026, month: 11, day: 25)
-        XCTAssertEqual(day.label, "2026.11.25(수)")
+        XCTAssertEqual(day.label(locale: Locale(identifier: "ko")), "2026.11.25(수)")
         XCTAssertEqual(day.weekStart(firstWeekday: 1), DayKey(year: 2026, month: 11, day: 22))
         XCTAssertEqual(DayKey(string: "2026-11-25"), day)
         XCTAssertEqual(MonthKey(year: 2026, month: 11).weeks(firstWeekday: 1).count, 5)
@@ -80,7 +80,9 @@ final class RecordStoreTests: XCTestCase {
         let day = DayKey(year: 2026, month: 11, day: 25)
         try store.save(day: day, items: [RecordItem(kind: .word, value: "살구잼"), RecordItem(kind: .place, value: "연남동")])
 
-        XCTAssertEqual(store.search("장소").map(\.item.value), ["연남동"])
+        // Korean names and dates whatever language the test host runs in.
+        let korean: (ItemKind) -> String = { ["word": "단어", "emoji": "이모지", "place": "장소", "time": "시간"][$0.rawValue]! }
+        XCTAssertEqual(store.search("장소", locale: Locale(identifier: "ko"), kindLabel: korean).map(\.item.value), ["연남동"])
         XCTAssertEqual(store.search("11.25").count, 2)
         XCTAssertEqual(store.search("남극").count, 0)
 
