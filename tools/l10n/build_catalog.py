@@ -1,4 +1,4 @@
-"""Builds Tokipin/Localizable.xcstrings for 17 languages.
+"""Builds the app and policy string catalogs for 17 languages.
 
 Sources, in order:
   1. Web dictionaries at tokipin@9e512c1 (locales/demo, locales/site), matched by the Korean key (그대로).
@@ -25,7 +25,6 @@ weekdays = json.load(open(os.path.join(HERE, 'weekdays.json')))
 NATIVE.update(json.load(open(os.path.join(HERE, 'onboarding.json'))))
 keys = set(json.load(open(os.path.join(HERE, 'keys.json'))))
 policies, policy_keys = policy_documents(os.path.join(WEB, '..'))
-keys.update(policy_keys)
 
 def web(lang, key):
     if key in demo.get(lang, {}): return demo[lang][key]
@@ -78,7 +77,6 @@ KO_DEFAULT = {"kind.word": "단어", "kind.emoji": "이모지", "kind.place": "�
 SPEC = re.compile(r'%(?:\d+\$)?(@|lld|d)')
 
 def value_for(key, lang):
-    if key in policy_keys: return site.get(lang, {}).get(key)
     if key in NATIVE: return NATIVE[key].get(lang)
     if key in WEEKDAY: return weekdays[lang][WEEKDAY[key]]
     if key in VIEW_BACK:
@@ -139,15 +137,32 @@ for key in sorted(keys):
         entry["localizations"][APPLE[lang]] = localization(key, v)
     strings[key] = entry
 
+# Policy literals and fallback copy come from the English HTML. The same web dictionary
+# key selects the approved translation in each language, including Korean.
+policy_strings = {}
+for english, web_key in policy_keys.items():
+    if site['en'].get(web_key) != english:
+        sys.exit(f'English policy text does not match the site dictionary: {web_key}')
+    translations = {}
+    for tag in ['ko', *APPLE]:
+        value = site.get(tag, {}).get(web_key)
+        if not isinstance(value, str) or not value.strip():
+            missing.append((web_key, tag))
+            continue
+        translations[APPLE.get(tag, tag)] = unit(value)
+    policy_strings[english] = {"localizations": translations}
+
 # Never write a catalog with holes: keep the last verified one and say what is missing.
 if missing:
     for m in missing: print('MISSING', m, file=sys.stderr)
     sys.exit(f'{len(missing)} translations missing; {OUT} left unchanged')
 
-catalog = {"sourceLanguage": "ko", "strings": strings, "version": "1.0"}
-with open(OUT, 'w') as f:
-    json.dump(catalog, f, ensure_ascii=False, indent=2, separators=(',', ' : '), sort_keys=True)
-    f.write('\n')
+for name, source_language, entries in [('Localizable', 'ko', strings), ('Policies', 'en', policy_strings)]:
+    output_path = os.path.join(HERE, '../../Tokipin', f'{name}.xcstrings')
+    catalog = {"sourceLanguage": source_language, "strings": entries, "version": "1.0"}
+    with open(output_path, 'w') as output:
+        json.dump(catalog, output, ensure_ascii=False, indent=2, separators=(',', ' : '), sort_keys=True)
+        output.write('\n')
 with open(os.path.join(HERE, '../../Tokipin/Features/Settings/PolicyDocuments.generated.swift'), 'w') as output:
     output.write(policies)
 print(len(strings), 'keys; 0 missing')
