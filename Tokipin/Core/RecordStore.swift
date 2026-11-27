@@ -352,11 +352,20 @@ final class RecordStore {
     /// Lower-cased in the app locale, with formatter spaces (narrow/no-break, thin) turned into
     /// plain spaces so a typed "6:45 PM" matches the formatted "6:45\u{202F}PM".
     static func searchForm(_ text: String, locale: Locale) -> String {
-        var result = text.lowercased(with: locale)
-        for space in ["\u{202F}", "\u{00A0}", "\u{2009}", "\u{2007}"] {
-            result = result.replacingOccurrences(of: space, with: " ")
+        let lowered = text.lowercased(with: locale)
+        // Most strings hold none of these spaces: one scan, no copy.
+        guard lowered.unicodeScalars.contains(where: isSpecialSpace) else { return lowered }
+        var plain = String.UnicodeScalarView()
+        plain.append(contentsOf: lowered.unicodeScalars.lazy.map { isSpecialSpace($0) ? " " : $0 })
+        return String(plain)
+    }
+
+    /// Narrow no-break, no-break, thin and figure spaces that formatters put in dates and times.
+    private static func isSpecialSpace(_ scalar: Unicode.Scalar) -> Bool {
+        switch scalar.value {
+        case 0x202F, 0x00A0, 0x2009, 0x2007: true
+        default: false
         }
-        return result
     }
 
     func exportData() throws -> Data {

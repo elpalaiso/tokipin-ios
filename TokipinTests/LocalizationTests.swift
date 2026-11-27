@@ -151,16 +151,21 @@ final class LocalizationRuntimeTests: XCTestCase {
         let store = RecordStore(directory: dir, defaults: UserDefaults(suiteName: UUID().uuidString)!)
         await store.load()
         try store.save(day: day, items: [RecordItem(kind: .time, value: "18:45")])
-        let shown = RecordItem(kind: .time, value: "18:45").displayValue.lowercased()
-        XCTAssertEqual(store.search(shown, locale: gb).count, 1, shown)
-        // The formatter puts U+202F before AM/PM; typing a plain space must match too.
-        let us = TimeRules.locale(localization: "en", region: Locale.Region("US"))
-        let copied = TimeRules.display("18:45", uses24Hour: false)
-        XCTAssertEqual(store.search(copied, locale: us).count, 1, copied)
-        if copied.contains("PM") || copied.contains("pm") {
-            XCTAssertEqual(store.search("6:45 PM", locale: us).count, 1)
-            XCTAssertEqual(store.search("6:45 pm", locale: us).count, 1)
+        // Copy the time exactly as the app shows it in the current hour cycle ("18:45" or "6:45 PM"),
+        // then as typed with plain spaces.
+        let host = TimeRules.displayLocale
+        let shown = RecordItem(kind: .time, value: "18:45").displayValue
+        let typed = String(shown.map { $0.isWhitespace ? " " : $0 })
+        XCTAssertEqual(store.search(shown, locale: host).count, 1, shown)
+        XCTAssertEqual(store.search(typed, locale: host).count, 1, typed)
+        XCTAssertEqual(store.search(typed.lowercased(), locale: host).count, 1, typed)
+        if TimeRules.deviceUses24Hour() {
+            XCTAssertEqual(store.search("18:45", locale: host).count, 1)
+        } else {
+            // 12-hour: the formatter puts U+202F before AM/PM; a typed plain space must match too.
+            XCTAssertTrue(shown.unicodeScalars.contains { $0.value == 0x202F } || shown == typed, shown)
         }
+        let us = TimeRules.locale(localization: "en", region: Locale.Region("US"))
         XCTAssertEqual(RecordStore.searchForm("6:45\u{202F}PM", locale: us), "6:45 pm")
         XCTAssertEqual(store.search("18:45", locale: gb).count, 1)
         XCTAssertEqual(store.search("Wednesday, 25 November", locale: gb).count, 1)
