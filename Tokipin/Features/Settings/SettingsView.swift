@@ -167,6 +167,7 @@ struct DebugSampleSection: View {
     @Environment(RecordStore.self) private var store
     @State private var message: String?
     @State private var confirmingRangeSamples = false
+    @State private var replay: SampleTour?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -174,6 +175,12 @@ struct DebugSampleSection: View {
                 .font(.brand(15, .medium))
                 .padding(.top, 8)
             VStack(spacing: 0) {
+                Button { replay = SampleTour() } label: {
+                    Text("온보딩 다시 체험").font(.brand(16, .medium))
+                        .frame(maxWidth: .infinity, minHeight: 54, alignment: .leading)
+                        .contentShape(Rectangle())
+                }
+                Rectangle().fill(Palette.line).frame(height: 1)
                 Button { load() } label: { row("예시 기록 넣기", detail: "기존 기록을 지우고 홈페이지 체험과 같은 3년치 기록을 넣어요.") }
                 Rectangle().fill(Palette.line).frame(height: 1)
                 Button { load(years: 10) } label: {
@@ -192,6 +199,9 @@ struct DebugSampleSection: View {
             if let message {
                 Text(verbatim: message).font(.brand(13)).foregroundStyle(Palette.focus)
             }
+        }
+        .fullScreenCover(item: $replay) { tour in
+            DebugTourReplay(tour: tour)
         }
         .alert(Text(verbatim: "달력 범위 예시로 교체할까요?"), isPresented: $confirmingRangeSamples) {
             Button(role: .cancel) {} label: { Text(verbatim: "취소") }
@@ -240,6 +250,34 @@ struct DebugSampleSection: View {
         } catch {
             message = "달력 범위 예시를 넣지 못했어요: \(error.localizedDescription)"
         }
+    }
+}
+
+/// The settings presentation stays underneath the trial. Neither exit path runs personal launch routing.
+private struct DebugTourReplay: View {
+    let tour: SampleTour
+    @Environment(UsageAnalytics.self) private var usage
+    @Environment(\.dismiss) private var dismiss
+    @State private var showsInvitation = false
+
+    var body: some View {
+        SampleTourHost(tour: tour) {
+            if usage.isAvailable { showsInvitation = true } else { dismiss() }
+        }
+        .overlay(alignment: .topLeading) {
+            if tour.panel == nil && !showsInvitation {
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .frame(width: 44, height: 44).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain).foregroundStyle(Palette.primary)
+                .padding(.leading, 10).padding(.vertical, 2)
+                .accessibilityLabel("닫기")
+                .accessibilityIdentifier("debugReplay.close")
+            }
+        }
+        // The invitation is the production UI. Its preview choices never call the SDK or persist a choice.
+        .usageSharingInvitation(isPresented: $showsInvitation, onJoin: {}, onDismiss: { dismiss() })
     }
 }
 #endif

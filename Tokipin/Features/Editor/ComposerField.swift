@@ -12,6 +12,8 @@ struct ComposerField: UIViewRepresentable {
     var accessibilityLabel: String
     /// The person put the caret in the field themselves (e.g. after opening with the pencil).
     var onBeginEditing: () -> Void = {}
+    /// The active UIKit field lets the trial's Next button finalize marked IME text just like Return.
+    var onFocusField: ((InputField) -> Void)?
     var onReturn: () -> Void
 
     func makeUIView(context: Context) -> InputField {
@@ -95,6 +97,7 @@ struct ComposerField: UIViewRepresentable {
         }
 
         func textFieldDidBeginEditing(_ field: UITextField) {
+            if let input = field as? InputField { parent.onFocusField?(input) }
             // Without this the editor still wants the keyboard down and closes it on the next update.
             if !parent.isFocused { parent.onBeginEditing() }
         }

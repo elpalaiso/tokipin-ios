@@ -21,6 +21,7 @@ struct SearchResult: Identifiable, Hashable {
 
 enum StoreError: Error {
     case notLoaded
+    case sampleIsPrivate
 }
 
 /// Owns every saved record and the single in-progress draft.
@@ -49,34 +50,51 @@ final class RecordStore {
     @ObservationIgnored private var recordsVersion = 0
     /// Unsaved editor state, one per day, so a draft on one day never overwrites another's.
     private(set) var drafts: [DayKey: Draft] = [:]
-    /// True until the first record is saved or the first editor is closed.
+    /// True until a saved record is loaded or the first real editor is available to use.
     private(set) var isFirstLaunch: Bool
 
-    @ObservationIgnored private let directory: URL
-    @ObservationIgnored private let defaults: UserDefaults
+    private struct Files {
+        let directory: URL
+        var recordsURL: URL { directory.appendingPathComponent("records.json") }
+        var draftURL: URL { directory.appendingPathComponent("draft.json") }
+        var draftsURL: URL { directory.appendingPathComponent("drafts.json") }
+    }
+    @ObservationIgnored private let files: Files?
+    @ObservationIgnored private let defaults: UserDefaults?
+    var isSample: Bool { files == nil }
     @ObservationIgnored private let firstLaunchKey = "tokipin.hasOpenedEditor"
     /// Tests use this to simulate a full disk.
     @ObservationIgnored var simulateWriteFailure = false
 
     init(directory: URL? = nil, defaults: UserDefaults = .standard) {
-        self.directory = directory ?? FileManager.default
+        self.files = Files(directory: directory ?? FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Tokipin", isDirectory: true)
+            .appendingPathComponent("Tokipin", isDirectory: true))
         self.defaults = defaults
         self.isFirstLaunch = !defaults.bool(forKey: firstLaunchKey)
     }
 
-    private var recordsURL: URL { directory.appendingPathComponent("records.json") }
-    private var draftURL: URL { directory.appendingPathComponent("draft.json") }   // v0.1 single draft
-    private var draftsURL: URL { directory.appendingPathComponent("drafts.json") }
+    /// Trial edits use the same journal operations and indexes, without a disk location or preferences.
+    init(sample: RecordArchive) {
+        files = nil
+        defaults = nil
+        isFirstLaunch = false
+        for day in sample.days where !day.items.isEmpty {
+            records[day.date] = day.items
+            updatedAt[day.date] = day.updatedAt
+        }
+        reindex()
+        state = .loaded
+    }
 
     // MARK: Loading
 
     func load() async {
+        guard let files else { return }
         state = .loading
-        let recordsURL = recordsURL
-        let draftURL = draftURL
-        let draftsURL = draftsURL
+        let recordsURL = files.recordsURL
+        let draftURL = files.draftURL
+        let draftsURL = files.draftsURL
         let result: Result<(RecordArchive?, [Draft]), Error> = await Task.detached(priority: .userInitiated) {
             do {
                 var archive: RecordArchive?
@@ -120,7 +138,16 @@ final class RecordStore {
     func markEditorOpened() {
         guard isFirstLaunch else { return }
         isFirstLaunch = false
-        defaults.set(true, forKey: firstLaunchKey)
+        defaults?.set(true, forKey: firstLaunchKey)
+    }
+
+    func needsSampleCalendar(hasUsageChoice: Bool) -> Bool {
+        state == .loaded && isFirstLaunch && records.isEmpty && drafts.isEmpty
+            && !hasUsageChoice && defaults?.bool(forKey: "tokipin.completedSampleCalendar") == false
+    }
+
+    func completeSampleCalendar() {
+        defaults?.set(true, forKey: "tokipin.completedSampleCalendar")
     }
 
     // MARK: Writing
@@ -217,8 +244,9 @@ final class RecordStore {
     /// Writes the whole archive atomically. Each day's JSON is cached, so saving one day
     /// re-encodes only that day (`changed`; nil = everything) and joins the rest.
     private func write(_ records: [DayKey: [RecordItem]], updated: [DayKey: Date], changed: Set<DayKey>?) throws {
+        guard let files else { return }
         if simulateWriteFailure { throw CocoaError(.fileWriteOutOfSpace) }
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: files.directory, withIntermediateDirectories: true)
         var cache = changed == nil ? [:] : dayJSON
         let encoder = JSONEncoder.tokipinCompact
         var data = Data(#"{"version":1,"days":["#.utf8)
@@ -234,7 +262,7 @@ final class RecordStore {
             data.append(chunk)
         }
         data.append(contentsOf: Array("]}".utf8))
-        try data.write(to: recordsURL, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        try data.write(to: files.recordsURL, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
         // Only after a successful write; removed days drop out of the cache.
         dayJSON = cache.filter { records[$0.key] != nil }
         recordsVersion += 1
@@ -284,15 +312,16 @@ final class RecordStore {
     }
 
     private func writeDrafts() {
+        guard let files else { return }
         do {
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(at: files.directory, withIntermediateDirectories: true)
             if drafts.isEmpty {
-                try? FileManager.default.removeItem(at: draftsURL)
+                try? FileManager.default.removeItem(at: files.draftsURL)
             } else {
                 let list = drafts.keys.sorted().map { drafts[$0]! }
-                try JSONEncoder.tokipin.encode(list).write(to: draftsURL, options: .atomic)
+                try JSONEncoder.tokipin.encode(list).write(to: files.draftsURL, options: .atomic)
             }
-            try? FileManager.default.removeItem(at: draftURL)
+            try? FileManager.default.removeItem(at: files.draftURL)
         } catch {
             // Drafts stay in memory; losing the on-disk copy is not fatal.
         }
@@ -369,7 +398,8 @@ final class RecordStore {
     }
 
     func exportData() throws -> Data {
-        try JSONEncoder.tokipin.encode(Self.archive(records, updated: updatedAt))
+        guard !isSample else { throw StoreError.sampleIsPrivate }
+        return try JSONEncoder.tokipin.encode(Self.archive(records, updated: updatedAt))
     }
 }
 

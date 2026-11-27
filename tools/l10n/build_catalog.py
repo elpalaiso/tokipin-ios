@@ -21,6 +21,7 @@ APPLE = {"en": "en", "ja": "ja", "de": "de", "fr": "fr", "id": "id", "vi": "vi",
 demo = {os.path.basename(f)[:-5]: json.load(open(f)) for f in glob.glob(WEB + '/demo/*.json')}
 site = {os.path.basename(f)[:-5]: json.load(open(f)) for f in glob.glob(WEB + '/site/*.json')}
 weekdays = json.load(open(os.path.join(HERE, 'weekdays.json')))
+NATIVE.update(json.load(open(os.path.join(HERE, 'onboarding.json'))))
 keys = json.load(open(os.path.join(HERE, 'keys.json')))
 
 def web(lang, key):
@@ -144,3 +145,14 @@ with open(OUT, 'w') as f:
     json.dump(catalog, f, ensure_ascii=False, indent=2, separators=(',', ' : '), sort_keys=True)
     f.write('\n')
 print(len(strings), 'keys; 0 missing')
+
+# The trial uses the web's word/place tokens as seeded journal content, separate from interface copy.
+samples = {}
+for tag in ['ko'] + list(APPLE):
+    with open(os.path.join(WEB, 'samples', tag + '.json')) as source:
+        samples[APPLE.get(tag, tag)] = json.load(source)
+if any(set(words) != set(samples['ko']) for words in samples.values()):
+    sys.exit('Sample token sets differ between languages')
+with open(os.path.join(HERE, '../../Tokipin/Resources/SampleVocabulary.json'), 'w') as output:
+    json.dump(samples, output, ensure_ascii=False, sort_keys=True, indent=2)
+    output.write('\n')

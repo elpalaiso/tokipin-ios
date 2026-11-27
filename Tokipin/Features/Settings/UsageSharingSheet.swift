@@ -3,13 +3,14 @@ import SwiftUI
 
 extension View {
     /// Keep the editor (or returning user's normal destination) visible behind the sheet.
-    func usageSharingInvitation(isPresented: Binding<Bool>, onDismiss: @escaping () -> Void = {}) -> some View {
-        modifier(UsageSharingInvitation(isPresented: isPresented, onDismiss: onDismiss))
+    func usageSharingInvitation(isPresented: Binding<Bool>, onJoin: @escaping () -> Void, onDismiss: @escaping () -> Void = {}) -> some View {
+        modifier(UsageSharingInvitation(isPresented: isPresented, onJoin: onJoin, onDismiss: onDismiss))
     }
 }
 
 private struct UsageSharingInvitation: ViewModifier {
     @Binding var isPresented: Bool
+    let onJoin: () -> Void
     let onDismiss: () -> Void
     @State private var explicitlySkipped = false
     @State private var showsReminder = false
@@ -45,7 +46,7 @@ private struct UsageSharingInvitation: ViewModifier {
                 showsReminder = explicitlySkipped
                 explicitlySkipped = false
             }) {
-                UsageSharingSheet(onSkip: { explicitlySkipped = true })
+                UsageSharingSheet(onSkip: { explicitlySkipped = true }, onJoin: onJoin)
                     .presentationBackgroundInteraction(.enabled)
                     .presentationDragIndicator(.visible)
                     .presentationBackground(LinearGradient(colors: [Color(hex: 0x343F39), Color(hex: 0x28332E)],
@@ -57,7 +58,7 @@ private struct UsageSharingInvitation: ViewModifier {
 
 private struct UsageSharingSheet: View {
     let onSkip: () -> Void
-    @Environment(UsageAnalytics.self) private var usage
+    let onJoin: () -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var measuredSize = CGSize(width: 390, height: 244)
@@ -97,7 +98,7 @@ private struct UsageSharingSheet: View {
             dismiss()
         }
         choice("함께하기") {
-            usage.setEnabled(true)
+            onJoin()
             dismiss()
         }
         .accessibilityHint(Text("앱 사용 통계 공유"))

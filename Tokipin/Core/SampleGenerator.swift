@@ -2,7 +2,7 @@ import Foundation
 
 /// Sample records identical to the homepage trial (tokipin/trial.js + trial-content.js):
 /// the same seeded generator, themes and Korean words, over the three years ending today.
-/// Used only by the debug "예시 기록 넣기" action and tests.
+/// Used by the in-memory first-launch trial and debug fixtures.
 enum SampleGenerator {
     struct Theme {
         let words: [String]
@@ -62,11 +62,11 @@ enum SampleGenerator {
         return offset != candidates[roll(candidates.count)]
     }
 
-    static func items(for key: DayKey) -> [RecordItem] {
+    static func items(for key: DayKey, vocabulary: [String: String] = words, starter: Bool = false) -> [RecordItem] {
         let number = dayNumber(key)
         var roll = Random(number)
         let theme = themes[roll(themes.count)]
-        let sequence = arrangements[roll(arrangements.count)]
+        let sequence: [ItemKind] = starter ? [.word, .emoji, .place, .time] : arrangements[roll(arrangements.count)]
         var pools: [ItemKind: [String]] = [.word: theme.words, .emoji: theme.emoji, .place: theme.places]
         var items: [RecordItem] = []
         for kind in sequence {
@@ -78,21 +78,21 @@ enum SampleGenerator {
                 guard var pool = pools[kind], !pool.isEmpty else { continue }
                 let token = pool.remove(at: roll(pool.count))
                 pools[kind] = pool
-                value = kind == .emoji ? token : (words[token] ?? token)
+                value = kind == .emoji ? token : (vocabulary[token] ?? token)
             }
-            let id = UUID(uuidString: String(format: "00000000-0000-4000-8000-%012llx", UInt64(number) * 16 + UInt64(items.count)))!
+            let id = UUID(uuidString: String(format: "00000000-0000-4000-8000-%012llx", UInt64(truncatingIfNeeded: number * 16 + items.count) & 0xffffffffffff))!
             items.append(RecordItem(id: id, kind: kind, value: value))
         }
         return items
     }
 
     /// Three years ending today, like the homepage trial.
-    static func archive(today: DayKey = .today, years: Int = 3) -> RecordArchive {
+    static func archive(today: DayKey = .today, years: Int = 3, vocabulary: [String: String] = words) -> RecordArchive {
         let start = firstDay(today: today, years: years)
         var days: [RecordArchive.Day] = []
         for number in dayNumber(start)...dayNumber(today) where hasSample(number) {
             let key = day(fromNumber: number)
-            days.append(.init(date: key, items: items(for: key), updatedAt: key.date))
+            days.append(.init(date: key, items: items(for: key, vocabulary: vocabulary), updatedAt: key.date))
         }
         return RecordArchive(days: days)
     }
@@ -104,6 +104,13 @@ enum SampleGenerator {
         let anniversary = DayKey(year: today.year - years, month: today.month, day: min(today.day, last))
         return day(fromNumber: dayNumber(anniversary) + 1)
     }
+
+    static let localizedWords: [String: String] = {
+        guard let url = Bundle.main.url(forResource: "SampleVocabulary", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let languages = try? JSONDecoder().decode([String: [String: String]].self, from: data) else { return words }
+        return languages[Bundle.main.preferredLocalizations.first ?? "en"] ?? languages["en"] ?? words
+    }()
 
     /// Korean column of the homepage vocabulary (trial-content.js).
     static let words: [String: String] = [

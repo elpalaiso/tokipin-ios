@@ -37,6 +37,7 @@ final class UsageAnalytics {
     private let client: UsageAnalyticsClient
     private var choice: Choice?
 
+    var hasChoice: Bool { choice != nil }
     var isAvailable: Bool { client.available }
     var isEnabled: Bool { client.available && choice == .on }
 

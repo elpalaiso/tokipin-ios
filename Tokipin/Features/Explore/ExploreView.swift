@@ -8,6 +8,12 @@ struct PendingUndo: Identifiable {
 
 /// Home: the four explore levels with a shared header, "오늘" and "+".
 struct ExploreView: View {
+    @Environment(SampleTour.self) private var tour: SampleTour?
+    private struct Navigation: Equatable {
+        let level: ExploreLevel
+        let day: DayKey
+        let month: MonthKey
+    }
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     @State private var pendingUndo: PendingUndo?
@@ -32,7 +38,14 @@ struct ExploreView: View {
         ZStack {
             BrandBackground()
             VStack(spacing: 0) {
+                if let tour {
+                    TourRail(tour: tour, editor: false, replay: tour.replay, next: tour.nextInArchive)
+                }
                 header
+                if let tour, tour.guided, !app.isSearching {
+                    TourHint(title: tour.cue.title, editor: false) { tour.panel = .leaveGuide }
+                        .padding(.bottom, 4)
+                }
                 content
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { contentFrame = $0 }
@@ -51,10 +64,36 @@ struct ExploreView: View {
             }
         }
         .safeAreaInset(edge: .bottom) { bottomBar }
+        .onChange(of: Navigation(level: app.level, day: app.selectedDay, month: app.recordsMonth)) { old, new in
+            guard let tour else { return }
+            if old.level != new.level {
+                tour.changedLevel(from: old.level, to: new.level)
+            } else if old.day != new.day && new.level == .day {
+                tour.changedDay()
+            } else if old.month != new.month {
+                tour.changedRecordsMonth()
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if let tour, let notice = tour.notice {
+                Text(verbatim: notice).font(.brand(14)).foregroundStyle(Palette.primary)
+                    .padding(10).glassCard(cornerRadius: 14).padding(.bottom, 76)
+                    .allowsHitTesting(false)
+                    .task(id: notice) {
+                        try? await Task.sleep(for: .seconds(3))
+                        if !Task.isCancelled { tour.notice = nil }
+                    }
+            }
+        }
         .overlay {
             if app.isSearching {
-                SearchView()
-                    .transition(.opacity)
+                VStack(spacing: 0) {
+                    if let tour {
+                        TourRail(tour: tour, editor: false, replay: { app.isSearching = false; tour.replay() },
+                                 next: { app.isSearching = false; tour.nextInArchive() })
+                    }
+                    SearchView()
+                }.background { BrandBackground() }.transition(.opacity)
             }
         }
         .sheet(isPresented: $app.isShowingSettings) {
@@ -188,8 +227,10 @@ struct ExploreView: View {
                 }
             }
             .pickerStyle(.inline)
-            Divider()
-            Button { app.isShowingSettings = true } label: { Label("설정", systemImage: "gearshape") }
+            if tour == nil {
+                Divider()
+                Button { app.isShowingSettings = true } label: { Label("설정", systemImage: "gearshape") }
+            }
         } label: {
             HeaderIcon(systemName: "square.on.square")
         }

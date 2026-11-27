@@ -2,6 +2,11 @@ import SwiftUI
 
 /// 기록 입력: items stack in the order written; four kind tools stay above the keyboard.
 struct EditorView: View {
+    @Environment(SampleTour.self) private var tour: SampleTour?
+    @State private var choseTool = false
+    @State private var committedTrialItem = false
+    @State private var hasSoftwareKeyboard = false
+    @State private var trialField: ComposerField.InputField?
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     @Environment(\.dismiss) private var dismiss
@@ -49,12 +54,29 @@ struct EditorView: View {
         ZStack {
             BrandBackground()
             VStack(spacing: 0) {
+                if let tour {
+                    TourRail(tour: tour, editor: true, replay: {
+                        tour.replay()
+                        choseTool = model.kind != .word
+                        committedTrialItem = false
+                    }, next: nextTrialAction)
+                }
                 header
-                canvas
+                canvas.overlay(alignment: .top) {
+                    if let tour, tour.guided, trialStep == .save {
+                        TourHint(title: "체크 표시를 눌러 저장해요.", editor: true) { tour.panel = .leaveGuide }
+                    }
+                }
                 bottomControls
             }
         }
         .onAppear(perform: setUp)
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            if tour != nil { hasSoftwareKeyboard = true }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            if tour != nil { hasSoftwareKeyboard = false }
+        }
         .onChange(of: allowsKeyboard) { _, allowed in if allowed { store.markEditorOpened() } }
         .sheet(isPresented: $picking, onDismiss: { if !keyboardWanted { keyboardWanted = keyboardBeforePicking } }) {
             EntryDatePicker(current: model.day, today: app.today, onCancel: {
@@ -145,6 +167,7 @@ struct EditorView: View {
                     CircleIconButton(accessibilityLabel: "기록 저장", action: finish) {
                         Image("IconCheck").renderingMode(.template).resizable().scaledToFit()
                     }
+                    .trialHighlight(tour?.guided == true && trialStep == .save, radius: 22)
                 }
             }
             .padding(.horizontal, 16)
@@ -344,9 +367,11 @@ struct EditorView: View {
                 isFocused: keyboardWanted && allowsKeyboard && model.selection == nil,
                 accessibilityLabel: model.kind.inputLabel,
                 onBeginEditing: { keyboardWanted = true },
+                onFocusField: tour == nil ? nil : { trialField = $0 },
                 onReturn: commitField
             )
             .frame(height: size * 1.5)
+            .trialHighlight(tour?.guided == true && trialStep == .input)
         }
     }
 
@@ -383,6 +408,13 @@ struct EditorView: View {
                     .padding(.horizontal, 26)
                     .accessibilityAddTraits(.updatesFrequently)
             }
+            if let tour, tour.guided {
+                // Moving the active guide must not resize a List-hosted text field mid-keystroke.
+                TourHint(title: trialHint, editor: true) { tour.panel = .leaveGuide }
+                    .opacity(trialStep == .save ? 0 : 1)
+                    .accessibilityHidden(trialStep == .save)
+                    .allowsHitTesting(trialStep != .save)
+            }
             toolbar
             if model.kind == .time && model.selection == nil {
                 timePanel
@@ -406,6 +438,7 @@ struct EditorView: View {
                     .foregroundStyle(active ? Palette.onFocus : Palette.primary)
                     .frame(width: 54, height: 44)
                     .background(active ? Palette.focus : .clear, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .trialHighlight(tour?.guided == true && trialStep == .tool && kind == .emoji, radius: 12)
                     .frame(maxWidth: .infinity, minHeight: 48)
                     .contentShape(Rectangle())
                 }
@@ -470,9 +503,59 @@ struct EditorView: View {
         DispatchQueue.main.async { syncingPicker = false }
     }
 
+    private enum TrialStep { case tool, input, save }
+
+    private var trialStep: TrialStep {
+        let raw = ItemValidator.normalize(model.kind, model.raw)
+        if committedTrialItem { return .save }
+        if model.kind != .time, case .value = raw { return .save }
+        return model.kind == .word && !choseTool ? .tool : .input
+    }
+
+    private var trialHint: LocalizedStringKey {
+        if trialStep == .tool { return "이모지 도구를 눌러요." }
+        switch model.kind {
+        case .emoji:
+            return hasSoftwareKeyboard && trialField?.textInputMode?.primaryLanguage == "emoji"
+                ? "아래 자판에서 이모지를 눌러요." : "이모지를 입력해 주세요."
+        case .word: return "남기고 싶은 단어를 입력해요."
+        case .place: return "기억할 장소를 입력해요."
+        case .time: return "시간을 고른 뒤 +를 눌러요."
+        }
+    }
+
+    private func finishTrialComposition() {
+        guard let field = trialField, field.isFirstResponder, field.markedTextRange != nil else { return }
+        field.unmarkText()
+        model.raw = field.text ?? model.raw
+    }
+
+    private func nextTrialAction() {
+        guard let tour, tour.guided, tour.panel == nil else { return }
+        finishTrialComposition()
+        if model.selection != nil { model.selection = nil }
+        switch trialStep {
+        case .tool:
+            switchKind(.emoji)
+        case .input:
+            if model.raw.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                switch model.kind {
+                case .emoji: model.raw = "🌱"
+                case .word: model.raw = SampleGenerator.localizedWords["walk"] ?? "산책"
+                case .place: model.raw = SampleGenerator.localizedWords["park"] ?? "공원"
+                case .time: model.raw = TimeRules.canonical(from: time)
+                }
+            }
+            commitField()
+        case .save:
+            finish()
+        }
+    }
+
     private func switchKind(_ kind: ItemKind) {
         model.setKind(kind)
         guard model.kind == kind else { return }
+        if tour != nil { choseTool = true; committedTrialItem = false }
         keyboardWanted = kind != .time
         if kind == .time { syncTimePicker() }
     }
@@ -480,6 +563,7 @@ struct EditorView: View {
     private func commitField() {
         let wasEditing = model.editingID != nil
         guard model.commitRaw() else { return }
+        if tour != nil { committedTrialItem = !model.items.isEmpty }
         if model.kind == .time { keyboardWanted = false }
         UIAccessibility.post(notification: .announcement, argument: wasEditing ? String(localized: "항목을 수정했어요.") : String(localized: "항목을 추가했어요."))
     }
@@ -529,19 +613,22 @@ struct EditorView: View {
     }
 
     private func finish() {
+        if tour != nil { finishTrialComposition() }
         finished = true
         guard let items = model.itemsForSaving() else { finished = false; return }
         let existing = store.items(on: model.day)
         if items == existing {
             store.updateDraft(nil, for: model.day)
+            tour?.didSave(items)
             leave(to: existing.isEmpty ? nil : model.day)
             return
         }
         do {
             try store.save(day: model.day, items: items)
-            if usage.isEnabled, EditorModel.isCountedSave(previous: existing, saved: items) { usage.didSaveRecord() }
+            if !store.isSample, usage.isEnabled, EditorModel.isCountedSave(previous: existing, saved: items) { usage.didSaveRecord() }
             model.saveFailed = false
             store.updateDraft(nil, for: model.day)
+            tour?.didSave(items)
             // The last item gone: 일간 shows the same day's empty screen.
             leave(to: items.isEmpty && app.level != .day ? nil : model.day)
         } catch {
@@ -560,12 +647,12 @@ struct EditorView: View {
     private func leave(to day: DayKey?) {
         keyboardWanted = false
         if let day {
-            app.navigate(to: day, level: app.level == .day ? .day : .records, haptic: false)
+            app.navigate(to: day, level: tour != nil || app.level == .day ? .day : .records, haptic: false)
             app.focusedMonth = day.monthKey
             app.requestReveal(day)
         }
         app.editorDay = nil
-        dismiss()
+        if tour == nil { dismiss() }
     }
 }
 
