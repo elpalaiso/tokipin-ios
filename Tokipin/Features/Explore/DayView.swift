@@ -221,23 +221,15 @@ struct DayBody: View {
         let items = store.items(on: day)
         VStack(spacing: 0) {
             ForEach(items) { item in
-                DayRecordRow(item: item, highlighted: app.searchHighlight == item.id)
+                row(item)
             }
         }
     }
-}
 
-struct DayRecordRow: View {
-    let item: RecordItem
-    var highlighted = false
-    var showsWordIcon = false
-
-    var body: some View {
+    private func row(_ item: RecordItem) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
-                if item.kind == .place || item.kind == .time || (showsWordIcon && item.kind == .word) {
-                    KindIcon(kind: item.kind, size: 17)
-                }
+                if item.kind == .place || item.kind == .time { KindIcon(kind: item.kind, size: 17) }
                 Text(item.displayValue)
                     .font(.brand(item.kind == .emoji ? 26 : 21))
                     .foregroundStyle(Palette.primary)
@@ -245,9 +237,9 @@ struct DayRecordRow: View {
             }
             .padding(.leading, 6)
             .frame(minHeight: 66)
-            .background(highlighted ? Color.white.opacity(0.08) : .clear)
+            .background(app.searchHighlight == item.id ? Color.white.opacity(0.08) : .clear)
             .overlay(alignment: .leading) {
-                if highlighted {
+                if app.searchHighlight == item.id {
                     Rectangle().fill(Palette.secondary).frame(width: 2)
                 }
             }

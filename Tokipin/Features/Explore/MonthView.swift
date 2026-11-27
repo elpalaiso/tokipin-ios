@@ -5,6 +5,8 @@ import SwiftUI
 struct MonthView: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
+    @Environment(SampleTour.self) private var tour: SampleTour?
+    @State private var gestureOrigin: CGFloat?
     @State private var visibleMonth: MonthKey?
     @State private var didInitialScroll = false
 
@@ -42,6 +44,17 @@ struct MonthView: View {
                     .scrollTargetLayout()
                     .padding(.horizontal, 16)
                     .padding(.bottom, 24)
+                }
+                .onScrollPhaseChange { _, phase, context in
+                    guard let tour, tour.guided, tour.cue == .monthScroll, app.level == .month else { return }
+                    if phase == .interacting { gestureOrigin = context.geometry.contentOffset.y }
+                    if phase == .idle { gestureOrigin = nil }
+                }
+                .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { _, offset in
+                    if let gestureOrigin, abs(offset - gestureOrigin) > 18 {
+                        tour?.scrolledMonth()
+                        self.gestureOrigin = nil
+                    }
                 }
                 .scrollIndicators(.hidden)
                 .scrollPosition(id: $visibleMonth, anchor: .top)
@@ -144,23 +157,10 @@ enum MonthCellPreview {
 }
 
 struct MonthGrid: View {
+    @Environment(SampleTour.self) private var tour: SampleTour?
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     let month: MonthKey
-
-    var body: some View {
-        CalendarMonthCard(month: month) { day in
-            MonthDateCell(day: day, items: store.items(on: day), selected: day == app.selectedDay) { app.openDay(day) }
-                .pinchTarget(.day(day), in: .month)
-        } afterWeek: { _ in EmptyView() }
-    }
-}
-
-/// Shared calendar presentation. The caller owns the source of each date's entries and its actions.
-struct CalendarMonthCard<Cell: View, AfterWeek: View>: View {
-    let month: MonthKey
-    @ViewBuilder let cell: (DayKey) -> Cell
-    @ViewBuilder let afterWeek: ([Int?]) -> AfterWeek
 
     var body: some View {
         let firstColumn = month.firstDay.column()
@@ -195,24 +195,20 @@ struct CalendarMonthCard<Cell: View, AfterWeek: View>: View {
                             }
                         }
                     }
-                    afterWeek(week)
                 }
             }
             .padding(.vertical, 6)
             .glassCard(cornerRadius: 22, fill: Palette.surface.opacity(0.78))
         }
     }
-}
 
-struct MonthDateCell: View {
-    let day: DayKey
-    let items: [RecordItem]
-    let selected: Bool
-    let open: () -> Void
-
-    var body: some View {
+    private func cell(_ day: DayKey) -> some View {
+        let items = store.items(on: day)
         let preview = MonthCellPreview.fragments(items)
-        return Button(action: open) {
+        let selected = day == app.selectedDay
+        return Button {
+            if let tour { tour.openCalendarDay(day) } else { app.openDay(day) }
+        } label: {
             VStack(spacing: 3) {
                 Text("\(day.day)")
                     .font(.brand(14, items.isEmpty ? .regular : .semibold))
@@ -245,6 +241,9 @@ struct MonthDateCell: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .trialHighlight(tour?.guided == true && tour?.cue == .pickDay &&
+                        month == app.focusedMonth && day == (store.days(in: month).first ?? month.firstDay))
+        .pinchTarget(.day(day), in: .month)
         .accessibilityLabel(items.isEmpty ? day.spokenLabel : "\(day.spokenLabel), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }

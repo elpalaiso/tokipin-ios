@@ -12,61 +12,86 @@ final class SampleCalendarTests: XCTestCase {
         return store
     }
 
-    func testSamplePracticeNeverEntersDraftsRecordsSearchOrExport() async throws {
-        let store = await readStore()
-        XCTAssertTrue(store.needsSampleCalendar(hasUsageChoice: false))
-        for date in ["2026-01-01", "2026-03-15", "2028-03-31"] {
-            let today = try XCTUnwrap(DayKey(string: date))
-            var sample = SampleCalendar(today: today)
-            for offset in 0...2 {
-                sample.month = today.monthKey.adding(months: -offset)
-                let target = sample.featured
-                let reservedDay = sample.reserved(in: sample.month)
-                XCTAssertNotEqual(target, reservedDay)
-                XCTAssertEqual(sample.items(on: target).last?.value, "🏺")
-                XCTAssertTrue(sample.items(on: reservedDay).isEmpty)
-                sample.beginPractice(from: target)
-                XCTAssertEqual(sample.page, .practice(reservedDay))
-                sample.savePractice()
-                XCTAssertEqual(sample.page, .practice(reservedDay))
-                sample.selectedEmoji = "🌱"
-                sample.savePractice()
-                XCTAssertEqual(sample.page, .month)
-                XCTAssertEqual(sample.items(on: reservedDay).map(\.value), ["🌱"])
-                XCTAssertEqual(sample.items(on: target).count, 3)
-                sample.beginPractice(from: target)
-                XCTAssertNotEqual(sample.page, .practice(reservedDay))
-            }
-            let restarted = SampleCalendar(today: today)
-            XCTAssertTrue(restarted.saved.isEmpty)
-        }
-        XCTAssertNil(store.latestDraft)
-        XCTAssertTrue(store.isEmpty)
-        XCTAssertTrue(store.search("🌱").isEmpty)
-        let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: store.exportData())
+    func testTrialUsesThreeYearsOfRealJournalOperationsOnlyInMemory() async throws {
+        let personal = await readStore()
+        let today = try XCTUnwrap(DayKey(string: "2026-11-27"))
+        let tour = SampleTour(today: today)
+        let store = tour.store
+        XCTAssertTrue(store.isSample)
+        XCTAssertGreaterThan(store.records.count, 750)
+        XCTAssertEqual(tour.app.editorDay, today)
+        XCTAssertFalse(store.items(on: today).isEmpty && store.latestDraft == nil)
+        let testItem = RecordItem(kind: .word, value: "only inside sample")
+        try store.save(day: today, items: [testItem])
+        XCTAssertEqual(store.search("only inside sample").first?.day, today)
+        store.updateDraft(Draft(day: today, items: [], kind: .word, raw: "private", changed: true), for: today)
+        XCTAssertEqual(store.latestDraft?.raw, "private")
+        let removed = try store.deleteDay(today)
+        XCTAssertTrue(store.search("only inside sample").isEmpty)
+        try store.restoreDay(today, items: removed)
+        try store.replaceItem(RecordItem(id: testItem.id, kind: .word, value: "edited"), on: today)
+        XCTAssertEqual(store.items(on: today).first?.value, "edited")
+        XCTAssertThrowsError(try store.exportData())
+        XCTAssertTrue(personal.isEmpty)
+        XCTAssertNil(personal.latestDraft)
+        XCTAssertTrue(personal.search("only inside sample").isEmpty)
+        let archive = try JSONDecoder.tokipin.decode(RecordArchive.self, from: personal.exportData())
         XCTAssertTrue(archive.days.isEmpty)
         let relaunched = await readStore()
         XCTAssertTrue(relaunched.needsSampleCalendar(hasUsageChoice: false))
+        XCTAssertTrue(SampleTour(today: today).store.search("only inside sample").isEmpty)
     }
 
-    func testSeedDensityAndRepeatedPracticeOnlyUsesAvailableDates() throws {
-        for date in ["2026-01-01", "2026-02-15", "2028-02-29"] {
-            var sample = SampleCalendar(today: try XCTUnwrap(DayKey(string: date)))
-            let days = (1...sample.month.numberOfDays).map { DayKey(year: sample.month.year, month: sample.month.month, day: $0) }
-            let emptyDays = days.filter { sample.items(on: $0).isEmpty }
-            XCTAssertGreaterThanOrEqual(days.count - emptyDays.count, 20)
-            let from = sample.featured
-            for _ in emptyDays {
-                sample.beginPractice(from: from)
-                sample.selectedEmoji = "✨"
-                sample.savePractice()
-            }
-            XCTAssertEqual(Set(sample.saved.keys), Set(emptyDays))
-            XCTAssertNil(sample.practiceDate(from: from))
-            sample.beginPractice(from: from)
-            XCTAssertEqual(sample.page, .month)
-            XCTAssertEqual(sample.items(on: from).last?.value, "🏺")
-        }
+    func testNativeGeneratorUsesWebVocabularyForAllLanguages() throws {
+        let url = try XCTUnwrap(Bundle.main.url(forResource: "SampleVocabulary", withExtension: "json"))
+        let packs = try JSONDecoder().decode([String: [String: String]].self, from: Data(contentsOf: url))
+        XCTAssertEqual(Set(packs.keys), Set(LocalizationTests.languages))
+        for pack in packs.values { XCTAssertEqual(Set(pack.keys), Set(SampleGenerator.words.keys)) }
+        let day = try XCTUnwrap(DayKey(string: "2026-11-27"))
+        let ko = SampleGenerator.items(for: day, vocabulary: try XCTUnwrap(packs["ko"]), starter: true)
+        let en = SampleGenerator.items(for: day, vocabulary: try XCTUnwrap(packs["en"]), starter: true)
+        XCTAssertEqual(ko.map(\.kind), [.word, .emoji, .place, .time])
+        XCTAssertEqual(ko.map(\.id), en.map(\.id))
+        XCTAssertNotEqual(ko.first?.value, en.first?.value)
+        XCTAssertEqual(ko.last?.value, en.last?.value)
+    }
+
+    func testRealNavigationAdvancesTheGuideWithoutSkippingSteps() {
+        let tour = SampleTour()
+        tour.app.editorDay = nil
+        tour.nextInArchive()
+        XCTAssertEqual(tour.cue, .dayZoom)
+        tour.nextInArchive()
+        XCTAssertEqual(tour.app.level, .records)
+        tour.changedLevel(from: .day, to: .records)
+        let before = tour.app.recordsMonth
+        tour.nextInArchive()
+        XCTAssertNotEqual(tour.app.recordsMonth, before)
+        XCTAssertEqual(tour.cue, .recordsZoom)
+        tour.changedRecordsMonth()
+        XCTAssertEqual(tour.cue, .recordsZoom)
+        tour.nextInArchive()
+        tour.changedLevel(from: .records, to: .month)
+        tour.nextInArchive()
+        XCTAssertEqual(tour.cue, .monthZoom)
+        tour.nextInArchive()
+        tour.changedLevel(from: .month, to: .year)
+        tour.nextInArchive()
+        tour.changedLevel(from: .year, to: .month)
+        XCTAssertEqual(tour.cue, .pickDay)
+        // A menu change or search result is free navigation, not the last guided date tap.
+        tour.changedLevel(from: .month, to: .day)
+        XCTAssertNil(tour.panel)
+        XCTAssertEqual(tour.cue, .daySwipe)
+        tour.changedLevel(from: .year, to: .month)
+        tour.nextInArchive()
+        tour.changedLevel(from: .month, to: .day)
+        XCTAssertEqual(tour.panel, .invitation)
+        tour.panel = nil
+        XCTAssertFalse(tour.guided)
+        tour.replay()
+        XCTAssertTrue(tour.guided)
+        XCTAssertEqual(tour.cue, .daySwipe)
     }
 
     func testOnboardingCompletionAndExistingInstallSignalsSurviveRelaunch() async throws {

@@ -9,7 +9,7 @@ struct RootView: View {
     @State private var inviteFromExplore = false
     @State private var delayEditorKeyboard = false
     @State private var showSkeleton = false
-    @State private var showsSample = false
+    @State private var sampleTour: SampleTour?
     @State private var didRoute = false
     /// Continues the system launch screen (same colour and icon) until the first read is done,
     /// as Android keeps its splash; a slow read hands over to the skeleton instead.
@@ -27,8 +27,8 @@ struct RootView: View {
             case .failed:
                 RecoveryView { Task { await load() } }
             case .loaded:
-                if showsSample {
-                    SampleCalendarView(startJournal: startJournal)
+                if let sampleTour {
+                    SampleTourHost(tour: sampleTour, startJournal: startJournal)
                 } else if didRoute {
                     ExploreView()
                 }
@@ -79,16 +79,16 @@ struct RootView: View {
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
         if store.needsSampleCalendar(hasUsageChoice: usage.hasChoice) {
-            showsSample = true
+            sampleTour = SampleTour()
             return
         }
         routeToJournal()
     }
 
     private func startJournal() {
-        guard showsSample else { return }
+        guard sampleTour != nil else { return }
         store.completeSampleCalendar()
-        showsSample = false
+        sampleTour = nil
         routeToJournal()
     }
 

@@ -719,103 +719,128 @@
   "",
   null
  ],
- "예시 달력": [
-  "SampleCalendarView.stringsdata",
+ "날짜를 좌우로 쓸어 전날과 다음 날을 둘러보세요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "내 기록 시작": [
-  "SampleCalendarView.stringsdata",
+ "두 손가락을 모으면 기록한 날만 보여요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "예시 이모지 남기기": [
-  "SampleCalendarView.stringsdata",
+ "위의 월 숫자를 누르거나 좌우로 밀어 다른 달을 보세요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "이모지를 골라 예시 달력에 남겨 보세요.": [
-  "SampleCalendarView.stringsdata",
+ "두 손가락을 모으면 월간 달력이 보여요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "예시 달력에 표시했어요.": [
-  "SampleCalendarView.stringsdata",
+ "위아래로 스크롤해 다른 달을 둘러보세요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "두 손가락을 모으면 한 해가 보여요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "월을 누르거나 두 손가락을 벌려 한 달을 펼치세요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
  "날짜를 눌러 그날의 기록을 열어 보세요.": [
-  "SampleCalendarView.stringsdata",
+  "SampleTour.stringsdata",
   "",
   null
  ],
  "탐색 안내 닫기": [
-  "SampleCalendarView.stringsdata",
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "입력 안내 다시 보기": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "첫 기록을 남겼어요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "기록을 저장했어요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "이날의 기록을 비웠어요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "아래 자판에서 이모지를 눌러요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "기억할 장소를 입력해요.": [
+  "SampleTour.stringsdata",
+  "",
+  null
+ ],
+ "남기고 싶은 단어를 입력해요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
  "체크 표시를 눌러 저장해요.": [
-  "SampleCalendarView.stringsdata",
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "도예": [
-  "SampleCalendar.stringsdata",
+ "입력 안내 닫기": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "작업실": [
-  "SampleCalendar.stringsdata",
+ "이모지 도구를 눌러요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "산책": [
-  "SampleCalendar.stringsdata",
+ "시간을 고른 뒤 +를 눌러요.": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "공원": [
-  "SampleCalendar.stringsdata",
+ "탐색 안내 다시 보기": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "커피": [
-  "SampleCalendar.stringsdata",
+ "시작": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "카페": [
-  "SampleCalendar.stringsdata",
+ "이제 나만의 기록을 쌓아가 볼까요?": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "독서": [
-  "SampleCalendar.stringsdata",
+ "다음": [
+  "SampleTour.stringsdata",
   "",
   null
  ],
- "도서관": [
-  "SampleCalendar.stringsdata",
-  "",
-  null
- ],
- "자전거 타기": [
-  "SampleCalendar.stringsdata",
-  "",
-  null
- ],
- "산책로": [
-  "SampleCalendar.stringsdata",
-  "",
-  null
- ],
- "요리": [
-  "SampleCalendar.stringsdata",
-  "",
-  null
- ],
- "부엌": [
-  "SampleCalendar.stringsdata",
+ "계속 둘러보기": [
+  "SampleTour.stringsdata",
   "",
   null
  ]
