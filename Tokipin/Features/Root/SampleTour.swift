@@ -3,7 +3,7 @@ import SwiftUI
 
 /// A real editor and four real archive views operate on a private, memory-only journal.
 @MainActor @Observable
-final class SampleTour {
+final class SampleTour: Identifiable {
     enum Panel { case leaveGuide, invitation }
     enum Cue: String {
         case daySwipe, dayZoom, recordsSwipe, recordsZoom, monthScroll, monthZoom, yearOpen, pickDay

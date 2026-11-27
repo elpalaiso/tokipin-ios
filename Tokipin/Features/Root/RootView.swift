@@ -37,11 +37,11 @@ struct RootView: View {
         .overlay {
             if showSplash { LaunchSplash().transition(.opacity) }
         }
-        .usageSharingInvitation(isPresented: $inviteFromExplore)
+        .usageSharingInvitation(isPresented: $inviteFromExplore, onJoin: { usage.setEnabled(true) })
         .fullScreenCover(item: $app.editorDay) { day in
             EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard,
                        allowsKeyboard: !delayEditorKeyboard)
-                .usageSharingInvitation(isPresented: $inviteFromEditor) { delayEditorKeyboard = false }
+                .usageSharingInvitation(isPresented: $inviteFromEditor, onJoin: { usage.setEnabled(true) }) { delayEditorKeyboard = false }
         }
         .task { await load() }
         // The month may roll over while the app is in the background or the time zone changes.

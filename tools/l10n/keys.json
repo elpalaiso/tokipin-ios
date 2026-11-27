@@ -848,5 +848,10 @@
   "SampleTour.stringsdata",
   "",
   null
+ ],
+ "온보딩 다시 체험": [
+  "SettingsView.stringsdata",
+  "",
+  null
  ]
 }

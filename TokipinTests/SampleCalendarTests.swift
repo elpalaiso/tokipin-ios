@@ -43,6 +43,32 @@ final class SampleCalendarTests: XCTestCase {
         XCTAssertTrue(SampleTour(today: today).store.search("only inside sample").isEmpty)
     }
 
+    func testRepeatingToursLeavesPersonalHistoryAndCompletionUntouched() async throws {
+        let personal = await readStore()
+        let today = DayKey.today
+        let entry = RecordItem(kind: .word, value: "my personal record")
+        try personal.save(day: today, items: [entry])
+        personal.updateDraft(Draft(day: today, items: [entry], kind: .word, raw: "my draft", changed: true), for: today)
+        personal.completeSampleCalendar()
+        personal.markEditorOpened()
+        let before = defaults.dictionaryRepresentation()
+        let archive = try personal.exportData()
+        let first = SampleTour(today: today)
+        try first.store.save(day: today, items: [RecordItem(kind: .word, value: "only in this replay")])
+        first.guided = false
+
+        let second = SampleTour(today: today)
+        XCTAssertNotEqual(first.id, second.id)
+        XCTAssertTrue(second.guided)
+        XCTAssertEqual(second.app.editorDay, today)
+        XCTAssertTrue(second.store.search("only in this replay").isEmpty)
+        let reopened = await readStore()
+        XCTAssertEqual(try reopened.exportData(), archive)
+        XCTAssertEqual(reopened.latestDraft?.raw, "my draft")
+        XCTAssertEqual(reopened.items(on: today), [entry])
+        XCTAssertTrue(NSDictionary(dictionary: before).isEqual(to: defaults.dictionaryRepresentation()))
+    }
+
     func testChangingTrialHintPreservesActiveComposerAndMarkedText() async throws {
         let probe = ComposerProbe()
         let host = UIHostingController(rootView: ProbeView(probe: probe))
