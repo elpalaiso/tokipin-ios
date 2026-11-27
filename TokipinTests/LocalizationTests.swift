@@ -37,6 +37,20 @@ final class LocalizationTests: XCTestCase {
         }
     }
 
+    func testUsageSharingInvitationAndSettingsReminderAreLocalized() throws {
+        for language in Self.languages {
+            let title = try text("더 나은 토키핀을 함께 만들까요?", language)
+            let body = try text("앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요.", language)
+            let join = try text("함께하기", language)
+            let reminder = try text("설정에서 ‘앱 사용 통계 공유’를 언제든 켤 수 있어요.", language)
+            let toggle = try text("앱 사용 통계 공유", language)
+            for value in [title, body, join, reminder, toggle] {
+                XCTAssertFalse(value.isEmpty || value == "⚠︎", language)
+            }
+            XCTAssertTrue(reminder.contains(toggle), language)
+        }
+    }
+
     func testPluralsAt0_1_2_5_21() throws {
         let key = "이날 기록 %lld개를 삭제했어요."
         XCTAssertEqual(try text(key, "en", 1), "Deleted 1 item from this day.")

@@ -689,17 +689,22 @@
   "",
   null
  ],
- "토키핀 개선에 함께할까요?": [
+ "더 나은 토키핀을 함께 만들까요?": [
   "UsageSharingSheet.stringsdata",
   "",
   null
  ],
- "기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요.": [
+ "앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요.": [
   "UsageSharingSheet.stringsdata",
   "",
   null
  ],
- "공유하기": [
+ "설정에서 ‘앱 사용 통계 공유’를 언제든 켤 수 있어요.": [
+  "UsageSharingSheet.stringsdata",
+  "",
+  null
+ ],
+ "함께하기": [
   "UsageSharingSheet.stringsdata",
   "",
   null

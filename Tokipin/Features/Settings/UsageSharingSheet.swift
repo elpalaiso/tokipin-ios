@@ -1,17 +1,51 @@
+import Accessibility
 import SwiftUI
 
 extension View {
     /// Keep the editor (or returning user's normal destination) visible behind the sheet.
     func usageSharingInvitation(isPresented: Binding<Bool>, onDismiss: @escaping () -> Void = {}) -> some View {
-        self.accessibilityHidden(isPresented.wrappedValue)
+        modifier(UsageSharingInvitation(isPresented: isPresented, onDismiss: onDismiss))
+    }
+}
+
+private struct UsageSharingInvitation: ViewModifier {
+    @Binding var isPresented: Bool
+    let onDismiss: () -> Void
+    @State private var explicitlySkipped = false
+    @State private var showsReminder = false
+
+    func body(content: Content) -> some View {
+        content.accessibilityHidden(isPresented)
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if showsReminder {
+                    let message = String(localized: "설정에서 ‘앱 사용 통계 공유’를 언제든 켤 수 있어요.")
+                    Text(verbatim: message)
+                        .font(.brand(14)).foregroundStyle(Palette.primary)
+                        .padding(.horizontal, 16).padding(.vertical, 8)
+                        .glassCard(cornerRadius: 16, fill: Palette.surface)
+                        .padding(.horizontal, 16).padding(.vertical, 4)
+                        .allowsHitTesting(false)
+                        .task {
+                            var announcement = AttributedString(message)
+                            announcement.accessibilitySpeechAnnouncementPriority = .low
+                            AccessibilityNotification.Announcement(announcement).post()
+                            try? await Task.sleep(for: .seconds(5))
+                            if !Task.isCancelled { showsReminder = false }
+                        }
+                }
+            }
             .overlay {
-                if isPresented.wrappedValue {
-                    Color.black.opacity(0.45).ignoresSafeArea().onTapGesture { isPresented.wrappedValue = false }
+                if isPresented {
+                    Color.black.opacity(0.45).ignoresSafeArea().onTapGesture { isPresented = false }
                         .accessibilityHidden(true)
                 }
             }
-            .sheet(isPresented: isPresented, onDismiss: onDismiss) {
-                UsageSharingSheet()
+            .sheet(isPresented: $isPresented, onDismiss: {
+                onDismiss()
+                showsReminder = explicitlySkipped
+                explicitlySkipped = false
+            }) {
+                UsageSharingSheet(onSkip: { explicitlySkipped = true })
                     .presentationBackgroundInteraction(.enabled)
                     .presentationDragIndicator(.visible)
                     .presentationBackground(LinearGradient(colors: [Color(hex: 0x343F39), Color(hex: 0x28332E)],
@@ -22,6 +56,7 @@ extension View {
 }
 
 private struct UsageSharingSheet: View {
+    let onSkip: () -> Void
     @Environment(UsageAnalytics.self) private var usage
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -30,10 +65,10 @@ private struct UsageSharingSheet: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("토키핀 개선에 함께할까요?")
+                Text("더 나은 토키핀을 함께 만들까요?")
                     .font(.brand(23, .medium, relativeTo: .title2))
                     .accessibilityAddTraits(.isHeader)
-                Text("기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요.")
+                Text("앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요.")
                     .font(.brand(15)).foregroundStyle(Palette.secondary)
                 if typeSize.isAccessibilitySize || measuredSize.width < 350 {
                     VStack(spacing: 8) { actions }
@@ -57,11 +92,15 @@ private struct UsageSharingSheet: View {
     }
 
     @ViewBuilder private var actions: some View {
-        choice("지금은 안 함") { dismiss() }
-        choice("공유하기") {
+        choice("지금은 안 함") {
+            onSkip()
+            dismiss()
+        }
+        choice("함께하기") {
             usage.setEnabled(true)
             dismiss()
         }
+        .accessibilityHint(Text("앱 사용 통계 공유"))
     }
 
     private func choice(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {

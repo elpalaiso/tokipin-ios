@@ -46,7 +46,7 @@ struct SettingsView: View {
                         .tint(Palette.focus)
                         .disabled(!usage.isAvailable)
                         .padding(.top, 10)
-                        Text("기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요.")
+                        Text("앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요.")
                             .font(.brand(13)).foregroundStyle(Palette.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.trailing, 60)
