@@ -5,10 +5,13 @@ pt-BR, es (Spain), es-419, zh-Hans, zh-Hant (Taiwan), zh-HK. Web codes map to Ap
 es-ES → `es`, zh-Hant-TW → `zh-Hant`, zh-Hant-HK → `zh-HK`.
 
 - The app follows the device language (or the per-app language in iOS Settings). A language the app
-  does not support falls back to English (`developmentRegion = en`); the catalog's source stays Korean.
+  does not support falls back to English (`developmentRegion = en`); the main interface catalog uses Korean source keys.
 - Strings live in `Tokipin/Localizable.xcstrings` (source language ko). Rows follow the Figma
   [iOS handoff table](https://www.figma.com/design/DCXIvwQgfRlhz65FdjZJ5n/Tokipin?node-id=311-1097):
   그대로 = web dictionary value, 조정 = web term adapted to iOS arguments, 별도 = iOS-only translation.
+- The offline policy screens use the English HTML articles as their source and the site dictionaries for all 17 languages.
+  The generator uses the `data-site-text` attributes to match the translations. After editing the web policies, run
+  `TOKIPIN_WEB_LOCALES=../tokipin/locales python3 tools/l10n/build_catalog.py`. Check in `Tokipin/Policies.xcstrings` and the generated Swift document.
 - Dates, months and years come from `DateFormatter` templates in the app language (`DayKey.label`,
   `MonthKey.spokenLabel`, `MonthKey.monthName`, `MonthKey.spokenYear`). Header numbers keep the fixed
   YYYY.MM.DD / YYYY.MM / YYYY notation. Weekday keys use each locale's short standalone names.

@@ -105,6 +105,16 @@ final class LocalizationRuntimeTests: XCTestCase {
                                                   bundle: .forClass(RecordStore.self)))
     }
 
+    func testPolicyTextDefaultsToEnglishAndUsesTheAppLanguage() {
+        let expected = ["en": "Terms of use", "it": "Terms of use", "ko": "이용약관", "ja": "利用規約"]
+        for (language, title) in expected {
+            let resource = LocalizedStringResource("Terms of use", table: "Policies",
+                                                   locale: Locale(identifier: language),
+                                                   bundle: .forClass(RecordStore.self))
+            XCTAssertEqual(String(localized: resource), title, language)
+        }
+    }
+
     func testKoreanCountsStayKoreanWithEnglishFallback() {
         let count = 2
         XCTAssertEqual(resolved("이날 기록 \(count)개를 삭제했어요.", "ko"), "이날 기록 2개를 삭제했어요.")
