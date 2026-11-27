@@ -5,6 +5,7 @@ struct EditorView: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
     @Environment(\.dismiss) private var dismiss
+    @Environment(UsageAnalytics.self) private var usage
 
     @State private var model: EditorModel
     @State private var time = Date()
@@ -22,6 +23,7 @@ struct EditorView: View {
     /// Opened with the pencil: the saved day as a whole is being edited.
     @State private var wholeDay: Bool
     private let focusItem: UUID?
+    private let allowsKeyboard: Bool
 
     struct RowDrag: Equatable {
         let id: UUID
@@ -35,7 +37,8 @@ struct EditorView: View {
     }
 
 
-    init(day: DayKey, focusItem: UUID?, startsWithKeyboard: Bool = true) {
+    init(day: DayKey, focusItem: UUID?, startsWithKeyboard: Bool = true, allowsKeyboard: Bool = true) {
+        self.allowsKeyboard = allowsKeyboard
         self.focusItem = focusItem
         _keyboardWanted = State(initialValue: startsWithKeyboard)
         _wholeDay = State(initialValue: !startsWithKeyboard)
@@ -52,6 +55,7 @@ struct EditorView: View {
             }
         }
         .onAppear(perform: setUp)
+        .onChange(of: allowsKeyboard) { _, allowed in if allowed { store.markEditorOpened() } }
         .sheet(isPresented: $picking, onDismiss: { if !keyboardWanted { keyboardWanted = keyboardBeforePicking } }) {
             EntryDatePicker(current: model.day, today: app.today, onCancel: {
                 picking = false
@@ -86,7 +90,7 @@ struct EditorView: View {
             model.edit(item)
             syncTimePicker()
         }
-        store.markEditorOpened()
+        if allowsKeyboard { store.markEditorOpened() }
     }
 
     // MARK: Header
@@ -337,7 +341,7 @@ struct EditorView: View {
                 placeholder: model.kind.label,
                 font: BrandFont.uiFont(size, isFirstEntry(position) ? .medium : .regular, relativeTo: .title1),
                 preferEmoji: model.kind == .emoji,
-                isFocused: keyboardWanted && model.selection == nil,
+                isFocused: keyboardWanted && allowsKeyboard && model.selection == nil,
                 accessibilityLabel: model.kind.inputLabel,
                 onBeginEditing: { keyboardWanted = true },
                 onReturn: commitField
@@ -535,6 +539,7 @@ struct EditorView: View {
         }
         do {
             try store.save(day: model.day, items: items)
+            if usage.isEnabled, EditorModel.isCountedSave(previous: existing, saved: items) { usage.didSaveRecord() }
             model.saveFailed = false
             store.updateDraft(nil, for: model.day)
             // The last item gone: 일간 shows the same day's empty screen.

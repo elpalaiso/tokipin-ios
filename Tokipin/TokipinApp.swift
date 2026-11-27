@@ -4,6 +4,7 @@ import SwiftUI
 struct TokipinApp: App {
     @State private var store = RecordStore()
     @State private var app = AppModel()
+    @State private var usage = UsageAnalytics()
 
     init() {
         BrandFont.register()
@@ -14,6 +15,7 @@ struct TokipinApp: App {
             RootView()
                 .environment(store)
                 .environment(app)
+                .environment(usage)
                 .preferredColorScheme(.dark)
                 .tint(Palette.focus)
         }

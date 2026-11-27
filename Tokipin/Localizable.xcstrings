@@ -6780,6 +6780,112 @@
         }
       }
     },
+    "더 나은 토키핀을 함께 만들까요?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Möchtest du Tokipin mit uns verbessern?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Want to help make Tokipin better?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Nos ayudas a mejorar Tokipin?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Nos ayudas a mejorar Tokipin?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Et si on améliorait Tokipin ensemble ?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "क्या आप Tokipin को बेहतर बनाने में साथ देंगे?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mau ikut membantu kami menyempurnakan Tokipin?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一緒にトキピンをもっと使いやすくしませんか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더 나은 토키핀을 함께 만들까요?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vamos melhorar o Tokipin juntos?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поможете нам сделать Tokipin лучше?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มาช่วยกันพัฒนา Tokipin ให้ดีขึ้นไหม"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin’i birlikte geliştirelim mi?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn muốn cùng chúng tôi cải thiện Tokipin không?"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "想一起讓 Tokipin 更好用嗎？"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "愿意和我们一起改进 Tokipin 吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "想一起讓 Tokipin 更好用嗎？"
+          }
+        }
+      }
+    },
     "두 번 탭해 골라요." : {
       "localizations" : {
         "de" : {
@@ -7734,6 +7840,112 @@
         }
       }
     },
+    "선택한 경우 Google Analytics가 앱 실행·저장 이벤트, 앱 설치 식별자와 기기 정보를 처리해요. 기록 내용·기록 날짜·검색어는 보내지 않아요. 설정에서 언제든지 끌 수 있어요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du zustimmst, verarbeitet Google Analytics Daten zu App-Starts und zum Speichern von Notizen sowie eine Kennung der App-Installation und Geräteinformationen. Die Inhalte und Datumsangaben deiner Notizen sowie deine Suchbegriffe werden nicht gesendet. Du kannst das Teilen jederzeit in den Einstellungen deaktivieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you opt in, Google Analytics processes app opens, note saves, an app installation identifier, and device information. We don’t send the contents or dates of your notes, or your search terms. You can turn sharing off at any time in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si aceptas, Google Analytics procesa las aperturas de la app, las veces que guardas notas, un identificador de la instalación y datos del dispositivo. No enviamos el contenido ni las fechas de tus notas, ni tus términos de búsqueda. Puedes desactivar esta opción en cualquier momento en Ajustes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si aceptas, Google Analytics procesa las aperturas de la app, las veces que guardas notas, un identificador de la instalación y datos del dispositivo. No enviamos el contenido ni las fechas de tus notas, ni tus términos de búsqueda. Puedes desactivar esta opción en cualquier momento en Configuración."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous acceptez, Google Analytics traite les ouvertures de l’app, les enregistrements de notes, un identifiant de l’installation et des informations sur l’appareil. Le contenu et les dates de vos notes ainsi que vos termes de recherche ne sont pas transmis. Vous pouvez désactiver le partage à tout moment dans les réglages."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अगर आप सहमति देते हैं, तो Google Analytics ऐप खुलने और नोट सहेजे जाने की जानकारी, ऐप इंस्टॉलेशन की पहचान और डिवाइस की जानकारी प्रोसेस करता है। हम आपके नोट की सामग्री, उनकी तारीखें या खोज शब्द नहीं भेजते। आप सेटिंग्स में जाकर इसे कभी भी बंद कर सकते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika Anda setuju, Google Analytics memproses aktivitas membuka aplikasi dan menyimpan catatan, pengenal instalasi aplikasi, serta informasi perangkat. Kami tidak mengirim isi atau tanggal catatan maupun kata pencarian Anda. Anda dapat menonaktifkan berbagi kapan saja di Pengaturan."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有をオンにすると、Google Analytics がアプリの起動と記録の保存に関するイベント、アプリのインストール識別子、端末情報を処理します。記録の内容や日付、検索語は送りません。共有は設定でいつでもオフにできます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택한 경우 Google Analytics가 앱 실행·저장 이벤트, 앱 설치 식별자와 기기 정보를 처리해요. 기록 내용·기록 날짜·검색어는 보내지 않아요. 설정에서 언제든지 끌 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se você aceitar, o Google Analytics processará as aberturas do app, os eventos de salvamento de anotações, um identificador da instalação do app e informações do dispositivo. Não enviamos o conteúdo ou as datas das anotações, nem os termos de busca. Você pode desativar o compartilhamento a qualquer momento nas configurações."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если вы согласитесь, Google Analytics будет обрабатывать сведения об открытии приложения и сохранении записей, идентификатор установки приложения и данные об устройстве. Мы не передаём содержимое и даты записей или поисковые запросы. Отключить передачу статистики можно в любой момент в настройках."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หากคุณยินยอม Google Analytics จะประมวลผลเหตุการณ์การเปิดแอปและการบันทึกโน้ต ตัวระบุการติดตั้งแอป และข้อมูลอุปกรณ์ เราไม่ส่งเนื้อหาหรือวันที่ของบันทึก รวมถึงคำค้นของคุณ คุณปิดการแชร์ได้ทุกเมื่อในการตั้งค่า"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onay verirseniz Google Analytics uygulama açma ve not kaydetme olaylarını, uygulama yüklemenize ait bir tanımlayıcıyı ve cihaz bilgilerini işler. Not içeriklerini, not tarihlerini veya arama terimlerinizi göndermeyiz. Paylaşımı istediğiniz zaman Ayarlar’dan kapatabilirsiniz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu bạn đồng ý, Google Analytics sẽ xử lý các sự kiện mở ứng dụng và lưu ghi chú, mã nhận dạng bản cài đặt ứng dụng và thông tin thiết bị. Chúng tôi không gửi nội dung, ngày của ghi chú hay từ khóa tìm kiếm. Bạn có thể tắt chia sẻ bất cứ lúc nào trong phần Cài đặt."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如你同意，Google Analytics 會處理開啟應用程式和儲存記錄的事件、應用程式安裝識別碼及裝置資料。我們不會傳送記錄內容、記錄日期或搜尋字詞。你可以隨時在設定中關閉分享。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果你同意，Google Analytics 会处理应用打开和记录保存事件、应用安装标识符和设备信息。我们不会发送记录内容、记录日期或搜索词。你可以随时在设置中关闭分享。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果你同意，Google Analytics 會處理開啟 App 和儲存紀錄的事件、App 安裝識別碼及裝置資訊。我們不會傳送紀錄內容、紀錄日期或搜尋字詞。你可以隨時在設定中關閉分享。"
+          }
+        }
+      }
+    },
     "선택한 항목 삭제" : {
       "localizations" : {
         "de" : {
@@ -7942,6 +8154,112 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "設定"
+          }
+        }
+      }
+    },
+    "설정에서 ‘앱 사용 통계 공유’를 언제든 켤 수 있어요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In den Einstellungen kannst du „App-Nutzungsstatistiken teilen“ jederzeit aktivieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can turn on “Share app usage statistics” anytime in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Ajustes puedes activar «Compartir estadísticas de uso de la app» cuando quieras."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Configuración puedes activar «Compartir estadísticas de uso de la app» en cualquier momento."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez activer « Partager les statistiques d’utilisation de l’app » à tout moment dans les réglages."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आप सेटिंग्स में जाकर “ऐप के इस्तेमाल के आँकड़े शेयर करें” कभी भी चालू कर सकते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda bisa mengaktifkan “Bagikan statistik penggunaan aplikasi” kapan saja di Pengaturan."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「設定」の「アプリの使用統計を共有」は、いつでもオンにできます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정에서 ‘앱 사용 통계 공유’를 언제든 켤 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode ativar “Compartilhar estatísticas de uso do app” a qualquer momento nas Configurações."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В настройках можно в любой момент включить «Делиться статистикой использования приложения»."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุณเปิด “แชร์สถิติการใช้แอป” ได้ทุกเมื่อในการตั้งค่า"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar’da “Uygulama kullanım istatistiklerini paylaş” seçeneğini istediğiniz zaman açabilirsiniz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể bật “Chia sẻ số liệu sử dụng ứng dụng” bất cứ lúc nào trong phần Cài đặt."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以隨時在設定中開啟「分享應用程式使用統計」。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你随时可以在设置中开启“分享应用使用统计”。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以隨時在設定中開啟「分享 App 使用統計」。"
           }
         }
       }
@@ -9320,6 +9638,218 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "還沒有紀錄。"
+          }
+        }
+      }
+    },
+    "앱 사용 통계 공유" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Nutzungsstatistiken teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share app usage statistics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir estadísticas de uso de la app"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir estadísticas de uso de la app"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partager les statistiques d’utilisation de l’app"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐप के इस्तेमाल के आँकड़े शेयर करें"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bagikan statistik penggunaan aplikasi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリの使用統計を共有"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 사용 통계 공유"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartilhar estatísticas de uso do app"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Делиться статистикой использования приложения"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แชร์สถิติการใช้แอป"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama kullanım istatistiklerini paylaş"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chia sẻ số liệu sử dụng ứng dụng"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享應用程式使用統計"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享应用使用统计"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享 App 使用統計"
+          }
+        }
+      }
+    },
+    "앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzungsstatistiken zeigen uns zum Beispiel, wie oft die App geöffnet wird und Notizen gespeichert werden. So können wir nachsehen, wo es hakt, und Funktionen verbessern. Die Inhalte deiner Notizen und deine Suchbegriffe senden wir nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usage statistics, like how often the app is opened and notes are saved, help us see what could work better and improve features. We don’t send the contents of your notes or your search terms."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las estadísticas de uso, como el número de veces que se abre la app o se guardan notas, nos ayudan a detectar dificultades y mejorar las funciones. No enviamos el contenido de tus notas ni tus términos de búsqueda."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las estadísticas de uso, como la cantidad de veces que se abre la app o se guardan notas, nos ayudan a detectar dificultades y mejorar las funciones. No enviamos el contenido de tus notas ni tus términos de búsqueda."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les statistiques d’utilisation, par exemple le nombre d’ouvertures de l’app et de notes enregistrées, nous aident à repérer ce qui pose problème et à améliorer les fonctionnalités. Nous ne transmettons ni le contenu de vos notes ni vos termes de recherche."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐप कितनी बार खोला गया और कितनी बार नोट सहेजे गए, ऐसे आँकड़ों से हमें समझने में मदद मिलती है कि कहाँ दिक्कत आ रही है और सुविधाएँ कैसे बेहतर बनाई जा सकती हैं। हम आपके नोट की सामग्री या आपके खोजे हुए शब्द नहीं भेजते।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistik penggunaan, seperti seberapa sering aplikasi dibuka dan catatan disimpan, membantu kami melihat kendala dan memperbaiki fitur. Kami tidak mengirim isi catatan atau kata kunci pencarian Anda."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリを開いた回数や記録を保存した回数などの利用統計を参考に、使いにくいところを見直し、機能を改善します。記録の内容や検索した言葉は送信しません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estatísticas de uso, como o número de vezes que o app é aberto e que as notas são salvas, nos ajudam a identificar dificuldades e melhorar os recursos. Não enviamos o conteúdo das suas notas nem seus termos de busca."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статистика использования, например частота открытия приложения и сохранения записей, помогает нам находить неудобства и улучшать функции. Мы не отправляем содержимое ваших записей и ваши поисковые запросы."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สถิติการใช้งาน เช่น จำนวนครั้งที่เปิดแอปและบันทึกโน้ต ช่วยให้เราเห็นจุดที่ใช้งานไม่สะดวกและปรับปรุงฟีเจอร์ต่าง ๆ เราไม่ส่งเนื้อหาในบันทึกหรือคำค้นของคุณ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamanın kaç kez açıldığı ve notların kaç kez kaydedildiği gibi kullanım istatistikleri, yaşanan zorlukları fark etmemize ve özellikleri iyileştirmemize yardımcı olur. Notlarınızın içeriğini veya arama terimlerinizi göndermeyiz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Các thống kê sử dụng như số lần mở ứng dụng và lưu ghi chú giúp chúng tôi nhận ra những điểm bất tiện và cải thiện các tính năng. Chúng tôi không gửi nội dung ghi chú hay từ khóa tìm kiếm của bạn."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我們會參考開啟應用程式和儲存記錄的次數等使用統計，了解哪些地方用起來不方便，並改善功能。我們不會傳送你的記錄內容或搜尋字詞。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我们会参考打开应用和保存记录的次数等使用统计，了解哪里用起来不方便，并改进功能。我们不会发送你的记录内容或搜索词。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我們會參考開啟 App 和儲存紀錄的次數等使用統計，了解哪些地方用起來不方便，藉此改善功能。我們不會傳送你的紀錄內容或搜尋字詞。"
           }
         }
       }
@@ -13392,6 +13922,112 @@
         }
       }
     },
+    "지금은 안 함" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt nicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora no"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora no"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas maintenant"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी नहीं"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nanti saja"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今はしない"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금은 안 함"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora não"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не сейчас"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ไว้ก่อน"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi değil"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Để sau"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫時不要"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂不"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫時不要"
+          }
+        }
+      }
+    },
     "직접 만든 기록에 대한 권리는 작성자에게 있어요. 다른 사람의 글이나 개인정보가 담긴 기록을 외부에 공유할 때에는 그 사람의 권리와 사생활을 존중해 주세요." : {
       "localizations" : {
         "de" : {
@@ -14342,6 +14978,112 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已展開"
+          }
+        }
+      }
+    },
+    "함께하기" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich bin dabei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Count me in"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me apunto"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me sumo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je participe"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "साथ दें"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saya ikut"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "協力する"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "함께하기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quero participar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я участвую"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เข้าร่วม"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ben de varım"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tham gia"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我願意"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我愿意"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我願意"
           }
         }
       }
