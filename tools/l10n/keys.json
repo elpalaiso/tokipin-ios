@@ -718,5 +718,105 @@
   "PolicyView.stringsdata",
   "",
   null
+ ],
+ "예시 달력": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "내 기록 시작": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "예시 이모지 남기기": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "이모지를 골라 예시 달력에 남겨 보세요.": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "예시 달력에 표시했어요.": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "날짜를 눌러 그날의 기록을 열어 보세요.": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "탐색 안내 닫기": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "체크 표시를 눌러 저장해요.": [
+  "SampleCalendarView.stringsdata",
+  "",
+  null
+ ],
+ "도예": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "작업실": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "산책": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "공원": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "커피": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "카페": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "독서": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "도서관": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "자전거 타기": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "산책로": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "요리": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
+ ],
+ "부엌": [
+  "SampleCalendar.stringsdata",
+  "",
+  null
  ]
 }

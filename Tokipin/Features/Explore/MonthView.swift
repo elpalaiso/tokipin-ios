@@ -149,6 +149,20 @@ struct MonthGrid: View {
     let month: MonthKey
 
     var body: some View {
+        CalendarMonthCard(month: month) { day in
+            MonthDateCell(day: day, items: store.items(on: day), selected: day == app.selectedDay) { app.openDay(day) }
+                .pinchTarget(.day(day), in: .month)
+        } afterWeek: { _ in EmptyView() }
+    }
+}
+
+/// Shared calendar presentation. The caller owns the source of each date's entries and its actions.
+struct CalendarMonthCard<Cell: View, AfterWeek: View>: View {
+    let month: MonthKey
+    @ViewBuilder let cell: (DayKey) -> Cell
+    @ViewBuilder let afterWeek: ([Int?]) -> AfterWeek
+
+    var body: some View {
         let firstColumn = month.firstDay.column()
         VStack(alignment: .leading, spacing: 6) {
             // Month number above the weekday column of the 1st, outside the card.
@@ -181,18 +195,24 @@ struct MonthGrid: View {
                             }
                         }
                     }
+                    afterWeek(week)
                 }
             }
             .padding(.vertical, 6)
             .glassCard(cornerRadius: 22, fill: Palette.surface.opacity(0.78))
         }
     }
+}
 
-    private func cell(_ day: DayKey) -> some View {
-        let items = store.items(on: day)
+struct MonthDateCell: View {
+    let day: DayKey
+    let items: [RecordItem]
+    let selected: Bool
+    let open: () -> Void
+
+    var body: some View {
         let preview = MonthCellPreview.fragments(items)
-        let selected = day == app.selectedDay
-        return Button { app.openDay(day) } label: {
+        return Button(action: open) {
             VStack(spacing: 3) {
                 Text("\(day.day)")
                     .font(.brand(14, items.isEmpty ? .regular : .semibold))
@@ -225,7 +245,6 @@ struct MonthGrid: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .pinchTarget(.day(day), in: .month)
         .accessibilityLabel(items.isEmpty ? day.spokenLabel : "\(day.spokenLabel), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }

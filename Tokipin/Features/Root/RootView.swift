@@ -9,6 +9,7 @@ struct RootView: View {
     @State private var inviteFromExplore = false
     @State private var delayEditorKeyboard = false
     @State private var showSkeleton = false
+    @State private var showsSample = false
     @State private var didRoute = false
     /// Continues the system launch screen (same colour and icon) until the first read is done,
     /// as Android keeps its splash; a slow read hands over to the skeleton instead.
@@ -26,7 +27,11 @@ struct RootView: View {
             case .failed:
                 RecoveryView { Task { await load() } }
             case .loaded:
-                ExploreView()
+                if showsSample {
+                    SampleCalendarView(startJournal: startJournal)
+                } else if didRoute {
+                    ExploreView()
+                }
             }
         }
         .overlay {
@@ -70,9 +75,24 @@ struct RootView: View {
         // Long enough to be seen as a splash, never longer than the read itself needs.
         let remaining = 0.6 - Date().timeIntervalSince(started)
         if remaining > 0 { try? await Task.sleep(for: .seconds(remaining)) }
-        hideSplash()
+        defer { hideSplash() }
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
+        if store.needsSampleCalendar(hasUsageChoice: usage.hasChoice) {
+            showsSample = true
+            return
+        }
+        routeToJournal()
+    }
+
+    private func startJournal() {
+        guard showsSample else { return }
+        store.completeSampleCalendar()
+        showsSample = false
+        routeToJournal()
+    }
+
+    private func routeToJournal() {
         let offer = usage.claimInvitation()
         if let draft = store.latestDraft {
             // The app was interrupted mid-entry: bring the draft back.

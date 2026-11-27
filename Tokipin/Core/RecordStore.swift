@@ -49,7 +49,7 @@ final class RecordStore {
     @ObservationIgnored private var recordsVersion = 0
     /// Unsaved editor state, one per day, so a draft on one day never overwrites another's.
     private(set) var drafts: [DayKey: Draft] = [:]
-    /// True until the first record is saved or the first editor is closed.
+    /// True until a saved record is loaded or the first real editor is available to use.
     private(set) var isFirstLaunch: Bool
 
     @ObservationIgnored private let directory: URL
@@ -121,6 +121,15 @@ final class RecordStore {
         guard isFirstLaunch else { return }
         isFirstLaunch = false
         defaults.set(true, forKey: firstLaunchKey)
+    }
+
+    func needsSampleCalendar(hasUsageChoice: Bool) -> Bool {
+        state == .loaded && isFirstLaunch && records.isEmpty && drafts.isEmpty
+            && !hasUsageChoice && !defaults.bool(forKey: "tokipin.completedSampleCalendar")
+    }
+
+    func completeSampleCalendar() {
+        defaults.set(true, forKey: "tokipin.completedSampleCalendar")
     }
 
     // MARK: Writing
