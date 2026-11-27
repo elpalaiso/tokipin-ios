@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 /// 설정 sheet: touch feedback, JSON export, storage note, policies.
 struct SettingsView: View {
     @Environment(RecordStore.self) private var store
+    @Environment(UsageAnalytics.self) private var usage
     @Environment(\.dismiss) private var dismiss
     @AppStorage(Haptics.enabledKey) private var hapticsEnabled = true
     @State private var exportDocument: RecordsDocument?
@@ -38,6 +39,20 @@ struct SettingsView: View {
                         }
                         .tint(Palette.focus)
                         .frame(minHeight: 66)
+                        Rectangle().fill(Palette.line).frame(height: 1)
+                        Toggle(isOn: Binding(get: { usage.isEnabled }, set: { usage.setEnabled($0) })) {
+                            Text("앱 사용 통계 공유").font(.brand(17, .medium))
+                        }
+                        .tint(Palette.focus)
+                        .disabled(!usage.isAvailable)
+                        .padding(.top, 10)
+                        .accessibilityHint(Text("기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요."))
+                        Text("기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요.")
+                            .font(.brand(13)).foregroundStyle(Palette.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.trailing, 60)
+                            .padding(.vertical, 8)
+                            .accessibilityHidden(true)
                         Rectangle().fill(Palette.line).frame(height: 1)
                         Button(action: export) {
                             HStack {

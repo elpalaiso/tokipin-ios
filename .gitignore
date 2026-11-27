@@ -4,3 +4,6 @@ DerivedData/
 build/
 *.xcuserstate
 .review/
+
+# Local Firebase client configuration, supplied by the project owner.
+Tokipin/GoogleService-Info.plist

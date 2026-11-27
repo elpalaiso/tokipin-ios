@@ -151,6 +151,14 @@ final class EditorModel {
         lastDeleted = []
     }
 
+    /// An explicit save counts additions, edits, or reorderings among the remaining items.
+    /// Removing entries alone (including deleting an entire day) is a deletion.
+    static func isCountedSave(previous: [RecordItem], saved: [RecordItem]) -> Bool {
+        guard !saved.isEmpty else { return false }
+        let remainingIDs = Set(saved.map(\.id))
+        return saved != previous.filter { remainingIDs.contains($0.id) }
+    }
+
     /// Items to save, including whatever is still in the composer. Nil if the
     /// composer holds an invalid value.
     func itemsForSaving() -> [RecordItem]? {

@@ -683,5 +683,35 @@
   "EntryDatePicker.stringsdata",
   "",
   null
+ ],
+ "앱 사용 통계 공유": [
+  "SettingsView.stringsdata",
+  "",
+  null
+ ],
+ "토키핀 개선에 함께할까요?": [
+  "UsageSharingSheet.stringsdata",
+  "",
+  null
+ ],
+ "기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요.": [
+  "UsageSharingSheet.stringsdata",
+  "",
+  null
+ ],
+ "공유하기": [
+  "UsageSharingSheet.stringsdata",
+  "",
+  null
+ ],
+ "지금은 안 함": [
+  "UsageSharingSheet.stringsdata",
+  "",
+  null
+ ],
+ "선택한 경우 Google Analytics가 앱 실행·저장 이벤트, 앱 설치 식별자와 기기 정보를 처리해요. 기록 내용·기록 날짜·검색어는 보내지 않아요. 설정에서 언제든지 끌 수 있어요.": [
+  "PolicyView.stringsdata",
+  "",
+  null
  ]
 }

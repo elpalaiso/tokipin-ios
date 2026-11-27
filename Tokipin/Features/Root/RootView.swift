@@ -4,6 +4,10 @@ import SwiftUI
 struct RootView: View {
     @Environment(RecordStore.self) private var store
     @Environment(AppModel.self) private var app
+    @Environment(UsageAnalytics.self) private var usage
+    @State private var inviteFromEditor = false
+    @State private var inviteFromExplore = false
+    @State private var delayEditorKeyboard = false
     @State private var showSkeleton = false
     @State private var didRoute = false
     /// Continues the system launch screen (same colour and icon) until the first read is done,
@@ -28,8 +32,11 @@ struct RootView: View {
         .overlay {
             if showSplash { LaunchSplash().transition(.opacity) }
         }
+        .usageSharingInvitation(isPresented: $inviteFromExplore)
         .fullScreenCover(item: $app.editorDay) { day in
-            EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard)
+            EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard,
+                       allowsKeyboard: !delayEditorKeyboard)
+                .usageSharingInvitation(isPresented: $inviteFromEditor) { delayEditorKeyboard = false }
         }
         .task { await load() }
         // The month may roll over while the app is in the background or the time zone changes.
@@ -66,12 +73,19 @@ struct RootView: View {
         hideSplash()
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
+        let offer = usage.claimInvitation()
         if let draft = store.latestDraft {
             // The app was interrupted mid-entry: bring the draft back.
+            inviteFromEditor = offer
+            delayEditorKeyboard = offer
             app.select(draft.day, haptic: false)
             app.openEditor(for: draft.day)
         } else if store.isFirstLaunch && store.isEmpty {
+            inviteFromEditor = offer
+            delayEditorKeyboard = offer
             app.openEditor(for: .today)
+        } else {
+            inviteFromExplore = offer
         }
     }
 }
