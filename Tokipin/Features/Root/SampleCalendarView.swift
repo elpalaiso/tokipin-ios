@@ -197,6 +197,9 @@ struct SampleCalendarView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if sample.guides {
                     guide("이모지를 골라 예시 달력에 남겨 보세요.")
+                        .opacity(sample.selectedEmoji == nil ? 1 : 0)
+                        .allowsHitTesting(sample.selectedEmoji == nil)
+                        .accessibilityHidden(sample.selectedEmoji != nil)
                 }
                 HStack(alignment: .center, spacing: 10) {
                     ForEach(SampleCalendar.emoji, id: \.self) { emoji in
@@ -217,8 +220,7 @@ struct SampleCalendarView: View {
                 }
                 HStack(alignment: .center, spacing: 6) {
                     if sample.guides, sample.selectedEmoji != nil {
-                        Text("체크 표시를 눌러 저장해요.")
-                            .font(.brand(13, .medium)).foregroundStyle(Palette.secondary)
+                        guide("체크 표시를 눌러 저장해요.")
                     }
                     Spacer(minLength: 0)
                     Button {
