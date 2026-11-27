@@ -196,18 +196,19 @@ struct SampleCalendarView: View {
     private var practicePage: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                if sample.guides && sample.selectedEmoji == nil {
+                if sample.guides {
                     guide("이모지를 골라 예시 달력에 남겨 보세요.")
                 }
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 62, maximum: 80), spacing: 10)],
-                          alignment: .leading, spacing: 10) {
+                HStack(alignment: .center, spacing: 10) {
                     ForEach(SampleCalendar.emoji, id: \.self) { emoji in
                         let selected = sample.selectedEmoji == emoji
                         let suggested = sample.guides && sample.selectedEmoji == nil && emoji == SampleCalendar.emoji.first
                         let outlined = selected || suggested
                         Button { sample.selectedEmoji = emoji } label: {
                             Text(verbatim: emoji).font(.brand(26))
-                                .frame(maxWidth: .infinity, minHeight: 60)
+                                .lineLimit(1).minimumScaleFactor(0.6)
+                                .frame(minWidth: 44, maxWidth: 80)
+                                .frame(height: max(60, BrandFont.uiFont(26).lineHeight + 12))
                                 .background(sage.opacity(selected ? 0.22 : 0.08), in: RoundedRectangle(cornerRadius: 14))
                                 .overlay(RoundedRectangle(cornerRadius: 14)
                                     .strokeBorder(sage.opacity(outlined ? 1 : 0.32), lineWidth: outlined ? 2 : 1))
@@ -217,7 +218,8 @@ struct SampleCalendarView: View {
                 }
                 HStack(alignment: .center, spacing: 6) {
                     if sample.guides, sample.selectedEmoji != nil {
-                        guide("체크 표시를 눌러 저장해요.")
+                        Text("체크 표시를 눌러 저장해요.")
+                            .font(.brand(13, .medium)).foregroundStyle(Palette.secondary)
                     }
                     Spacer(minLength: 0)
                     Button {
