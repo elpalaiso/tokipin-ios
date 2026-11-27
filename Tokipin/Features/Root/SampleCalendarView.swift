@@ -144,9 +144,8 @@ struct SampleCalendarView: View {
                         await Task.yield()
                         if let day = sample.lastSaved, day.monthKey == sample.month {
                             reader.scrollTo(day, anchor: .center)
-                        } else if sample.guides,
-                                  let row = sample.month.weeks().firstIndex(where: { $0.contains(sample.featured.day) }),
-                                  CGFloat(row + 1) * 97 + 88 > viewport.size.height {
+                        } else if sample.guides {
+                            // Bottom anchoring clamps to the top if the guide already fits.
                             reader.scrollTo("sample.monthGuide", anchor: .bottom)
                         }
                     }
