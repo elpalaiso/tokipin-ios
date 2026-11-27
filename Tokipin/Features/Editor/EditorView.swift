@@ -62,10 +62,11 @@ struct EditorView: View {
                     }, next: nextTrialAction)
                 }
                 header
-                if let tour, tour.guided, trialStep == .save {
-                    TourHint(title: "체크 표시를 눌러 저장해요.", editor: true) { tour.panel = .leaveGuide }
+                canvas.overlay(alignment: .top) {
+                    if let tour, tour.guided, trialStep == .save {
+                        TourHint(title: "체크 표시를 눌러 저장해요.", editor: true) { tour.panel = .leaveGuide }
+                    }
                 }
-                canvas
                 bottomControls
             }
         }
@@ -407,8 +408,12 @@ struct EditorView: View {
                     .padding(.horizontal, 26)
                     .accessibilityAddTraits(.updatesFrequently)
             }
-            if let tour, tour.guided, trialStep != .save {
+            if let tour, tour.guided {
+                // Moving the active guide must not resize a List-hosted text field mid-keystroke.
                 TourHint(title: trialHint, editor: true) { tour.panel = .leaveGuide }
+                    .opacity(trialStep == .save ? 0 : 1)
+                    .accessibilityHidden(trialStep == .save)
+                    .allowsHitTesting(trialStep != .save)
             }
             toolbar
             if model.kind == .time && model.selection == nil {

@@ -243,6 +243,7 @@ struct MonthGrid: View {
         .buttonStyle(.plain)
         .trialHighlight(tour?.guided == true && tour?.cue == .pickDay &&
                         month == app.focusedMonth && day == (store.days(in: month).first ?? month.firstDay))
+        .accessibilityIdentifier(tour == nil ? "" : "trial.monthCell.\(day.string)")
         .pinchTarget(.day(day), in: .month)
         .accessibilityLabel(items.isEmpty ? day.spokenLabel : "\(day.spokenLabel), \(items.map(\.displayValue).joined(separator: ", "))")
         .accessibilityAddTraits(selected ? .isSelected : [])

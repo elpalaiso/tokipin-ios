@@ -1,3 +1,4 @@
+import SwiftUI
 import XCTest
 @testable import Tokipin
 
@@ -40,6 +41,36 @@ final class SampleCalendarTests: XCTestCase {
         let relaunched = await readStore()
         XCTAssertTrue(relaunched.needsSampleCalendar(hasUsageChoice: false))
         XCTAssertTrue(SampleTour(today: today).store.search("only inside sample").isEmpty)
+    }
+
+    func testChangingTrialHintPreservesActiveComposerAndMarkedText() async throws {
+        let probe = ComposerProbe()
+        let host = UIHostingController(rootView: ProbeView(probe: probe))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let oldWindow = scene.keyWindow
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; oldWindow?.makeKeyAndVisible() }
+        host.view.layoutIfNeeded()
+
+        let field = try XCTUnwrap(findField(in: host.view))
+        field.becomeFirstResponder()
+        field.setMarkedText("서울", selectedRange: NSRange(location: 2, length: 0))
+        probe.highlighted = false
+        try await Task.sleep(for: .milliseconds(60))
+        host.view.layoutIfNeeded()
+        XCTAssertIdentical(findField(in: host.view), field)
+        XCTAssertEqual(field.text, "서울")
+        XCTAssertNotNil(field.markedTextRange)
+    }
+
+    private func findField(in view: UIView) -> UITextField? {
+        if let field = view as? UITextField { return field }
+        for child in view.subviews {
+            if let field = findField(in: child) { return field }
+        }
+        return nil
     }
 
     func testNativeGeneratorUsesWebVocabularyForAllLanguages() throws {
@@ -126,5 +157,20 @@ final class SampleCalendarTests: XCTestCase {
         await returned.load()
         XCTAssertFalse(returned.needsSampleCalendar(hasUsageChoice: false))
         XCTAssertTrue(returned.isFirstLaunch) // Interrupted before the real editor closed.
+    }
+}
+
+@MainActor @Observable private final class ComposerProbe {
+    var raw = ""
+    var highlighted = true
+}
+
+private struct ProbeView: View {
+    @Bindable var probe: ComposerProbe
+
+    var body: some View {
+        ComposerField(text: $probe.raw, placeholder: "", font: .systemFont(ofSize: 16), preferEmoji: false,
+                      isFocused: true, accessibilityLabel: "", onReturn: {})
+            .trialHighlight(probe.highlighted)
     }
 }

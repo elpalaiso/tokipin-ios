@@ -114,7 +114,8 @@ final class SampleTour {
             app.navigate(to: day, level: .month)
             app.requestReveal(day)
         case .monthScroll:
-            let target = app.focusedMonth.adding(months: app.focusedMonth == store.earliestDay?.monthKey ? 1 : -1)
+            let first = CalendarRange.firstMonth(today: app.today, earliestRecord: store.earliestDay)
+            let target = app.focusedMonth.adding(months: app.focusedMonth <= first ? 1 : -1)
             app.focusedMonth = target
             app.requestReveal(store.days(in: target).first ?? target.firstDay)
             scrolledMonth()
@@ -123,8 +124,10 @@ final class SampleTour {
             app.navigate(to: day, level: .year)
             app.requestReveal(day)
         case .yearOpen:
-            app.setLevel(.month)
-            app.requestReveal(app.selectedDay)
+            let month = app.focusedMonth
+            let day = month == app.selectedDay.monthKey ? app.selectedDay : store.days(in: month).first ?? month.firstDay
+            app.navigate(to: day, level: .month)
+            app.requestReveal(day)
         case .pickDay:
             openCalendarDay(store.days(in: app.focusedMonth).first ?? app.focusedMonth.firstDay)
         }
@@ -258,11 +261,12 @@ private struct SampleTourDecision: View {
 extension View {
     @ViewBuilder
     func trialHighlight(_ active: Bool, radius: CGFloat = 10) -> some View {
-        if active {
-            overlay {
+        // Keep the control's identity, especially while UIKit is delivering text or composing.
+        overlay {
+            if active {
                 RoundedRectangle(cornerRadius: radius).strokeBorder(tourPaper, lineWidth: 2)
                     .allowsHitTesting(false).accessibilityHidden(true)
             }
-        } else { self }
+        }
     }
 }
