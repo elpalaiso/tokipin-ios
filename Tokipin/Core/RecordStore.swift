@@ -314,7 +314,7 @@ final class RecordStore {
     func search(_ query: String, locale: Locale = TimeRules.displayLocale,
                 kindLabel: (ItemKind) -> String = { $0.label }) -> [SearchResult] {
         // One case rule for the query and everything indexed: the app locale's (Turkish İ/ı included).
-        let q = query.trimmingCharacters(in: .whitespaces).lowercased(with: locale)
+        let q = Self.searchForm(query.trimmingCharacters(in: .whitespaces), locale: locale)
         guard !q.isEmpty else { return [] }
         // Kind names match whatever their case on screen ("Place", "place", "Ort").
         let kind = ItemKind.allCases.first {
@@ -327,11 +327,11 @@ final class RecordStore {
             searchIndex = sortedDays.flatMap { day in
                 let date = (day.dotted + " " + day.string) as NSString
                 // The date as the app shows and reads it ("Wed, 25 Nov 2026", "Wednesday 25 November 2026").
-                let label = (labeler(day) + "\n" + spoken.string(from: day.date)).lowercased(with: locale) as NSString
+                let label = Self.searchForm(labeler(day) + "\n" + spoken.string(from: day.date), locale: locale) as NSString
                 return (records[day] ?? []).map { item in
                     // Times match as stored ("18:45") and as shown ("6:45 PM").
                     let text = item.kind == .time ? item.value + "\n" + item.displayValue : item.value
-                    return (day, item, text.lowercased(with: locale) as NSString, date, label)
+                    return (day, item, Self.searchForm(text, locale: locale) as NSString, date, label)
                 }
             }
         }
@@ -347,6 +347,16 @@ final class RecordStore {
             }
         }
         return results
+    }
+
+    /// Lower-cased in the app locale, with formatter spaces (narrow/no-break, thin) turned into
+    /// plain spaces so a typed "6:45 PM" matches the formatted "6:45\u{202F}PM".
+    static func searchForm(_ text: String, locale: Locale) -> String {
+        var result = text.lowercased(with: locale)
+        for space in ["\u{202F}", "\u{00A0}", "\u{2009}", "\u{2007}"] {
+            result = result.replacingOccurrences(of: space, with: " ")
+        }
+        return result
     }
 
     func exportData() throws -> Data {

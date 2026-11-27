@@ -153,6 +153,15 @@ final class LocalizationRuntimeTests: XCTestCase {
         try store.save(day: day, items: [RecordItem(kind: .time, value: "18:45")])
         let shown = RecordItem(kind: .time, value: "18:45").displayValue.lowercased()
         XCTAssertEqual(store.search(shown, locale: gb).count, 1, shown)
+        // The formatter puts U+202F before AM/PM; typing a plain space must match too.
+        let us = TimeRules.locale(localization: "en", region: Locale.Region("US"))
+        let copied = TimeRules.display("18:45", uses24Hour: false)
+        XCTAssertEqual(store.search(copied, locale: us).count, 1, copied)
+        if copied.contains("PM") || copied.contains("pm") {
+            XCTAssertEqual(store.search("6:45 PM", locale: us).count, 1)
+            XCTAssertEqual(store.search("6:45 pm", locale: us).count, 1)
+        }
+        XCTAssertEqual(RecordStore.searchForm("6:45\u{202F}PM", locale: us), "6:45 pm")
         XCTAssertEqual(store.search("18:45", locale: gb).count, 1)
         XCTAssertEqual(store.search("Wednesday, 25 November", locale: gb).count, 1)
     }
