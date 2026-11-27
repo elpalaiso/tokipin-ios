@@ -25,7 +25,7 @@ private struct UsageSharingSheet: View {
     @Environment(UsageAnalytics.self) private var usage
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var height: CGFloat = 244
+    @State private var measuredSize = CGSize(width: 390, height: 244)
 
     var body: some View {
         ScrollView {
@@ -35,7 +35,7 @@ private struct UsageSharingSheet: View {
                     .accessibilityAddTraits(.isHeader)
                 Text("기록 기능을 더 편하게 만드는 데 도움이 돼요. 공유하면 앱 실행과 저장 횟수를 Google Analytics로 보내요. 기록 내용과 검색어는 보내지 않아요.")
                     .font(.brand(15)).foregroundStyle(Palette.secondary)
-                if typeSize.isAccessibilitySize {
+                if typeSize.isAccessibilitySize || measuredSize.width < 350 {
                     VStack(spacing: 8) { actions }
                 } else {
                     ViewThatFits(in: .horizontal) {
@@ -48,11 +48,11 @@ private struct UsageSharingSheet: View {
             .padding(.horizontal, 24)
             .padding(.top, 34)
             .padding(.bottom, 22)
-            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { measuredSize = $0 }
         }
         .scrollBounceBehavior(.basedOnSize)
         .foregroundStyle(Palette.primary)
-        .presentationDetents([.height(height)])
+        .presentationDetents([.height(measuredSize.height)])
         .accessibilityAction(.escape) { dismiss() }
     }
 
