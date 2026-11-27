@@ -9,6 +9,8 @@ es-ES → `es`, zh-Hant-TW → `zh-Hant`, zh-Hant-HK → `zh-HK`.
 - Strings live in `Tokipin/Localizable.xcstrings` (source language ko). Rows follow the Figma
   [iOS handoff table](https://www.figma.com/design/DCXIvwQgfRlhz65FdjZJ5n/Tokipin?node-id=311-1097):
   그대로 = web dictionary value, 조정 = web term adapted to iOS arguments, 별도 = iOS-only translation.
+- The offline policy screens use the web articles and their site translations in document order. After updating those files, run
+  `TOKIPIN_WEB_LOCALES=../tokipin/locales python3 tools/l10n/build_catalog.py` and check in the updated catalog and generated Swift document.
 - Dates, months and years come from `DateFormatter` templates in the app language (`DayKey.label`,
   `MonthKey.spokenLabel`, `MonthKey.monthName`, `MonthKey.spokenYear`). Header numbers keep the fixed
   YYYY.MM.DD / YYYY.MM / YYYY notation. Weekday keys use each locale's short standalone names.

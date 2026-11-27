@@ -1904,6 +1904,536 @@
     "Aa" : {
       "shouldTranslate" : false
     },
+    "Google Analytics 데이터 보관 기준" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenaufbewahrung in Google Analytics"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics data retention"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conservación de datos en Google Analytics"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conservación de datos en Google Analytics"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conservation des données dans Google Analytics"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics में डेटा रखने की अवधि"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retensi data Google Analytics"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analyticsのデータ保持期間"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics 데이터 보관 기준"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retenção de dados no Google Analytics"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сроки хранения данных в Google Analytics"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ระยะเวลาเก็บรักษาข้อมูลของ Google Analytics"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics verileri ne kadar süre saklar?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thời hạn lưu giữ dữ liệu của Google Analytics"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics 資料保留期限"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics 的数据保留期限"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Analytics 資料保留期限"
+          }
+        }
+      }
+    },
+    "Google 개인정보 문의" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google zum Datenschutz kontaktieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact Google about privacy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contactar con Google sobre privacidad"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contactar a Google sobre privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contacter Google au sujet de la confidentialité"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "गोपनीयता के बारे में Google से संपर्क करें"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hubungi Google tentang privasi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プライバシーについてGoogleに問い合わせる"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 개인정보 문의"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falar com o Google sobre privacidade"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обратиться в Google по вопросу конфиденциальности"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ติดต่อ Google เกี่ยวกับความเป็นส่วนตัว"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gizlilikle ilgili olarak Google’a ulaşın"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liên hệ với Google về quyền riêng tư"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "就私隱事宜聯絡 Google"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "联系 Google 咨询隐私问题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "向 Google 洽詢隱私權問題"
+          }
+        }
+      }
+    },
+    "Google은 접속 IP로 대략적인 지역을 파악한 뒤 IP를 저장하기 전에 삭제해요. 통계는 가까운 수집 센터를 거쳐 국외 서버에서 처리될 수 있어요. 공유를 끄면 이후 수집이 중단돼요. 이벤트 데이터의 보관 기간은 2개월, 사용자 식별자에 연결된 데이터는 마지막 활동 후 14개월이에요. 이 기간은 일반 집계 보고서에는 적용되지 않아요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google leitet aus deiner IP-Adresse einen ungefähren Standort ab und verwirft die Adresse, bevor sie protokolliert wird. Die Statistiken werden über ein nahe gelegenes Erfassungszentrum übertragen und können auf Servern im Ausland verarbeitet werden. Wenn du das Teilen ausschaltest, endet die weitere Erfassung. Ereignisdaten werden zwei Monate lang gespeichert, mit der Nutzerkennung verknüpfte Daten 14 Monate ab der letzten Aktivität. Diese Fristen gelten nicht für aggregierte Standardberichte."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google uses your IP address to determine an approximate location and discards the address before logging it. Statistics pass through a nearby collection center and may be processed on servers abroad. Turning sharing off stops future collection. Event data is retained for 2 months and data linked to the user identifier for 14 months after the last activity. These periods do not apply to standard aggregate reports."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google utiliza tu dirección IP para determinar tu ubicación aproximada y la descarta antes de registrarla. Las estadísticas pasan por un centro de recogida de datos cercano y pueden tratarse en servidores de otros países. Si desactivas la opción de compartir, se dejan de recoger datos a partir de ese momento. Los datos de eventos se conservan durante 2 meses y los datos vinculados al identificador de usuario, durante 14 meses desde la última actividad. Estos plazos no se aplican a los informes agregados estándar."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google utiliza tu dirección IP para determinar tu ubicación aproximada y la descarta antes de registrarla. Las estadísticas pasan por un centro de recopilación de datos cercano y pueden tratarse en servidores de otros países. Si desactivas la opción de compartir, se dejan de recopilar datos a partir de ese momento. Los datos de eventos se conservan durante 2 meses y los datos vinculados al identificador de usuario, durante 14 meses desde la última actividad. Estos plazos no se aplican a los informes agregados estándar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google utilise votre adresse IP pour déterminer votre position approximative, puis la supprime avant de la consigner. Les statistiques transitent par un centre de collecte proche et peuvent être traitées sur des serveurs à l’étranger. Désactiver le partage met fin à la collecte. Les données d’événements sont conservées deux mois. Les données associées à l’identifiant utilisateur sont conservées 14 mois après la dernière activité. Ces durées ne s’appliquent pas aux rapports agrégés standards."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google आपके IP पते से आपके क्षेत्र का अनुमान लगाता है और पता लॉग में दर्ज करने से पहले ही हटा देता है। आँकड़े पास के संग्रह केंद्र से होकर जाते हैं और विदेश में स्थित सर्वरों पर संसाधित किए जा सकते हैं। साझा करना बंद करने पर आगे आँकड़े इकट्ठे नहीं किए जाते। इवेंट का डेटा 2 महीने तक रखा जाता है। उपयोगकर्ता आईडी से जुड़ा डेटा आखिरी गतिविधि के बाद 14 महीने तक रखा जाता है। ये अवधि कुल आँकड़ों पर आधारित मानक रिपोर्टों पर लागू नहीं होती हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google menggunakan alamat IP Anda untuk memperkirakan lokasi lalu membuang alamat tersebut sebelum mencatat data. Statistik diteruskan melalui pusat pengumpulan terdekat dan dapat diproses di server di luar negeri. Menonaktifkan berbagi statistik menghentikan pengumpulan selanjutnya. Data peristiwa disimpan selama 2 bulan dan data yang terkait dengan pengenal pengguna selama 14 bulan sejak aktivitas terakhir. Jangka waktu ini tidak berlaku untuk laporan agregat standar."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GoogleはIPアドレスからおおよその地域を特定した後、ログに保存する前にそのアドレスを破棄します。統計データは最寄りの収集センターを経由し、国外のサーバーで処理される場合があります。共有をオフにすると、以後の収集は停止します。イベントデータの保持期間は2か月、利用者の識別子に関連付けられたデータは最後の利用から14か月です。これらの期間は標準の集計レポートには適用されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google은 접속 IP로 대략적인 지역을 파악한 뒤 IP를 저장하기 전에 삭제해요. 통계는 가까운 수집 센터를 거쳐 국외 서버에서 처리될 수 있어요. 공유를 끄면 이후 수집이 중단돼요. 이벤트 데이터의 보관 기간은 2개월, 사용자 식별자에 연결된 데이터는 마지막 활동 후 14개월이에요. 이 기간은 일반 집계 보고서에는 적용되지 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Google usa seu endereço IP para determinar sua localização aproximada e o descarta antes de registrá-lo. As estatísticas passam por um centro de coleta próximo e podem ser processadas em servidores de outros países. Desativar o compartilhamento interrompe a coleta a partir desse momento. Os dados de eventos são mantidos por 2 meses, e os dados vinculados ao identificador de usuário, por 14 meses após a última atividade. Esses prazos não se aplicam aos relatórios agregados padrão."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google определяет примерное местоположение по IP-адресу и удаляет сам адрес до записи данных в журнал. Статистика поступает в ближайший центр сбора и может обрабатываться на серверах за рубежом. Отключение отправки статистики прекращает дальнейший сбор. Данные о событиях хранятся 2 месяца, а данные, связанные с идентификатором пользователя, — 14 месяцев с момента последней активности. Эти сроки не распространяются на стандартные сводные отчёты."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google ใช้ที่อยู่ IP เพื่อระบุพื้นที่โดยประมาณ แล้วทิ้งที่อยู่ IP ก่อนจัดเก็บลงในบันทึกของระบบ สถิติจะส่งผ่านศูนย์รวบรวมข้อมูลที่อยู่ใกล้ และอาจได้รับการประมวลผลบนเซิร์ฟเวอร์ในต่างประเทศ เมื่อปิดการแชร์ แอปจะหยุดเก็บสถิติใหม่ ข้อมูลเหตุการณ์จะเก็บไว้ 2 เดือน ส่วนข้อมูลที่เชื่อมโยงกับรหัสผู้ใช้จะเก็บไว้ 14 เดือนนับจากกิจกรรมครั้งล่าสุด ระยะเวลาเหล่านี้ไม่มีผลต่อรายงานสถิติแบบรวมมาตรฐาน"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google, yaklaşık konumunuzu belirlemek için IP adresinizi kullanır ve adresi kayda almadan siler. İstatistikler yakındaki bir veri toplama merkezinden geçer ve yurt dışındaki sunucularda işlenebilir. Paylaşımı kapattığınızda yeni veri toplanması durur. Etkinlik verileri 2 ay, kullanıcı tanımlayıcısına bağlı veriler ise son etkinlikten itibaren 14 ay saklanır. Bu süreler standart toplu raporlar için geçerli değildir."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google dùng địa chỉ IP để xác định vị trí gần đúng rồi loại bỏ địa chỉ này trước khi ghi vào nhật ký hệ thống. Số liệu đi qua một trung tâm thu thập ở gần bạn và có thể được xử lý trên máy chủ ở nước ngoài. Khi bạn tắt chia sẻ, ứng dụng ngừng thu thập số liệu mới. Dữ liệu sự kiện được lưu trong 2 tháng. Dữ liệu liên kết với mã định danh người dùng được lưu trong 14 tháng kể từ hoạt động gần nhất. Các thời hạn này không áp dụng cho báo cáo tổng hợp tiêu chuẩn."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 會根據你的 IP 位址判斷大概位置，然後捨棄該位址，不會將其寫入系統日誌。統計資料經鄰近的資料收集中心傳送，可能會在境外的伺服器上處理。關閉分享後便停止收集新資料。事件資料保留 2 個月，與用戶識別碼相關的資料則由最後一次活動起保留 14 個月。上述期限不適用於標準匯總報告。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 会根据你的 IP 地址判断大致位置，随后丢弃该地址，不会将其写入日志。统计数据经附近的数据采集中心传输，可能在境外服务器上处理。关闭共享后即停止收集新数据。事件数据保留 2 个月，与用户标识符关联的数据自最后一次活动起保留 14 个月。这些期限不适用于标准汇总报告。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 會透過你的 IP 位址判斷大致位置，隨即捨棄該位址，不會將它寫入記錄檔。統計資料會經由鄰近的資料收集中心傳送，可能在境外伺服器上處理。關閉分享後即停止收集新資料。事件資料保留 2 個月，與使用者識別碼相關聯的資料則自最後一次活動起保留 14 個月。這些期限不適用於標準彙總報表。"
+          }
+        }
+      }
+    },
+    "Google의 데이터 처리 안내" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So verarbeitet Google Daten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How Google handles data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo trata Google los datos"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo trata Google los datos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment Google traite les données"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google डेटा का इस्तेमाल कैसे करता है"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cara Google menangani data"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Googleによるデータの取り扱い"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google의 데이터 처리 안내"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como o Google trata os dados"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Как Google обрабатывает данные"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "วิธีที่ Google จัดการข้อมูล"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google verileri nasıl işler?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cách Google xử lý dữ liệu"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 如何處理資料"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 如何处理数据"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google 如何處理資料"
+          }
+        }
+      }
+    },
+    "Stepzu가 보유한 개인정보의 열람·정정·삭제나 처리정지를 원하시면 아래 개인정보 문의 창구로 연락해 주세요. 기기에만 있는 기록은 앱에서 직접 확인하고 수정하거나 지울 수 있어요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du Auskunft über deine bei Stepzu gespeicherten personenbezogenen Daten erhalten, sie berichtigen oder löschen lassen oder ihre weitere Verarbeitung stoppen möchtest, schreibe an die unten genannte Datenschutzadresse. Notizen, die nur auf deinem Gerät gespeichert sind, kannst du in der App ansehen, bearbeiten und löschen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To request access to, correction or deletion of personal information held by Stepzu, or to ask us to stop processing it, email our privacy contact below. You can view, edit and delete records stored only on your device in the app."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para solicitar el acceso a tus datos personales en poder de Stepzu, su rectificación o supresión, o para pedir que dejemos de tratarlos, escribe a la dirección que figura a continuación. Puedes consultar, editar y borrar en la app las notas que solo se guardan en tu dispositivo."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para solicitar el acceso a tus datos personales en poder de Stepzu, su rectificación o supresión, o para pedir que dejemos de tratarlos, escribe a la dirección que figura a continuación. Puedes consultar, editar y borrar en la app las notas que solo se guardan en tu dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour demander l’accès à vos données personnelles détenues par Stepzu, leur rectification, leur suppression ou l’arrêt de leur traitement, écrivez à l’adresse indiquée ci-dessous. Les notes conservées uniquement sur votre appareil peuvent être consultées, modifiées et supprimées dans l’app."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu के पास मौजूद अपनी निजी जानकारी देखने, उसमें सुधार कराने, उसे मिटाने या उसका इस्तेमाल रोकने का अनुरोध करने के लिए नीचे दिए गए गोपनीयता संपर्क पते पर ईमेल करें। सिर्फ़ आपके डिवाइस पर सहेजी गई प्रविष्टियाँ आप ऐप में देख, बदल और मिटा सकते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untuk meminta akses, perbaikan, penghapusan, atau penghentian pemrosesan informasi pribadi yang disimpan Stepzu, hubungi kami melalui alamat email privasi di bawah ini. Catatan yang hanya tersimpan di perangkat dapat Anda lihat, ubah, dan hapus langsung di aplikasi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzuが保有する個人情報の開示・訂正・削除、または利用停止をご希望の場合は、下記のプライバシー窓口にメールでご連絡ください。端末にのみ保存されている記録は、アプリで直接確認・編集・削除できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu가 보유한 개인정보의 열람·정정·삭제나 처리정지를 원하시면 아래 개인정보 문의 창구로 연락해 주세요. 기기에만 있는 기록은 앱에서 직접 확인하고 수정하거나 지울 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para pedir acesso, correção ou exclusão dos seus dados pessoais mantidos pela Stepzu, ou solicitar que deixemos de tratá-los, escreva para o endereço de contato abaixo. Você pode consultar, editar e excluir no app as anotações armazenadas apenas no seu dispositivo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чтобы получить доступ к персональным данным, которыми располагает Stepzu, запросить их исправление или удаление либо прекращение обработки, напишите по указанному ниже адресу. Записи, которые хранятся только на вашем устройстве, можно просматривать, изменять и удалять в самом приложении."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หากต้องการขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลที่ Stepzu เก็บไว้ หรือขอให้หยุดประมวลผล โปรดติดต่อทางอีเมลสำหรับเรื่องความเป็นส่วนตัวด้านล่าง สำหรับบันทึกที่เก็บไว้เฉพาะในอุปกรณ์ คุณสามารถดู แก้ไข หรือลบได้ในแอป"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu’nun elinde bulunan kişisel verilerinize erişmek, bunların düzeltilmesini, silinmesini veya işlenmesinin durdurulmasını istemek için aşağıdaki gizlilik iletişim adresine yazabilirsiniz. Yalnızca cihazınızda saklanan notları uygulama içinde görüntüleyebilir, düzenleyebilir ve silebilirsiniz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Để yêu cầu truy cập, chỉnh sửa hoặc xóa thông tin cá nhân mà Stepzu lưu giữ, hoặc yêu cầu ngừng xử lý, vui lòng gửi email đến địa chỉ liên hệ về quyền riêng tư bên dưới. Với các mục nhật ký chỉ được lưu trên thiết bị, bạn có thể xem, chỉnh sửa và xóa ngay trong ứng dụng."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如要查閱、更正或刪除 Stepzu 持有的個人資料，或要求我們停止處理，請透過下方的私隱聯絡電郵與我們聯絡。只儲存在自己裝置上的記錄，可以直接在應用程式中查看、修改及刪除。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如需查阅、更正或删除 Stepzu 持有的个人信息，或要求停止处理，请通过下方的隐私联系邮箱与我们联系。对于仅保存在自己设备上的记录，你可以直接在应用中查看、修改和删除。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如需查閱、更正或刪除 Stepzu 持有的個人資料，或要求停止處理，請寄信至下方的隱私聯絡信箱。只儲存在自己裝置上的紀錄，可以直接在 App 中查看、修改和刪除。"
+          }
+        }
+      }
+    },
     "Tokipin에 한마디" : {
       "localizations" : {
         "de" : {
@@ -2112,112 +2642,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tokipin 不會透過帳號同步紀錄。更換裝置或清除 App 資料前，請先在設定中將想保留的紀錄匯出成 JSON 檔案。"
-          }
-        }
-      }
-    },
-    "Tokipin은 회원가입 없이 사용하는 iOS·Android 기록 앱이에요. 기록과 작성 중인 초안은 기기의 앱 저장공간에 보관해요." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin ist eine Notiz-App für iOS und Android. Du kannst sie ohne Konto nutzen. Deine Notizen und Entwürfe liegen im Speicher der App auf deinem Gerät."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin is a journal for iOS and Android. You can use it without an account. The app keeps your notes and drafts in its storage on your device."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin es una app de notas para iOS y Android. Puedes usarla sin registrarte. La app guarda tus notas y borradores en tu dispositivo."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin es una app de notas para iOS y Android. Puedes usarla sin registrarte. La app guarda tus notas y borradores en tu dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin est une application de prise de notes pour iOS et Android. Vous pouvez l’utiliser sans créer de compte. Vos notes et vos brouillons restent dans l’espace de stockage de l’application sur votre appareil."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin, iOS और Android के लिए एक नोट ऐप है जिसे बिना खाता बनाए इस्तेमाल किया जा सकता है। आपके नोट और अधूरे ड्राफ़्ट आपके डिवाइस पर ऐप के स्टोरेज में सहेजे जाते हैं।"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin adalah aplikasi catatan untuk iOS dan Android yang dapat digunakan tanpa mendaftar. Catatan dan draf yang sedang kamu tulis tersimpan di ruang penyimpanan aplikasi pada perangkatmu."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipinは、会員登録なしで使えるiOS・Android向けの記録アプリです。記録や書きかけの下書きは、お使いの端末のアプリ専用領域に保存します。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin은 회원가입 없이 사용하는 iOS·Android 기록 앱이에요. 기록과 작성 중인 초안은 기기의 앱 저장공간에 보관해요."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Tokipin é um app de anotações para iOS e Android. Você pode usá-lo sem criar uma conta. Suas anotações e seus rascunhos ficam armazenados no app, no seu dispositivo."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin — приложение для личных записей на iOS и Android. Им можно пользоваться без регистрации. Ваши записи и черновики хранятся в памяти приложения на устройстве."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin เป็นแอปจดบันทึกสำหรับ iOS และ Android ที่ใช้งานได้โดยไม่ต้องสมัครสมาชิก บันทึกและฉบับร่างที่เขียนค้างไว้จะเก็บอยู่ในพื้นที่จัดเก็บของแอปบนอุปกรณ์ของคุณ"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin, iOS ve Android’de hesap açmadan kullanabileceğin bir not uygulaması. Notların ve üzerinde çalıştığın taslaklar cihazında, uygulamanın kendi alanında saklanır."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin là ứng dụng ghi chú cho iOS và Android, không cần đăng ký. Ghi chú và bản nháp của bạn được lưu trong bộ nhớ dành riêng cho ứng dụng trên thiết bị."
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin 是一款毋須註冊即可使用的 iOS 及 Android 記錄應用程式。記錄和草稿均儲存在裝置上此應用程式的專用空間。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin 是一款无需注册的 iOS 和 Android 记录应用。记录和草稿都保存在设备上这款应用的存储空间内。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tokipin 是一款不必註冊就能使用的 iOS 與 Android 紀錄 App。紀錄與草稿都儲存在裝置上這個 App 的專用空間。"
           }
         }
       }
@@ -3918,6 +4342,112 @@
         }
       }
     },
+    "개정안 · 2026년 11월 27일" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überarbeiteter Entwurf · 27. November 2026"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revised draft · November 27, 2026"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrador revisado · 27 de noviembre de 2026"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrador revisado · 27 de noviembre de 2026"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projet révisé · 27 novembre 2026"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "संशोधित मसौदा · 27 नवंबर 2026"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Draf revisi · 27 November 2026"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "改定案 · 2026年11月27日"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개정안 · 2026년 11월 27일"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versão preliminar revisada · 27 de novembro de 2026"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проект новой редакции · 27 ноября 2026 г."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ฉบับร่างที่ปรับปรุงแล้ว · 27 พฤศจิกายน 2569"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gözden geçirilmiş taslak · 27 Kasım 2026"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dự thảo sửa đổi · ngày 27 tháng 11 năm 2026"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修訂草案 · 2026年11月27日"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修订草案 · 2026年11月27日"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修訂草案 · 2026年11月27日"
+          }
+        }
+      }
+    },
     "검색 결과가 없어요." : {
       "localizations" : {
         "de" : {
@@ -4444,6 +4974,112 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "繼續瀏覽"
+          }
+        }
+      }
+    },
+    "공유를 켜면 앱 이용 방식을 살피고 기능을 개선하기 위해 Google LLC(미국)의 Google Analytics for Firebase를 사용해요. 앱 실행과 사용 시간, 기록 저장 여부, 앱 설치 식별자, 앱 버전, 기기와 운영체제 정보가 암호화된 연결로 Google에 전송돼요. 기록 내용·날짜, 초안, 검색어는 보내지 않아요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du das Teilen einschaltest, nutzen wir Google Analytics for Firebase von Google LLC (USA), um die Nutzung der App zu verstehen und ihre Funktionen zu verbessern. Die App übermittelt über eine verschlüsselte Verbindung Daten zu App-Starts, Nutzungsdauer und Speichervorgängen an Google. Dabei werden auch eine Kennung der App-Installation, die App-Version sowie Angaben zum Gerät und zum Betriebssystem übertragen. Inhalte und Datumsangaben deiner Notizen, Entwürfe und Suchbegriffe werden nicht gesendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you turn sharing on, we use Google Analytics for Firebase, provided by Google LLC (United States), to understand app use and improve features. The app sends activity such as launches, time spent and saves, along with an app installation identifier, app version, device and operating system information, to Google over an encrypted connection. It does not send journal content, journal dates, drafts or search terms."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si activas esta opción, utilizamos Google Analytics for Firebase, de Google LLC (Estados Unidos), para entender cómo se usa la app y mejorar sus funciones. La app envía a Google, mediante una conexión cifrada, datos sobre las veces que la abres, el tiempo de uso y si has guardado una nota, junto con un identificador de la instalación, la versión de la app e información sobre el dispositivo y su sistema operativo. No se envían el contenido ni las fechas de tus notas, los borradores ni los términos de búsqueda."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si activas esta opción, utilizamos Google Analytics for Firebase, de Google LLC (Estados Unidos), para entender cómo se usa la app y mejorar sus funciones. La app envía a Google, mediante una conexión cifrada, datos sobre las veces que la abres, el tiempo de uso y si has guardado una nota, junto con un identificador de la instalación, la versión de la app e información sobre el dispositivo y su sistema operativo. No se envían el contenido ni las fechas de tus notas, los borradores ni los términos de búsqueda."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous activez le partage, nous utilisons Google Analytics for Firebase, un service de Google LLC (États-Unis), pour comprendre comment l’app est utilisée et améliorer ses fonctionnalités. Par une connexion chiffrée, l’app transmet à Google des informations sur ses ouvertures, la durée d’utilisation et les enregistrements de notes, ainsi qu’un identifiant d’installation, la version de l’app et des informations sur l’appareil et le système d’exploitation. Le contenu et les dates de vos notes, vos brouillons et vos termes de recherche ne sont pas transmis."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "साझा करना चालू करने पर हम ऐप के उपयोग को समझने और उसकी सुविधाएँ बेहतर बनाने के लिए अमेरिका की Google LLC की सेवा Google Analytics for Firebase का इस्तेमाल करते हैं। ऐप खुलने, इस्तेमाल की अवधि और कोई प्रविष्टि सहेजी गई या नहीं जैसी जानकारी Google को एन्क्रिप्टेड कनेक्शन से भेजी जाती है। इसमें ऐप के इंस्टॉलेशन की पहचान करने वाला आईडी, ऐप का वर्शन, डिवाइस और ऑपरेटिंग सिस्टम की जानकारी भी शामिल होती है। प्रविष्टियों की सामग्री या तारीखें, ड्राफ़्ट और खोजे गए शब्द नहीं भेजे जाते।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika Anda mengaktifkan berbagi statistik, kami menggunakan Google Analytics for Firebase dari Google LLC (Amerika Serikat) untuk memahami penggunaan aplikasi dan menyempurnakan fiturnya. Melalui koneksi terenkripsi, aplikasi mengirim ke Google informasi tentang pembukaan aplikasi, durasi penggunaan dan tindakan menyimpan catatan, beserta pengenal instalasi aplikasi, versi aplikasi, serta informasi perangkat dan sistem operasi. Isi dan tanggal catatan, draf, serta kata yang Anda cari tidak dikirim."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共有をオンにすると、アプリの利用状況を把握し、機能を改善するために、米国のGoogle LLCが提供するGoogle Analytics for Firebaseを使用します。アプリの起動、利用時間、記録を保存したかどうか、アプリのインストール識別子、バージョン、端末とOSの情報が、暗号化された接続でGoogleに送信されます。記録の内容や日付、下書き、検索語は送信しません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공유를 켜면 앱 이용 방식을 살피고 기능을 개선하기 위해 Google LLC(미국)의 Google Analytics for Firebase를 사용해요. 앱 실행과 사용 시간, 기록 저장 여부, 앱 설치 식별자, 앱 버전, 기기와 운영체제 정보가 암호화된 연결로 Google에 전송돼요. 기록 내용·날짜, 초안, 검색어는 보내지 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se você ativar o compartilhamento, usaremos o Google Analytics for Firebase, da Google LLC (Estados Unidos), para entender como o app é usado e melhorar suas funções. Por uma conexão criptografada, o app envia ao Google dados sobre as vezes que você abre o app, o tempo de uso e se você salvou uma anotação, além do identificador da instalação, da versão do app e de informações sobre o dispositivo e o sistema operacional. O conteúdo e as datas das anotações, os rascunhos e os termos de busca não são enviados."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если вы включите отправку статистики, мы будем использовать Google Analytics for Firebase компании Google LLC (США), чтобы понимать, как люди пользуются приложением, и улучшать его функции. По зашифрованному соединению приложение передаёт Google сведения о запусках, времени использования и фактах сохранения записей, а также идентификатор установки, версию приложения, сведения об устройстве и операционной системе. Содержимое и даты записей, черновики и поисковые запросы не передаются."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หากคุณเปิดการแชร์ เราจะใช้ Google Analytics for Firebase ซึ่งให้บริการโดย Google LLC ในสหรัฐอเมริกา เพื่อศึกษาวิธีใช้งานแอปและปรับปรุงฟีเจอร์ แอปจะส่งข้อมูลการเปิดแอป ระยะเวลาที่ใช้ และการบันทึกรายการ พร้อมด้วยรหัสประจำการติดตั้งแอป เวอร์ชันแอป ข้อมูลอุปกรณ์และระบบปฏิบัติการไปยัง Google ผ่านการเชื่อมต่อที่เข้ารหัส โดยจะไม่ส่งเนื้อหาหรือวันที่ของบันทึก ฉบับร่าง หรือคำค้นหา"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paylaşımı açarsanız uygulamanın nasıl kullanıldığını anlamak ve özelliklerini geliştirmek için Google LLC (ABD) tarafından sunulan Google Analytics for Firebase hizmetini kullanırız. Uygulama; açılışlar, kullanım süresi ve not kaydetme işlemleriyle ilgili verilerin yanı sıra uygulama kurulumuna ait bir tanımlayıcıyı, uygulama sürümünü, cihaz ve işletim sistemi bilgilerini şifreli bir bağlantı üzerinden Google’a gönderir. Not içerikleriniz, not tarihleriniz, taslaklarınız ve arama terimleriniz gönderilmez."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu bạn bật chia sẻ, chúng tôi dùng Google Analytics for Firebase do Google LLC (Hoa Kỳ) cung cấp để tìm hiểu cách mọi người dùng ứng dụng và cải thiện tính năng. Qua kết nối được mã hóa, ứng dụng gửi cho Google thông tin về lượt mở, thời gian sử dụng, việc lưu mục nhật ký, cùng với mã định danh của bản cài đặt, phiên bản ứng dụng, thông tin thiết bị và hệ điều hành. Ứng dụng không gửi nội dung hay ngày của các mục nhật ký, bản nháp hoặc từ khóa tìm kiếm."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果開啟分享，我們會使用美國 Google LLC 提供的 Google Analytics for Firebase，了解應用程式的使用情況並改進功能。應用程式會透過加密連線向 Google 傳送啟動、使用時間和有否儲存記錄等資料，以及應用程式安裝識別碼、版本、裝置及作業系統資料。記錄內容和日期、草稿及搜尋字詞均不會傳送。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果开启共享，我们会使用美国 Google LLC 提供的 Google Analytics for Firebase，了解应用的使用情况并改进功能。应用会通过加密连接向 Google 发送应用启动、使用时长、是否保存了记录等信息，以及应用安装标识符、应用版本、设备和操作系统信息。记录的内容和日期、草稿及搜索词都不会发送。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果開啟分享，我們會使用美國 Google LLC 提供的 Google Analytics for Firebase，瞭解 App 的使用情形並改進功能。App 會透過加密連線將啟動次數、使用時間、是否儲存紀錄等使用資訊，以及 App 安裝識別碼、App 版本、裝置和作業系統資訊傳送給 Google。紀錄內容與日期、草稿及搜尋字詞都不會傳送。"
           }
         }
       }
@@ -7522,6 +8158,112 @@
         }
       }
     },
+    "대한민국의 Stepzu가 Tokipin 앱과 웹 체험을 운영해요. 개인 기록은 기기에 보관해요. 선택한 사용 통계와 직접 보낸 문의 메일은 아래와 같이 처리해요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu mit Sitz in der Republik Korea betreibt die Tokipin-Apps und die Web-Demo. Dein persönliches Tagebuch bleibt auf deinem Gerät. Hier erfährst du, wie wir mit freiwillig geteilten Nutzungsstatistiken und deinen E-Mails an uns umgehen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu, based in the Republic of Korea, operates the Tokipin apps and web demo. Your personal journal stays on your device. This policy explains how we handle optional usage statistics and any email you send us."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu, con sede en la República de Corea, gestiona las apps de Tokipin y la demo web. Tus notas personales se guardan en tu dispositivo. Esta política explica cómo tratamos las estadísticas de uso que decidas compartir y los correos que nos envíes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu, con sede en la República de Corea, gestiona las apps de Tokipin y la demo web. Tus notas personales se guardan en tu dispositivo. Esta política explica cómo tratamos las estadísticas de uso que decidas compartir y los correos que nos envíes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu, établi en République de Corée, exploite les apps Tokipin et la démo web. Votre journal personnel reste sur votre appareil. Cette politique explique comment nous traitons les statistiques d’utilisation que vous choisissez de partager et les e-mails que vous nous envoyez."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कोरिया गणराज्य में स्थित Stepzu, Tokipin ऐप और वेब डेमो का संचालन करता है। आपकी निजी डायरी आपके डिवाइस पर रहती है। इस नीति में बताया गया है कि हम आपके चुने हुए उपयोग के आँकड़ों और आपके भेजे ईमेल का इस्तेमाल कैसे करते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu, yang berkedudukan di Republik Korea, mengelola aplikasi Tokipin dan demo webnya. Catatan pribadi Anda tersimpan di perangkat Anda. Kebijakan ini menjelaskan cara kami menangani statistik penggunaan opsional dan email yang Anda kirimkan."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipinのアプリとウェブ体験版は、韓国のStepzuが運営しています。ご自身の日記は端末に保存されます。この方針では、任意で共有いただいた利用統計と、お問い合わせメールの取り扱いについて説明します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대한민국의 Stepzu가 Tokipin 앱과 웹 체험을 운영해요. 개인 기록은 기기에 보관해요. 선택한 사용 통계와 직접 보낸 문의 메일은 아래와 같이 처리해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Stepzu, com sede na República da Coreia, é responsável pelos apps Tokipin e pela demonstração na web. Suas anotações pessoais ficam no seu dispositivo. Esta política explica como tratamos as estatísticas de uso que você optar por compartilhar e os e-mails que nos enviar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приложениями Tokipin и веб-демоверсией управляет Stepzu (Республика Корея). Ваш личный дневник хранится на вашем устройстве. В этой политике описано, как мы обрабатываем статистику использования, если вы решили ею делиться, и письма, которые вы нам отправляете."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu ซึ่งตั้งอยู่ในสาธารณรัฐเกาหลี เป็นผู้ให้บริการแอป Tokipin และเว็บทดลองใช้ บันทึกส่วนตัวของคุณจะเก็บอยู่ในอุปกรณ์ของคุณ นโยบายนี้อธิบายวิธีที่เราจัดการสถิติการใช้งานที่คุณเลือกแชร์และอีเมลที่คุณส่งถึงเรา"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin uygulamalarını ve web demosunu Kore Cumhuriyeti merkezli Stepzu işletir. Kişisel günlüğünüz cihazınızda kalır. Bu politika, paylaşmayı seçtiğiniz kullanım istatistiklerini ve bize gönderdiğiniz e-postaları nasıl işlediğimizi açıklar."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stepzu, có trụ sở tại Hàn Quốc, vận hành ứng dụng Tokipin và bản trải nghiệm trên web. Nhật ký cá nhân được lưu trên thiết bị của bạn. Chính sách này giải thích cách chúng tôi xử lý số liệu sử dụng mà bạn chọn chia sẻ và email bạn gửi cho chúng tôi."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin 應用程式和網頁體驗版由位於韓國的 Stepzu 營運。你的個人日誌儲存在自己的裝置上。本政策說明我們如何處理你選擇分享的使用統計資料，以及你傳送給我們的電郵。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin 应用和网页版体验由位于韩国的 Stepzu 运营。你的个人日记保存在自己的设备上。本政策说明我们如何处理你选择分享的使用统计数据，以及你发给我们的电子邮件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin App 和網頁體驗版由位於韓國的 Stepzu 營運。你的個人日誌儲存在自己的裝置上。本政策說明我們如何處理你選擇分享的使用統計資料，以及你寄給我們的電子郵件。"
+          }
+        }
+      }
+    },
     "더 나은 토키핀을 함께 만들까요?" : {
       "localizations" : {
         "de" : {
@@ -8794,6 +9536,218 @@
         }
       }
     },
+    "메일을 보내면 Stepzu는 답변과 후속 처리를 위해 보낸 사람의 이메일 주소, 문의 내용, 직접 첨부한 파일을 확인해요. 처리가 끝나면 30일 이내에 메일과 첨부파일을 삭제해요. 법령에 따라 보관해야 하는 경우에는 해당 기간이 끝난 뒤 삭제해요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du uns schreibst, verwendet Stepzu deine E-Mail-Adresse, deine Nachricht und die von dir angehängten Dateien, um deine Anfrage zu beantworten und Rückfragen zu klären. Wir löschen die E-Mail und die Anhänge innerhalb von 30 Tagen nach Abschluss der Bearbeitung. Müssen wir sie aus gesetzlichen Gründen länger aufbewahren, löschen wir sie nach Ablauf dieser Frist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you email us, Stepzu uses your email address, message and any files you attach to answer and follow up. We delete the email and attachments within 30 days after your inquiry is resolved. If the law requires us to keep them longer, we delete them after that period."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si escribes a Stepzu, utilizamos tu dirección de correo, el contenido de tu mensaje y los archivos que adjuntes para responder a tu consulta y hacer el seguimiento. Eliminamos el correo y los archivos adjuntos en los 30 días siguientes a la resolución de tu consulta. Si la ley exige conservarlos durante más tiempo, los eliminamos cuando vence ese plazo."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si escribes a Stepzu, utilizamos tu dirección de correo, el contenido de tu mensaje y los archivos que adjuntes para responder a tu consulta y hacer el seguimiento. Eliminamos el correo y los archivos adjuntos en los 30 días siguientes a la resolución de tu consulta. Si la ley exige conservarlos durante más tiempo, los eliminamos cuando vence ese plazo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque vous nous écrivez, Stepzu utilise votre adresse e-mail, votre message et les fichiers que vous y joignez pour vous répondre et assurer le suivi de votre demande. Nous supprimons le message et ses pièces jointes dans les 30 jours suivant la clôture de votre demande. Si la loi impose une conservation plus longue, nous les supprimons à l’issue de ce délai."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जब आप हमें ईमेल भेजते हैं, तो Stepzu जवाब देने और ज़रूरत पड़ने पर आगे की कार्रवाई के लिए आपका ईमेल पता, संदेश और आपकी संलग्न की गई फ़ाइलें इस्तेमाल करता है। आपकी पूछताछ का निपटारा होने के 30 दिनों के भीतर हम ईमेल और संलग्न फ़ाइलें मिटा देते हैं। अगर क़ानून के तहत इन्हें अधिक समय तक रखना ज़रूरी हो, तो हम उस अवधि के ख़त्म होने के बाद इन्हें मिटा देते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat Anda mengirim email, Stepzu menggunakan alamat email, isi pesan, dan berkas yang Anda lampirkan untuk menjawab dan menindaklanjuti pertanyaan Anda. Kami menghapus email dan lampiran dalam waktu 30 hari setelah pertanyaan selesai ditangani. Jika hukum mewajibkan penyimpanan lebih lama, kami menghapusnya setelah masa tersebut berakhir."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お問い合わせの際、Stepzuは返信とその後の対応のため、送信元のメールアドレス、本文、ご自身で添付したファイルを使用します。対応が完了してから30日以内に、メールと添付ファイルを削除します。法令によりさらに長く保存する必要がある場合は、その期間が過ぎてから削除します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메일을 보내면 Stepzu는 답변과 후속 처리를 위해 보낸 사람의 이메일 주소, 문의 내용, 직접 첨부한 파일을 확인해요. 처리가 끝나면 30일 이내에 메일과 첨부파일을 삭제해요. 법령에 따라 보관해야 하는 경우에는 해당 기간이 끝난 뒤 삭제해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando você envia um e-mail à Stepzu, usamos seu endereço de e-mail, a mensagem e os arquivos que você anexar para responder e acompanhar a solicitação. Excluímos o e-mail e os anexos em até 30 dias após a resolução da solicitação. Se a lei exigir que sejam mantidos por mais tempo, eles serão excluídos ao fim desse prazo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Когда вы пишете нам, Stepzu использует ваш электронный адрес, текст письма и приложенные вами файлы, чтобы ответить и решить вопрос. Мы удаляем переписку и вложения в течение 30 дней после решения вопроса. Если закон требует более длительного хранения, мы удаляем их по окончании этого срока."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เมื่อคุณส่งอีเมลถึงเรา Stepzu จะใช้ที่อยู่อีเมล ข้อความ และไฟล์ที่คุณแนบมาเพื่อตอบกลับและติดตามเรื่อง เราจะลบอีเมลและไฟล์แนบภายใน 30 วันหลังจากดำเนินการตามคำขอเสร็จเรียบร้อย หากกฎหมายกำหนดให้เก็บไว้นานกว่านั้น เราจะลบเมื่อพ้นระยะเวลาที่กำหนด"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bize e-posta gönderdiğinizde Stepzu, talebinizi yanıtlamak ve takip etmek için e-posta adresinizi, mesajınızı ve eklediğiniz dosyaları kullanır. Talebiniz sonuçlandıktan sonra e-postayı ve eklerini 30 gün içinde sileriz. Yasalar daha uzun bir süre saklamamızı gerektiriyorsa bu sürenin sonunda sileriz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khi bạn gửi email, Stepzu dùng địa chỉ email, nội dung thư và các tệp bạn đính kèm để trả lời và theo dõi yêu cầu. Chúng tôi xóa email và tệp đính kèm trong vòng 30 ngày sau khi giải quyết xong yêu cầu. Nếu pháp luật yêu cầu lưu giữ lâu hơn, chúng tôi sẽ xóa khi hết thời hạn đó."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你以電郵與我們聯絡時，Stepzu 會使用你的電郵地址、來信內容及你主動附上的檔案來回覆及跟進查詢。我們會在處理完畢後 30 天內刪除電郵及附件。如法例規定需要保留更長時間，我們會在法定期限屆滿後刪除。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你联系我们时，Stepzu 会使用你的电子邮件地址、邮件内容和你主动添加的附件来回复并跟进。我们会在问题处理完毕后 30 天内删除邮件及附件。如果法律要求保留更长时间，我们会在法定期限届满后删除。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你來信時，Stepzu 會使用你的電子郵件地址、信件內容及你主動附上的檔案來回覆與追蹤問題。我們會在問題處理完畢後 30 天內刪除信件及附件。如果法令規定須保留更久，我們會在法定期限屆滿後刪除。"
+          }
+        }
+      }
+    },
+    "문의 메일과 보관 기간" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support-E-Mails und Aufbewahrungsdauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support email and retention"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consultas por correo y plazo de conservación"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consultas por correo y plazo de conservación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mails d’assistance et durée de conservation"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सहायता के लिए भेजे गए ईमेल और उन्हें रखने की अवधि"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email bantuan dan masa penyimpanan"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お問い合わせメールの取り扱いと保存期間"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "문의 메일과 보관 기간"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mails de suporte e prazo de retenção"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Письма в поддержку и сроки хранения"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "อีเมลติดต่อและระยะเวลาเก็บรักษา"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destek e-postaları ve saklama süresi"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email hỗ trợ và thời hạn lưu giữ"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查詢電郵及保留期限"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "联系邮件及保留期限"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "聯絡信件與保留期限"
+          }
+        }
+      }
+    },
     "삭제" : {
       "localizations" : {
         "de" : {
@@ -8896,112 +9850,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "刪除"
-          }
-        }
-      }
-    },
-    "선택한 경우 Google Analytics가 앱 실행·저장 이벤트, 앱 설치 식별자와 기기 정보를 처리해요. 기록 내용·기록 날짜·검색어는 보내지 않아요. 설정에서 언제든지 끌 수 있어요." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wenn du zustimmst, verarbeitet Google Analytics Daten zu App-Starts und zum Speichern von Notizen sowie eine Kennung der App-Installation und Geräteinformationen. Die Inhalte und Datumsangaben deiner Notizen sowie deine Suchbegriffe werden nicht gesendet. Du kannst das Teilen jederzeit in den Einstellungen deaktivieren."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you opt in, Google Analytics processes app opens, note saves, an app installation identifier, and device information. We don’t send the contents or dates of your notes, or your search terms. You can turn sharing off at any time in Settings."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si aceptas, Google Analytics procesa las aperturas de la app, las veces que guardas notas, un identificador de la instalación y datos del dispositivo. No enviamos el contenido ni las fechas de tus notas, ni tus términos de búsqueda. Puedes desactivar esta opción en cualquier momento en Ajustes."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si aceptas, Google Analytics procesa las aperturas de la app, las veces que guardas notas, un identificador de la instalación y datos del dispositivo. No enviamos el contenido ni las fechas de tus notas, ni tus términos de búsqueda. Puedes desactivar esta opción en cualquier momento en Configuración."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si vous acceptez, Google Analytics traite les ouvertures de l’app, les enregistrements de notes, un identifiant de l’installation et des informations sur l’appareil. Le contenu et les dates de vos notes ainsi que vos termes de recherche ne sont pas transmis. Vous pouvez désactiver le partage à tout moment dans les réglages."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "अगर आप सहमति देते हैं, तो Google Analytics ऐप खुलने और नोट सहेजे जाने की जानकारी, ऐप इंस्टॉलेशन की पहचान और डिवाइस की जानकारी प्रोसेस करता है। हम आपके नोट की सामग्री, उनकी तारीखें या खोज शब्द नहीं भेजते। आप सेटिंग्स में जाकर इसे कभी भी बंद कर सकते हैं।"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jika Anda setuju, Google Analytics memproses aktivitas membuka aplikasi dan menyimpan catatan, pengenal instalasi aplikasi, serta informasi perangkat. Kami tidak mengirim isi atau tanggal catatan maupun kata pencarian Anda. Anda dapat menonaktifkan berbagi kapan saja di Pengaturan."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "共有をオンにすると、Google Analytics がアプリの起動と記録の保存に関するイベント、アプリのインストール識別子、端末情報を処理します。記録の内容や日付、検索語は送りません。共有は設定でいつでもオフにできます。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "선택한 경우 Google Analytics가 앱 실행·저장 이벤트, 앱 설치 식별자와 기기 정보를 처리해요. 기록 내용·기록 날짜·검색어는 보내지 않아요. 설정에서 언제든지 끌 수 있어요."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se você aceitar, o Google Analytics processará as aberturas do app, os eventos de salvamento de anotações, um identificador da instalação do app e informações do dispositivo. Não enviamos o conteúdo ou as datas das anotações, nem os termos de busca. Você pode desativar o compartilhamento a qualquer momento nas configurações."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Если вы согласитесь, Google Analytics будет обрабатывать сведения об открытии приложения и сохранении записей, идентификатор установки приложения и данные об устройстве. Мы не передаём содержимое и даты записей или поисковые запросы. Отключить передачу статистики можно в любой момент в настройках."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "หากคุณยินยอม Google Analytics จะประมวลผลเหตุการณ์การเปิดแอปและการบันทึกโน้ต ตัวระบุการติดตั้งแอป และข้อมูลอุปกรณ์ เราไม่ส่งเนื้อหาหรือวันที่ของบันทึก รวมถึงคำค้นของคุณ คุณปิดการแชร์ได้ทุกเมื่อในการตั้งค่า"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Onay verirseniz Google Analytics uygulama açma ve not kaydetme olaylarını, uygulama yüklemenize ait bir tanımlayıcıyı ve cihaz bilgilerini işler. Not içeriklerini, not tarihlerini veya arama terimlerinizi göndermeyiz. Paylaşımı istediğiniz zaman Ayarlar’dan kapatabilirsiniz."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nếu bạn đồng ý, Google Analytics sẽ xử lý các sự kiện mở ứng dụng và lưu ghi chú, mã nhận dạng bản cài đặt ứng dụng và thông tin thiết bị. Chúng tôi không gửi nội dung, ngày của ghi chú hay từ khóa tìm kiếm. Bạn có thể tắt chia sẻ bất cứ lúc nào trong phần Cài đặt."
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "如你同意，Google Analytics 會處理開啟應用程式和儲存記錄的事件、應用程式安裝識別碼及裝置資料。我們不會傳送記錄內容、記錄日期或搜尋字詞。你可以隨時在設定中關閉分享。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "如果你同意，Google Analytics 会处理应用打开和记录保存事件、应用安装标识符和设备信息。我们不会发送记录内容、记录日期或搜索词。你可以随时在设置中关闭分享。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "如果你同意，Google Analytics 會處理開啟 App 和儲存紀錄的事件、App 安裝識別碼及裝置資訊。我們不會傳送紀錄內容、紀錄日期或搜尋字詞。你可以隨時在設定中關閉分享。"
           }
         }
       }
@@ -11232,6 +12080,112 @@
         }
       }
     },
+    "앱 사용 통계 공유는 처음에는 꺼져 있어요. 예시 달력을 마치고 내 기록을 시작할 때 선택할 수 있어요. 거절해도 모든 기록 기능을 쓸 수 있고, 설정에서 언제든 켜거나 끌 수 있어요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Teilen von Nutzungsstatistiken ist standardmäßig ausgeschaltet. Wenn du den Beispielkalender verlässt und dein eigenes Tagebuch beginnst, kannst du es einschalten. Auch wenn du ablehnst, stehen dir alle Tagebuchfunktionen zur Verfügung. Du kannst deine Wahl jederzeit in den Einstellungen ändern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usage sharing is off by default. You can choose whether to turn it on when you leave the sample calendar and start your own journal. You can use every journal feature if you decline, and change your choice in Settings at any time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La opción de compartir estadísticas de uso está desactivada de forma predeterminada. Puedes decidir si la activas al salir del calendario de ejemplo y comenzar tu propio diario. Si la rechazas, seguirás teniendo acceso a todas las funciones del diario. Puedes cambiar tu decisión en cualquier momento en Ajustes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La opción de compartir estadísticas de uso está desactivada de forma predeterminada. Puedes decidir si la activas al salir del calendario de ejemplo y comenzar tu propio diario. Si la rechazas, seguirás teniendo acceso a todas las funciones del diario. Puedes cambiar tu decisión en cualquier momento en Configuración."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le partage des statistiques d’utilisation est désactivé par défaut. Vous pouvez l’activer lorsque vous quittez le calendrier d’exemple pour commencer votre propre journal. Si vous refusez, toutes les fonctions du journal restent disponibles. Vous pouvez changer d’avis à tout moment dans les réglages."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "शुरुआत में ऐप के उपयोग के आँकड़े साझा करना बंद होता है। नमूना कैलेंडर का इस्तेमाल करने के बाद जब आप अपनी डायरी शुरू करते हैं, तब आप तय कर सकते हैं कि आँकड़े साझा करने हैं या नहीं। मना करने पर भी डायरी की सभी सुविधाएँ उपलब्ध रहती हैं। आप सेटिंग्स में कभी भी अपना फ़ैसला बदल सकते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbagi statistik penggunaan dinonaktifkan secara bawaan. Anda dapat memilih untuk mengaktifkannya saat beralih dari kalender contoh ke jurnal pribadi. Jika menolak, Anda tetap dapat menggunakan semua fitur jurnal. Pilihan ini dapat diubah kapan saja di Pengaturan."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用統計の共有は初期設定でオフになっています。サンプルカレンダーの体験を終え、自分の日記を始めるときに、共有するかどうか選べます。共有しなくても記録に関するすべての機能を使えます。設定からいつでも変更できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 사용 통계 공유는 처음에는 꺼져 있어요. 예시 달력을 마치고 내 기록을 시작할 때 선택할 수 있어요. 거절해도 모든 기록 기능을 쓸 수 있고, 설정에서 언제든 켜거나 끌 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O compartilhamento de estatísticas de uso vem desativado. Você pode escolher se quer ativá-lo ao sair do calendário de exemplo e começar seu próprio diário. Se preferir não compartilhar, todas as funções do diário continuam disponíveis. Você pode mudar de ideia a qualquer momento nas configurações."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "По умолчанию отправка статистики выключена. Вы можете включить её при переходе от пробного календаря к своему дневнику. Если вы откажетесь, все функции дневника останутся доступны. Изменить свой выбор можно в настройках в любое время."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "การแชร์สถิติการใช้งานแอปจะปิดไว้เป็นค่าเริ่มต้น เมื่อออกจากปฏิทินตัวอย่างและเริ่มบันทึกของตัวเอง คุณสามารถเลือกได้ว่าจะแชร์หรือไม่ แม้เลือกไม่แชร์ คุณก็ยังใช้ฟังก์ชันบันทึกได้ทั้งหมด และเปลี่ยนใจได้ทุกเมื่อในการตั้งค่า"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım istatistiklerini paylaşma seçeneği başlangıçta kapalıdır. Örnek takvimden çıkıp kendi günlüğünüze başlarken paylaşımı açabilirsiniz. Paylaşımı reddetseniz de günlüğün tüm özelliklerini kullanabilirsiniz. Kararınızı istediğiniz zaman Ayarlar’dan değiştirebilirsiniz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tính năng chia sẻ số liệu sử dụng ứng dụng mặc định ở trạng thái tắt. Khi rời lịch mẫu để bắt đầu nhật ký của riêng mình, bạn có thể chọn bật tính năng này. Nếu từ chối, bạn vẫn dùng được đầy đủ các chức năng ghi nhật ký và có thể thay đổi lựa chọn bất cứ lúc nào trong phần Cài đặt."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用統計分享預設為關閉。完成範例日曆體驗、開始寫自己的日誌時，你可以選擇是否開啟。即使不分享，你仍可使用所有記錄功能，也可以隨時在設定中更改選擇。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用默认关闭使用统计共享。结束示例日历体验、开始写自己的日记时，你可以选择是否开启。即使不分享，你仍可使用全部记录功能，也可以随时在设置中更改选择。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App 預設關閉使用統計分享。結束範例日曆體驗、開始寫自己的日誌時，你可以選擇是否開啟。即使不分享，你仍可使用所有記錄功能，也可以隨時在設定中變更選擇。"
+          }
+        }
+      }
+    },
     "앱 실행과 저장 횟수 같은 사용 통계를 참고해 불편한 점을 살피고 기능을 개선해요. 작성한 기록 내용과 검색어는 보내지 않아요." : {
       "localizations" : {
         "de" : {
@@ -11440,6 +12394,218 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 App"
+          }
+        }
+      }
+    },
+    "앱 이용이나 약관에 관해 궁금한 점은 Stepzu에 메일로 보내 주세요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schreibe Stepzu eine E-Mail, wenn du Fragen zur Nutzung von Tokipin oder zu diesen Bedingungen hast."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email Stepzu if you have a question about using Tokipin or about these terms."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si tienes alguna pregunta sobre el uso de Tokipin o sobre estas condiciones, escribe a Stepzu por correo electrónico."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si tienes alguna pregunta sobre el uso de Tokipin o sobre estas condiciones, escribe a Stepzu por correo electrónico."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écrivez à Stepzu si vous avez une question sur l’utilisation de Tokipin ou sur ces conditions."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin का इस्तेमाल करने या इन शर्तों के बारे में कोई सवाल हो, तो Stepzu को ईमेल भेजें।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kirim email ke Stepzu jika ada pertanyaan tentang penggunaan Tokipin atau ketentuan ini."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipinの使い方や本規約についてご質問がある場合は、Stepzuまでメールでご連絡ください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱 이용이나 약관에 관해 궁금한 점은 Stepzu에 메일로 보내 주세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se você tiver dúvidas sobre o uso do Tokipin ou sobre estes termos, envie um e-mail à Stepzu."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если у вас есть вопросы об использовании Tokipin или об этих условиях, напишите в Stepzu."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หากมีคำถามเกี่ยวกับการใช้ Tokipin หรือข้อกำหนดนี้ โปรดส่งอีเมลถึง Stepzu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tokipin’in kullanımı veya bu koşullar hakkında sorunuz varsa Stepzu’ya e-posta gönderebilirsiniz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu có câu hỏi về cách dùng Tokipin hoặc các điều khoản này, vui lòng gửi email cho Stepzu."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如對 Tokipin 的使用方法或本條款有任何疑問，請電郵聯絡 Stepzu。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果对 Tokipin 的使用或本条款有任何疑问，请发送电子邮件联系 Stepzu。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果對 Tokipin 的使用方式或本條款有疑問，請寄信給 Stepzu。"
+          }
+        }
+      }
+    },
+    "앱에서 예시 달력을 둘러보고 기록을 연습할 수 있어요. 내 기록을 시작하면 빈 달력으로 전환되고 연습한 내용은 옮겨지지 않아요. 웹 체험에서 작성한 기록은 새로고침하면 지워져요. 보관하려면 그 전에 설정에서 JSON 파일로 내보내 주세요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In der App kannst du den Beispielkalender erkunden und ausprobieren, wie du Notizen erstellst. Wenn du dein eigenes Tagebuch beginnst, öffnet sich ein leerer Kalender. Deine Übungseinträge werden nicht übernommen. Wenn du die Web-Demo neu lädst, werden die dort erstellten Notizen gelöscht. Möchtest du sie behalten, exportiere sie vorher in den Einstellungen als JSON-Datei."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can explore the sample calendar and practice adding entries in the app. Starting your own journal opens an empty calendar. Practice entries do not carry over. Refreshing the web demo clears the entries you added there. To keep them, export a JSON file from Settings first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la app puedes explorar el calendario de ejemplo y practicar añadiendo notas. Al empezar tu propio diario, se abre un calendario vacío. Las notas de práctica no se trasladan a él. Si recargas la demo web, se borran las notas que hayas añadido allí. Si quieres conservarlas, expórtalas antes a un archivo JSON desde Ajustes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En la app puedes explorar el calendario de ejemplo y practicar cómo agregar notas. Al empezar tu propio diario, se abre un calendario vacío. Las notas de práctica no se trasladan a él. Si recargas la demo web, se borran las notas que hayas agregado allí. Si quieres conservarlas, expórtalas antes a un archivo JSON desde Configuración."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans l’app, vous pouvez explorer le calendrier d’exemple et vous entraîner à ajouter des notes. Lorsque vous commencez votre propre journal, un calendrier vide s’ouvre. Les notes d’essai n’y sont pas transférées. Actualiser la démo web efface les notes que vous y avez ajoutées. Pour les conserver, exportez-les au format JSON dans les réglages avant d’actualiser la page."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ऐप में आप नमूना कैलेंडर देख सकते हैं और प्रविष्टियाँ जोड़ने का अभ्यास कर सकते हैं। जब आप अपनी डायरी शुरू करते हैं, तो एक खाली कैलेंडर खुलता है। अभ्यास की प्रविष्टियाँ उसमें नहीं आतीं। वेब डेमो को रीफ़्रेश करने पर वहाँ जोड़ी गई प्रविष्टियाँ मिट जाती हैं। उन्हें रखने के लिए पहले सेटिंग्स से JSON फ़ाइल के रूप में एक्सपोर्ट कर लें।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda dapat menjelajahi kalender contoh dan berlatih menulis catatan di aplikasi. Saat memulai jurnal pribadi, Anda akan mendapatkan kalender kosong. Catatan latihan tidak ikut dipindahkan. Memuat ulang demo web akan menghapus catatan yang Anda tambahkan di sana. Jika ingin menyimpannya, ekspor berkas JSON melalui Pengaturan terlebih dahulu."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリではサンプルカレンダーを自由に見たり、記録の追加を試したりできます。自分の日記を始めると空のカレンダーが開き、練習中の記録は引き継がれません。ウェブ体験版で追加した記録は再読み込みすると消去されます。残しておきたい場合は、先に設定からJSONファイルに書き出してください。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앱에서 예시 달력을 둘러보고 기록을 연습할 수 있어요. 내 기록을 시작하면 빈 달력으로 전환되고 연습한 내용은 옮겨지지 않아요. 웹 체험에서 작성한 기록은 새로고침하면 지워져요. 보관하려면 그 전에 설정에서 JSON 파일로 내보내 주세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No app, você pode explorar o calendário de exemplo e praticar a criação de anotações. Ao começar seu próprio diário, você encontra um calendário vazio. As anotações de prática não são transferidas para ele. Recarregar a demonstração na web apaga as anotações feitas nela. Para guardá-las, exporte-as antes para um arquivo JSON nas configurações."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В приложении вы можете изучить пробный календарь и потренироваться добавлять записи. Когда вы начнёте свой дневник, откроется пустой календарь. Пробные записи в него не переносятся. Обновление страницы веб-демоверсии удаляет добавленные в ней записи. Чтобы их сохранить, предварительно экспортируйте файл JSON в настройках."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "คุณสามารถสำรวจปฏิทินตัวอย่างและฝึกเพิ่มรายการในแอป เมื่อเริ่มบันทึกของตัวเอง คุณจะเห็นปฏิทินว่าง โดยรายการที่ฝึกเพิ่มจะไม่ถูกย้ายมาด้วย การรีเฟรชเว็บทดลองใช้จะล้างรายการที่คุณเพิ่มไว้ในเว็บ หากต้องการเก็บรายการเหล่านั้น ให้ส่งออกเป็นไฟล์ JSON จากการตั้งค่าก่อนรีเฟรช"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulamada örnek takvimi inceleyebilir ve not eklemeyi deneyebilirsiniz. Kendi günlüğünüze başladığınızda boş bir takvim açılır. Deneme sırasında yazdığınız notlar buraya aktarılmaz. Web demosunda eklediğiniz notlar sayfayı yenilediğinizde silinir. Bunları saklamak için sayfayı yenilemeden önce Ayarlar’dan JSON dosyası olarak dışa aktarın."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể khám phá lịch mẫu và thử thêm mục nhật ký trong ứng dụng. Khi bạn bắt đầu nhật ký của riêng mình, một lịch trống sẽ mở ra. Các mục đã nhập thử sẽ không được chuyển sang. Tải lại bản trải nghiệm trên web sẽ xóa các mục bạn đã thêm ở đó. Để giữ lại, hãy xuất tệp JSON từ phần Cài đặt trước khi tải lại trang."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以在應用程式中瀏覽範例日曆，練習新增記錄。開始寫自己的日誌時，會開啟空白日曆，練習記錄不會轉入。重新載入網頁體驗版會清除你在其中新增的記錄。如要保留，請先在設定中將記錄匯出為 JSON 檔案。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以在应用中浏览示例日历，练习添加记录。开始写自己的日记时会打开一个空日历，练习记录不会转入。刷新网页版体验会清除你在其中添加的记录。如需保留，请先在设置中将记录导出为 JSON 文件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你可以在 App 中瀏覽範例日曆，練習新增紀錄。開始寫自己的日誌時，會開啟一個空白日曆，練習紀錄不會轉入。重新整理網頁體驗版會清除你在其中新增的紀錄。如需保留，請先在設定中將紀錄匯出為 JSON 檔案。"
           }
         }
       }
@@ -11758,6 +12924,112 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "年份 %@"
+          }
+        }
+      }
+    },
+    "예시 달력과 내 기록" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beispielkalender und persönliches Tagebuch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sample calendar and personal journal"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendario de ejemplo y diario personal"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendario de ejemplo y diario personal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendrier d’exemple et journal personnel"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "नमूना कैलेंडर और निजी डायरी"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalender contoh dan jurnal pribadi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サンプルカレンダーと自分の日記"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예시 달력과 내 기록"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendário de exemplo e diário pessoal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пробный календарь и личный дневник"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ปฏิทินตัวอย่างและบันทึกส่วนตัว"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek takvim ve kişisel günlük"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch mẫu và nhật ký cá nhân"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "範例日曆和個人日誌"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "示例日历和个人日记"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "範例日曆與個人日誌"
           }
         }
       }
@@ -12186,112 +13458,6 @@
         }
       }
     },
-    "운영자 정보, 문의처와 시행일은 정식 출시 때 안내할 예정이에요." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wer die App betreibt, wie du uns erreichst und ab wann diese Bestimmungen gelten, geben wir zum Start bekannt."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "We’ll publish the operator’s name, contact details and the effective date at launch."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuando lancemos la app, publicaremos los datos del responsable, el contacto y la fecha de entrada en vigor."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuando lancemos la app, publicaremos los datos del responsable, el contacto y la fecha de entrada en vigor."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nous publierons le nom de l’éditeur, ses coordonnées et la date d’entrée en vigueur lors du lancement."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ऐप के आधिकारिक लॉन्च पर हम संचालक का विवरण, संपर्क जानकारी और इस दस्तावेज़ के लागू होने की तारीख बताएँगे।"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Informasi pengelola, kontak, dan tanggal mulai berlaku akan diumumkan saat aplikasi resmi diluncurkan."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "運営者情報、お問い合わせ先、適用開始日は、アプリの正式リリース時にお知らせします。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "운영자 정보, 문의처와 시행일은 정식 출시 때 안내할 예정이에요."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No lançamento oficial, vamos divulgar os dados do responsável, o contato e a data de entrada em vigor."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "При запуске приложения мы укажем сведения об операторе, контакты и дату вступления документа в силу."
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เราจะแจ้งข้อมูลผู้ให้บริการ ช่องทางติดต่อ และวันที่มีผลบังคับใช้เมื่อแอปเปิดตัวอย่างเป็นทางการ"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uygulama kullanıma açıldığında işletmeci bilgilerini, iletişim adresini ve yürürlük tarihini paylaşacağız."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Thông tin về đơn vị vận hành, liên hệ và ngày có hiệu lực sẽ được công bố khi ứng dụng chính thức ra mắt."
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "應用程式正式推出時，我們會公布營運者資料、聯絡方法及生效日期。"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "应用正式上线时，我们会公布运营者信息、联系方式和生效日期。"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App 正式上架時，我們會公布營運者資訊、聯絡方式與生效日期。"
-          }
-        }
-      }
-    },
     "월 선택" : {
       "localizations" : {
         "de" : {
@@ -12606,6 +13772,218 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "點一下月份或張開兩指，就能展開月曆。"
+          }
+        }
+      }
+    },
+    "웹 체험과 언어 설정" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web-Demo und Spracheinstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web demo and language settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demo web y ajustes de idioma"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demo web y configuración de idioma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démo web et réglages de langue"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वेब डेमो और भाषा की सेटिंग्स"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demo web dan pengaturan bahasa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウェブ体験版と言語設定"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹 체험과 언어 설정"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demonstração na web e configurações de idioma"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Веб-демоверсия и выбор языка"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เว็บทดลองใช้และการตั้งค่าภาษา"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web demosu ve dil ayarları"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bản trải nghiệm trên web và cài đặt ngôn ngữ"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網頁體驗版和語言設定"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网页版体验和语言设置"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網頁體驗版與語言設定"
+          }
+        }
+      }
+    },
+    "웹에서 입력한 기록, 초안, 검색어는 서버로 보내지 않아요. 새로고침하면 체험 중 입력한 내용과 설정이 초기화돼요. 직접 고른 언어만 브라우저에 남고, 사이트 데이터를 지우면 삭제돼요. 웹 체험의 통계 스위치는 시연용이에요. 페이지를 불러올 때는 서버가 IP 주소와 요청한 파일 경로를 처리해요." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Web-Demo sendet keine Notizen, Entwürfe oder Suchbegriffe an einen Server. Wenn du die Seite neu lädst, werden deine Eingaben gelöscht und die Einstellungen der Demo zurückgesetzt. Nur die von dir ausgewählte Sprache bleibt in deinem Browser gespeichert. Du kannst sie entfernen, indem du die Websitedaten löschst. Der Schalter für Nutzungsstatistiken dient der Vorführung. Beim Laden einer Seite verarbeitet der Server deine IP-Adresse und den Pfad der angeforderten Datei."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web demo does not send entries, drafts or searches to a server. Refreshing clears what you entered and resets the demo settings. Only the language you explicitly choose is saved in your browser. Clearing site data removes it. The usage-sharing switch is for demonstration. When you load a page, the server processes your IP address and the requested file path."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La demo web no envía las notas, los borradores ni las búsquedas a ningún servidor. Al recargar la página, se borra lo que hayas escrito y se restablecen los ajustes de la demo. El navegador solo guarda el idioma que elijas expresamente. Puedes eliminar esta preferencia borrando los datos del sitio. El interruptor para compartir estadísticas solo sirve para probar la interfaz. Cuando cargas una página, el servidor procesa tu dirección IP y la ruta del archivo solicitado."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La demo web no envía las notas, los borradores ni las búsquedas a ningún servidor. Al volver a cargar la página, se borra lo que hayas escrito y se restablece la configuración de la demo. El navegador solo guarda el idioma que elijas expresamente. Puedes eliminar esta preferencia borrando los datos del sitio. El interruptor para compartir estadísticas solo sirve para probar la interfaz. Cuando cargas una página, el servidor procesa tu dirección IP y la ruta del archivo solicitado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La démo web n’envoie pas vos notes, vos brouillons ni vos termes de recherche à un serveur. Actualiser la page efface vos saisies et réinitialise les réglages de la démo. Seule la langue que vous choisissez est enregistrée dans votre navigateur. Vous pouvez effacer ce choix en supprimant les données du site. Le bouton de partage des statistiques sert à la démonstration. Lorsque vous chargez une page, le serveur traite votre adresse IP et le chemin du fichier demandé."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वेब डेमो आपकी प्रविष्टियाँ, ड्राफ़्ट या खोजे गए शब्द सर्वर पर नहीं भेजता। पेज रीफ़्रेश करने से आपके दर्ज किए गए विवरण मिट जाते हैं और डेमो की सेटिंग्स रीसेट हो जाती हैं। ब्राउज़र में सिर्फ़ वह भाषा सहेजी जाती है जो आपने ख़ुद चुनी है। साइट का डेटा साफ़ करने से यह चयन भी मिट जाता है। आँकड़े साझा करने का स्विच केवल डेमो के लिए है। पेज लोड होने पर सर्वर आपके IP पते और माँगी गई फ़ाइल के पथ को संसाधित करता है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demo web tidak mengirim catatan, draf, atau kata yang Anda cari ke server. Memuat ulang halaman akan menghapus isian Anda dan menyetel ulang pengaturan demo. Hanya bahasa yang Anda pilih sendiri yang disimpan di peramban. Untuk menghapusnya, hapus data situs. Sakelar berbagi statistik dalam demo hanya untuk mencoba fitur tersebut. Saat halaman dimuat, server memproses alamat IP Anda dan jalur berkas yang diminta."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウェブ体験版で入力した記録や下書き、検索語はサーバーに送信されません。ページを再読み込みすると、入力内容が消去され、体験版の設定も初期化されます。ブラウザに保存されるのはご自身で選択した言語だけで、サイトデータを消去すると削除されます。体験版の利用統計共有スイッチは操作を試すためのものです。ページの読み込み時には、サーバーがIPアドレスとリクエストされたファイルのパスを処理します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹에서 입력한 기록, 초안, 검색어는 서버로 보내지 않아요. 새로고침하면 체험 중 입력한 내용과 설정이 초기화돼요. 직접 고른 언어만 브라우저에 남고, 사이트 데이터를 지우면 삭제돼요. 웹 체험의 통계 스위치는 시연용이에요. 페이지를 불러올 때는 서버가 IP 주소와 요청한 파일 경로를 처리해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A demonstração na web não envia suas anotações, rascunhos ou buscas a um servidor. Recarregar a página apaga o que você escreveu e restaura as configurações da demonstração. O navegador guarda apenas o idioma que você escolhe. Limpar os dados do site apaga essa preferência. A opção de compartilhar estatísticas serve apenas para demonstrar como ela funciona. Ao carregar uma página, o servidor processa seu endereço IP e o caminho do arquivo solicitado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Веб-демоверсия не отправляет записи, черновики и поисковые запросы на сервер. При обновлении страницы введённые данные удаляются, а настройки демоверсии сбрасываются. В браузере сохраняется только выбранный вами язык. Чтобы удалить этот выбор, очистите данные сайта. Переключатель отправки статистики в демоверсии служит для ознакомления. При загрузке страницы сервер обрабатывает ваш IP-адрес и путь к запрошенному файлу."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เว็บทดลองใช้จะไม่ส่งบันทึก ฉบับร่าง หรือคำค้นหาไปยังเซิร์ฟเวอร์ เมื่อรีเฟรชหน้าเว็บ สิ่งที่คุณกรอกจะถูกล้างและการตั้งค่าของเว็บทดลองใช้จะกลับเป็นค่าเริ่มต้น เบราว์เซอร์จะเก็บเฉพาะภาษาที่คุณเลือกเอง การล้างข้อมูลเว็บไซต์จะลบตัวเลือกภาษานี้ สวิตช์แชร์สถิติในเว็บมีไว้เพื่อสาธิต เมื่อโหลดหน้าเว็บ เซิร์ฟเวอร์จะประมวลผลที่อยู่ IP ของคุณและเส้นทางของไฟล์ที่ขอ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web demosu notlarınızı, taslaklarınızı veya arama terimlerinizi sunucuya göndermez. Sayfayı yenilediğinizde girdiğiniz bilgiler silinir ve demo ayarları sıfırlanır. Tarayıcınıza yalnızca kendinizin seçtiği dil kaydedilir. Site verilerini temizleyerek bu seçimi silebilirsiniz. Kullanım istatistiklerini paylaşma anahtarı demoda yalnızca örnek olarak gösterilir. Sayfa yüklenirken sunucu, IP adresinizi ve istenen dosyanın yolunu işler."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bản trải nghiệm trên web không gửi mục nhật ký, bản nháp hay từ khóa tìm kiếm đến máy chủ. Khi bạn tải lại trang, nội dung đã nhập sẽ bị xóa và các cài đặt của bản trải nghiệm sẽ trở về mặc định. Trình duyệt chỉ lưu ngôn ngữ do chính bạn chọn. Xóa dữ liệu trang web sẽ xóa lựa chọn này. Công tắc chia sẻ số liệu chỉ dùng để minh họa. Khi bạn tải trang, máy chủ xử lý địa chỉ IP của bạn và đường dẫn của tệp được yêu cầu."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網頁體驗版不會將記錄、草稿或搜尋字詞傳送至伺服器。重新載入頁面會清除你在體驗中輸入的內容，並重設體驗設定。瀏覽器只會儲存你手動選擇的語言；清除網站資料即可刪除這項設定。體驗版內的使用統計開關僅作示範。載入頁面時，伺服器會處理你的 IP 位址及你要求存取的檔案路徑。"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "网页版体验不会将记录、草稿或搜索词发送到服务器。刷新网页会清除体验中输入的内容，并重置体验设置。浏览器只保存你手动选择的语言，清除网站数据即可删除这项设置。体验中的统计共享开关仅用于演示。加载网页时，服务器会处理你的 IP 地址和所请求的文件路径。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網頁體驗版不會將紀錄、草稿或搜尋字詞傳送至伺服器。重新整理頁面後，體驗時輸入的內容會清除，體驗設定也會重設。瀏覽器只會儲存你手動選擇的語言，清除網站資料即可刪除這項設定。體驗版中的使用統計開關僅供示範。載入網頁時，伺服器會處理你的 IP 位址與要求讀取的檔案路徑。"
           }
         }
       }
@@ -13034,108 +14412,108 @@
         }
       }
     },
-    "이 약관은 iOS·Android용 Tokipin 앱에서 개인 기록을 작성하고 열어볼 때 적용되는 이용 기준이에요." : {
+    "이 약관은 대한민국의 Stepzu가 제공하는 Tokipin iOS·Android 앱과 웹 체험에 적용돼요." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diese Bedingungen gelten, wenn du in der Tokipin-App für iOS und Android persönliche Notizen erstellst und ansiehst."
+            "value" : "Diese Bedingungen gelten für die Tokipin-Apps für iOS und Android sowie für die Web-Demo von Stepzu mit Sitz in der Republik Korea."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "These terms apply when you create and browse personal notes in the Tokipin app for iOS and Android."
+            "value" : "These terms apply to the Tokipin iOS and Android apps and the web demo provided by Stepzu, based in the Republic of Korea."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estas condiciones se aplican al crear y consultar notas personales en la app Tokipin para iOS y Android."
+            "value" : "Estas condiciones se aplican a las apps de Tokipin para iOS y Android y a la demo web que ofrece Stepzu, con sede en la República de Corea."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estas condiciones se aplican al crear y consultar notas personales en la app Tokipin para iOS y Android."
+            "value" : "Estas condiciones se aplican a las apps de Tokipin para iOS y Android y a la demo web que ofrece Stepzu, con sede en la República de Corea."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ces conditions s’appliquent à la création et à la consultation de notes personnelles dans l’application Tokipin pour iOS et Android."
+            "value" : "Ces conditions s’appliquent aux apps Tokipin pour iOS et Android et à la démo web proposées par Stepzu, établi en République de Corée."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "जब आप iOS या Android के Tokipin ऐप में निजी नोट बनाते या देखते हैं, तब ये शर्तें लागू होती हैं।"
+            "value" : "ये शर्तें कोरिया गणराज्य में स्थित Stepzu द्वारा उपलब्ध कराए गए Tokipin के iOS और Android ऐप और वेब डेमो पर लागू होती हैं।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ketentuan ini berlaku saat kamu membuat dan melihat catatan pribadi di aplikasi Tokipin untuk iOS dan Android."
+            "value" : "Ketentuan ini berlaku untuk aplikasi Tokipin di iOS dan Android serta demo web yang disediakan oleh Stepzu, yang berkedudukan di Republik Korea."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この規約は、iOS・Android版のTokipinで個人の記録を作成・閲覧するときに適用されます。"
+            "value" : "本規約は、韓国のStepzuが提供するTokipinのiOS・Androidアプリおよびウェブ体験版に適用されます。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이 약관은 iOS·Android용 Tokipin 앱에서 개인 기록을 작성하고 열어볼 때 적용되는 이용 기준이에요."
+            "value" : "이 약관은 대한민국의 Stepzu가 제공하는 Tokipin iOS·Android 앱과 웹 체험에 적용돼요."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estes termos se aplicam à criação e à consulta de anotações pessoais no app Tokipin para iOS e Android."
+            "value" : "Estes termos se aplicam aos apps Tokipin para iOS e Android e à demonstração na web oferecidos pela Stepzu, com sede na República da Coreia."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Эти условия применяются при создании и просмотре личных записей в приложении Tokipin для iOS и Android."
+            "value" : "Эти условия распространяются на приложения Tokipin для iOS и Android и на веб-демоверсию, предоставляемые Stepzu (Республика Корея)."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ข้อกำหนดนี้ใช้เมื่อคุณสร้างหรือเปิดดูบันทึกส่วนตัวในแอป Tokipin สำหรับ iOS และ Android"
+            "value" : "ข้อกำหนดนี้ใช้กับแอป Tokipin สำหรับ iOS และ Android รวมถึงเว็บทดลองใช้ที่ให้บริการโดย Stepzu ซึ่งตั้งอยู่ในสาธารณรัฐเกาหลี"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bu koşullar, iOS ve Android için Tokipin uygulamasında kişisel not oluştururken ve notlarını görüntülerken geçerlidir."
+            "value" : "Bu koşullar, Kore Cumhuriyeti merkezli Stepzu’nun sunduğu iOS ve Android için Tokipin uygulamaları ile web demosu için geçerlidir."
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Các điều khoản này áp dụng khi bạn tạo và xem ghi chú cá nhân trong ứng dụng Tokipin dành cho iOS và Android."
+            "value" : "Các điều khoản này áp dụng cho ứng dụng Tokipin trên iOS và Android cùng bản trải nghiệm trên web do Stepzu, có trụ sở tại Hàn Quốc, cung cấp."
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本條款適用於你在 iOS 或 Android 版 Tokipin 內建立及瀏覽個人記錄。"
+            "value" : "本條款適用於位於韓國的 Stepzu 提供的 Tokipin iOS 和 Android 應用程式及網頁體驗版。"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本条款适用于你在 iOS 或 Android 版 Tokipin 中创建和查看个人记录。"
+            "value" : "本条款适用于位于韩国的 Stepzu 提供的 Tokipin iOS 和 Android 应用及网页版体验。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本條款適用於在 iOS 或 Android 版 Tokipin App 中建立與瀏覽個人紀錄。"
+            "value" : "本條款適用於位於韓國的 Stepzu 提供的 Tokipin iOS 和 Android App，以及網頁體驗版。"
           }
         }
       }
@@ -17098,112 +18476,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "點一下勾號，儲存紀錄。"
-          }
-        }
-      }
-    },
-    "출시 전 초안 · iOS·Android 앱 기준" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entwurf vor dem Start · App für iOS und Android"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Draft for the iOS and Android apps · Before launch"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrador previo al lanzamiento · Apps para iOS y Android"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Borrador previo al lanzamiento · Apps para iOS y Android"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version provisoire avant lancement · Applications iOS et Android"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "लॉन्च से पहले का मसौदा · iOS और Android ऐप के लिए"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Draf sebelum peluncuran · Aplikasi iOS dan Android"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "公開前の草案（iOS・Androidアプリ対象）"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "출시 전 초안 · iOS·Android 앱 기준"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versão preliminar · Apps para iOS e Android"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Предварительная версия · Для приложений iOS и Android"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ฉบับร่างก่อนเปิดตัว · แอป iOS และ Android"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yayın öncesi taslak · iOS ve Android uygulamaları"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bản dự thảo trước khi phát hành · Ứng dụng iOS và Android"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "推出前草擬本 · 適用於 iOS 及 Android 應用程式"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发布前草案 · 适用于 iOS 和 Android 应用"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "上架前草案 · 適用於 iOS 與 Android App"
           }
         }
       }

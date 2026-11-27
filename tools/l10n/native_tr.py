@@ -242,24 +242,6 @@ T["%@, %@"] = {l: "%1$@, %2$@" for l in LANGS}
 T["%@, %@"].update({"ja": "%1$@、%2$@", "zh-Hans": "%1$@，%2$@", "zh-Hant-TW": "%1$@，%2$@", "zh-Hant-HK": "%1$@，%2$@",
                     "th": "%1$@ %2$@"})
 
-T["운영자 정보, 문의처와 시행일은 정식 출시 때 안내할 예정이에요."] = {
-    "en": "We’ll publish the operator’s name, contact details and the effective date at launch.",
-    "ja": "運営者情報、お問い合わせ先、適用開始日は、アプリの正式リリース時にお知らせします。",
-    "de": "Wer die App betreibt, wie du uns erreichst und ab wann diese Bestimmungen gelten, geben wir zum Start bekannt.",
-    "fr": "Nous publierons le nom de l’éditeur, ses coordonnées et la date d’entrée en vigueur lors du lancement.",
-    "id": "Informasi pengelola, kontak, dan tanggal mulai berlaku akan diumumkan saat aplikasi resmi diluncurkan.",
-    "vi": "Thông tin về đơn vị vận hành, liên hệ và ngày có hiệu lực sẽ được công bố khi ứng dụng chính thức ra mắt.",
-    "tr": "Uygulama kullanıma açıldığında işletmeci bilgilerini, iletişim adresini ve yürürlük tarihini paylaşacağız.",
-    "ru": "При запуске приложения мы укажем сведения об операторе, контакты и дату вступления документа в силу.",
-    "hi": "ऐप के आधिकारिक लॉन्च पर हम संचालक का विवरण, संपर्क जानकारी और इस दस्तावेज़ के लागू होने की तारीख बताएँगे।",
-    "th": "เราจะแจ้งข้อมูลผู้ให้บริการ ช่องทางติดต่อ และวันที่มีผลบังคับใช้เมื่อแอปเปิดตัวอย่างเป็นทางการ",
-    "pt-BR": "No lançamento oficial, vamos divulgar os dados do responsável, o contato e a data de entrada em vigor.",
-    "es-ES": "Cuando lancemos la app, publicaremos los datos del responsable, el contacto y la fecha de entrada en vigor.",
-    "es-419": "Cuando lancemos la app, publicaremos los datos del responsable, el contacto y la fecha de entrada en vigor.",
-    "zh-Hans": "应用正式上线时，我们会公布运营者信息、联系方式和生效日期。",
-    "zh-Hant-TW": "App 正式上架時，我們會公布營運者資訊、聯絡方式與生效日期。",
-    "zh-Hant-HK": "應用程式正式推出時，我們會公布營運者資料、聯絡方法及生效日期。"}
-
 T["뒤로"] = {
     "en": "Back", "ja": "戻る", "de": "Zurück", "fr": "Retour", "id": "Kembali", "vi": "Quay lại", "tr": "Geri",
     "ru": "Назад", "hi": "वापस", "th": "ย้อนกลับ", "pt-BR": "Voltar", "es-ES": "Atrás", "es-419": "Atrás",

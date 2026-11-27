@@ -9,6 +9,7 @@ Sources, in order:
 import glob, json, os, re, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from native_tr import T as NATIVE, LANGS
+from policy_documents import policy_documents
 
 WEB = os.environ.get('TOKIPIN_WEB_LOCALES') or os.path.join(os.path.dirname(__file__), '../../../tokipin/locales')
 HERE = os.path.dirname(__file__)
@@ -22,7 +23,9 @@ demo = {os.path.basename(f)[:-5]: json.load(open(f)) for f in glob.glob(WEB + '/
 site = {os.path.basename(f)[:-5]: json.load(open(f)) for f in glob.glob(WEB + '/site/*.json')}
 weekdays = json.load(open(os.path.join(HERE, 'weekdays.json')))
 NATIVE.update(json.load(open(os.path.join(HERE, 'onboarding.json'))))
-keys = json.load(open(os.path.join(HERE, 'keys.json')))
+keys = set(json.load(open(os.path.join(HERE, 'keys.json'))))
+policies, policy_keys = policy_documents(os.path.join(WEB, '..'))
+keys.update(policy_keys)
 
 def web(lang, key):
     if key in demo.get(lang, {}): return demo[lang][key]
@@ -75,6 +78,7 @@ KO_DEFAULT = {"kind.word": "단어", "kind.emoji": "이모지", "kind.place": "�
 SPEC = re.compile(r'%(?:\d+\$)?(@|lld|d)')
 
 def value_for(key, lang):
+    if key in policy_keys: return site.get(lang, {}).get(key)
     if key in NATIVE: return NATIVE[key].get(lang)
     if key in WEEKDAY: return weekdays[lang][WEEKDAY[key]]
     if key in VIEW_BACK:
@@ -144,6 +148,8 @@ catalog = {"sourceLanguage": "ko", "strings": strings, "version": "1.0"}
 with open(OUT, 'w') as f:
     json.dump(catalog, f, ensure_ascii=False, indent=2, separators=(',', ' : '), sort_keys=True)
     f.write('\n')
+with open(os.path.join(HERE, '../../Tokipin/Features/Settings/PolicyDocuments.generated.swift'), 'w') as output:
+    output.write(policies)
 print(len(strings), 'keys; 0 missing')
 
 # The trial uses the web's word/place tokens as seeded journal content, separate from interface copy.
