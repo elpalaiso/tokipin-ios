@@ -175,6 +175,7 @@ struct TourRail: View {
             } else if tour.guided {
                 Button("다음", action: next)
                     .accessibilityIdentifier("trial.next")
+                    .accessibilityHint("안내 동작 실행")
             } else {
                 Button(action: replay) {
                     Image(systemName: "arrow.counterclockwise").frame(width: 44, height: 44)

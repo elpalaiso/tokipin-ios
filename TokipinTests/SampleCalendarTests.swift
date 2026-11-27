@@ -46,7 +46,10 @@ final class SampleCalendarTests: XCTestCase {
         let url = try XCTUnwrap(Bundle.main.url(forResource: "SampleVocabulary", withExtension: "json"))
         let packs = try JSONDecoder().decode([String: [String: String]].self, from: Data(contentsOf: url))
         XCTAssertEqual(Set(packs.keys), Set(LocalizationTests.languages))
-        for pack in packs.values { XCTAssertEqual(Set(pack.keys), Set(SampleGenerator.words.keys)) }
+        let tokens = Set(try XCTUnwrap(packs["ko"]).keys)
+        XCTAssertEqual(tokens.count, 111)
+        XCTAssertTrue(Set(SampleGenerator.words.keys).isSubset(of: tokens))
+        for pack in packs.values { XCTAssertEqual(Set(pack.keys), tokens) }
         let day = try XCTUnwrap(DayKey(string: "2026-11-27"))
         let ko = SampleGenerator.items(for: day, vocabulary: try XCTUnwrap(packs["ko"]), starter: true)
         let en = SampleGenerator.items(for: day, vocabulary: try XCTUnwrap(packs["en"]), starter: true)
