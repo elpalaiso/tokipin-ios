@@ -2,30 +2,34 @@ import CryptoKit
 import XCTest
 @testable import Tokipin
 
-/// Runs the shared cases of "Tokipin Native UX v0.3" (81 kept from v0.2, 1 replaced, 27 new for
-/// the date headers and 기록한 날's shown-month list) against the iOS rules.
+/// Runs the shared cases of "Tokipin Native UX v0.4" against the iOS rules: the 109 kept from v0.3
+/// here, the 85 wide-screen cases in `AdaptiveSpecTests`.
 ///
-/// The spec has a single copy, shared with Android, at `../tokipin/native-spec/v0.3/`
-/// next to this repository. It is pinned by SHA-256 so both apps test the same version.
+/// The spec has a single copy, shared with Android, at `../tokipin/native-spec/v0.4/`
+/// next to this repository (or `TOKIPIN_SPEC_DIR`, e.g. `TEST_RUNNER_TOKIPIN_SPEC_DIR=… xcodebuild test`).
+/// It is pinned by SHA-256 so both apps test the same version.
 @MainActor
 final class NativeUXSpecTests: XCTestCase {
-    static let pinnedSHA256 = "6bddea73872758395ec047089b96a96ba996fa0cdaef11117363347655599512"
+    static let pinnedSHA256 = "81a9e6fd8e8aa0b70d99389214e5914f4d28a472120e8786e2b7679b2f167203"
 
     static var specURL: URL {
-        URL(fileURLWithPath: #filePath)
+        if let dir = ProcessInfo.processInfo.environment["TOKIPIN_SPEC_DIR"], !dir.isEmpty {
+            return URL(fileURLWithPath: dir).appendingPathComponent("Tokipin-Native-UX-v0.4.json")
+        }
+        return URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()      // TokipinTests
             .deletingLastPathComponent()      // tokipin-ios
             .deletingLastPathComponent()      // parent folder
-            .appendingPathComponent("tokipin/native-spec/v0.3/Tokipin-Native-UX-v0.3.json")
+            .appendingPathComponent("tokipin/native-spec/v0.4/Tokipin-Native-UX-v0.4.json")
     }
 
     private static var cachedCases: [[String: Any]]?
     /// Groups this file runs. `capability` cases for Android are filtered inside.
-    static let handledGroups: Set<String> = [
+    static let handledGroups: Set<String> = Set<String>([
         "swipe", "pinch", "pinchAnchor", "calendar", "emojiCommit", "emojiComposition", "emojiSelection",
         "emojiEdit", "migration", "capability", "timeDisplay", "timeEdit", "haptic", "recordedMonths",
         "visibleMonthIndex", "monthYearHints", "dateHeaders"
-    ]
+    ]).union(AdaptiveSpecTests.groups)
 
     private func cases(_ group: String) throws -> [[String: Any]] {
         if Self.cachedCases == nil {
@@ -58,11 +62,13 @@ final class NativeUXSpecTests: XCTestCase {
 
     // MARK: Coverage
 
-    /// Every case in the pinned file belongs to a group with a runner here (109 cases, 108 on iOS).
+    /// Every case in the pinned file belongs to a group with a runner (194 cases: 109 here, 108 on
+    /// iOS, and 85 in AdaptiveSpecTests).
     func testEveryCaseHasARunner() throws {
         _ = try cases("swipe")
         let all = Self.cachedCases!
-        XCTAssertEqual(all.count, 109)
+        XCTAssertEqual(all.count, 194)
+        XCTAssertEqual(all.filter { AdaptiveSpecTests.groups.contains($0["group"] as? String ?? "") }.count, 85)
         let groups = Set(all.compactMap { $0["group"] as? String })
         XCTAssertEqual(groups.subtracting(Self.handledGroups), [], "Unhandled groups")
         let androidOnly = all.filter { ($0["given"] as? [String: Any])?["platform"] as? String == "Android" }
