@@ -69,6 +69,7 @@ struct EditorView: View {
                 }
                 bottomControls
             }
+            .contentColumn()
         }
         .onAppear(perform: setUp)
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in

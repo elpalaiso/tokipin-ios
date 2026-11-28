@@ -23,9 +23,9 @@ struct RootView: View {
             BrandBackground()
             switch store.state {
             case .idle, .loading:
-                if showSkeleton { LoadingSkeleton() }
+                if showSkeleton { LoadingSkeleton().contentColumn() }
             case .failed:
-                RecoveryView { Task { await load() } }
+                RecoveryView { Task { await load() } }.contentColumn()
             case .loaded:
                 if let sampleTour {
                     SampleTourHost(tour: sampleTour, startJournal: startJournal)

@@ -50,6 +50,7 @@ struct ExploreView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { contentFrame = $0 }
             }
+            .contentColumn()
             .background(
                 PinchCatcher(
                     isEnabled: app.editorDay == nil && !app.isSearching && !app.isShowingSettings,
@@ -63,7 +64,7 @@ struct ExploreView: View {
                 EmptyHomeRabbit()
             }
         }
-        .safeAreaInset(edge: .bottom) { bottomBar }
+        .safeAreaInset(edge: .bottom) { bottomBar.contentColumn() }
         .onChange(of: Navigation(level: app.level, day: app.selectedDay, month: app.recordsMonth)) { old, new in
             guard let tour else { return }
             if old.level != new.level {
@@ -93,7 +94,9 @@ struct ExploreView: View {
                                  next: { app.isSearching = false; tour.nextInArchive() })
                     }
                     SearchView()
-                }.background { BrandBackground() }.transition(.opacity)
+                }
+                .contentColumn()
+                .background { BrandBackground() }.transition(.opacity)
             }
         }
         .sheet(isPresented: $app.isShowingSettings) {

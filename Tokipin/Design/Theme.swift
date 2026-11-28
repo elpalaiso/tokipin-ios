@@ -88,6 +88,19 @@ extension Font {
     }
 }
 
+/// Widest a single column may be; wider windows centre it and the backdrop fills the rest
+/// (UX v0.4 §2, same as Android `CONTENT_MAX_WIDTH`).
+enum ContentColumn {
+    static let maxWidth: CGFloat = 640
+}
+
+extension View {
+    /// Caps the view at the single-column width and centres it in whatever it is given.
+    func contentColumn() -> some View {
+        frame(maxWidth: ContentColumn.maxWidth).frame(maxWidth: .infinity)
+    }
+}
+
 /// Full-screen backdrop shared by every screen.
 struct BrandBackground: View {
     var body: some View {
