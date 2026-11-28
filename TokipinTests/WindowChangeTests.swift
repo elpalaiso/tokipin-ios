@@ -93,22 +93,73 @@ final class WindowChangeTests: XCTestCase {
         XCTAssertTrue(back.isFirstResponder)
     }
 
-    func testExploreAndSearchStateSurviveWindowResizes() async throws {
+    private func views<T: UIView>(_ type: T.Type, in view: UIView) -> [T] {
+        ((view as? T).map { [$0] } ?? []) + view.subviews.flatMap { views(type, in: $0) }
+    }
+
+    func testSearchFieldKeepsInstanceTextAndFocusThroughWindowResizes() async throws {
         let (store, app, usage) = try await makeEnvironment()
-        let day = DayKey(year: 2026, month: 11, day: 25)
-        app.openDay(day)
         app.isSearching = true
-        app.searchQuery = "살구"
         host(ExploreView().environment(store).environment(app).environment(usage))
         await wait(1.2)
-        let portrait = window.bounds.size
-        await resize(width: portrait.height, height: portrait.width)
-        XCTAssertTrue(app.isSearching)
+        let field = try XCTUnwrap(views(UITextField.self, in: window).first)
+        if !field.isFirstResponder { field.becomeFirstResponder() }
+        field.insertText("살구")
+        await wait()
         XCTAssertEqual(app.searchQuery, "살구")
-        XCTAssertEqual(app.level, .day)
-        XCTAssertEqual(app.selectedDay, day)
+        let portrait = window.bounds.size
+        for size in [CGSize(width: portrait.height, height: portrait.width), CGSize(width: 500, height: portrait.height), portrait] {
+            await resize(width: size.width, height: size.height)
+            let now = try XCTUnwrap(views(UITextField.self, in: window).first)
+            XCTAssertTrue(now === field, "the search field was rebuilt at \(size)")
+            XCTAssertEqual(now.text, "살구")
+            XCTAssertTrue(now.isFirstResponder)
+        }
+        XCTAssertTrue(app.isSearching)
+    }
+
+    func testMonthScrollPositionSurvivesWindowResizes() async throws {
+        let (store, app, usage) = try await makeEnvironment()
+        // A year of recorded months so the month view has somewhere to scroll.
+        for month in 1...12 { try store.save(day: DayKey(year: 2025, month: month, day: 10), items: [RecordItem(kind: .word, value: "달\(month)")]) }
+        app.setLevel(.month, haptic: false)
+        host(ExploreView().environment(store).environment(app).environment(usage))
+        await wait(1.2)
+        let scroll = try XCTUnwrap(views(UIScrollView.self, in: window).max { $0.contentSize.height < $1.contentSize.height })
+        scroll.setContentOffset(CGPoint(x: 0, y: max(scroll.contentOffset.y - 1500, 0)), animated: false)
+        await wait()
+        let offset = scroll.contentOffset.y
+        let portrait = window.bounds.size
+        // Landscape keeps the same 640pt column, so the same months sit at the same offset.
+        await resize(width: portrait.height, height: portrait.width)
+        let now = try XCTUnwrap(views(UIScrollView.self, in: window).max { $0.contentSize.height < $1.contentSize.height })
+        XCTAssertTrue(now === scroll, "the month list was rebuilt")
+        XCTAssertEqual(now.contentOffset.y, offset, accuracy: 1)
         await resize(width: portrait.width, height: portrait.height)
-        XCTAssertEqual(app.level, .day)
-        XCTAssertEqual(app.selectedDay, day)
+        XCTAssertEqual(now.contentOffset.y, offset, accuracy: 1)
+        XCTAssertEqual(app.level, .month)
+    }
+
+    /// The real presentation path: RootView's full-screen cover, opened with openEditor(for:).
+    func testEditorOpenedFromRootViewKeepsItsFieldThroughWindowResizes() async throws {
+        let (store, app, usage) = try await makeEnvironment()
+        host(RootView().environment(store).environment(app).environment(usage))
+        await wait(1.5)
+        let day = DayKey(year: 2026, month: 11, day: 27)
+        app.openEditor(for: day)
+        await wait(1.5)
+        let field = try XCTUnwrap(inputFields(in: window).first)
+        if !field.isFirstResponder { field.becomeFirstResponder() }
+        field.insertText("귤")
+        await wait()
+        let portrait = window.bounds.size
+        for size in [CGSize(width: portrait.height, height: portrait.width), CGSize(width: 500, height: portrait.height), portrait] {
+            await resize(width: size.width, height: size.height)
+            let now = try XCTUnwrap(inputFields(in: window).first)
+            XCTAssertTrue(now === field, "the editor's field was rebuilt at \(size)")
+            XCTAssertEqual(now.text, "귤")
+            XCTAssertTrue(now.isFirstResponder)
+        }
+        XCTAssertEqual(app.editorDay, day)
     }
 }

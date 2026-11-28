@@ -143,6 +143,8 @@ struct SampleTourHost: View {
     /// Wider than one column: the last question sits at the bottom within the column's width
     /// (UX v0.4 §3) instead of the centred iPad form sheet.
     private var wide: Bool { windowWidth > ContentColumn.maxWidth }
+    private var showsPanel: Bool { wide && tour.panel != nil }
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         Group {
@@ -156,12 +158,17 @@ struct SampleTourHost: View {
         .accessibilityHidden(tour.panel != nil)
         .environment(tour.store).environment(tour.app).environment(tour)
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { windowWidth = $0 }
-        .overlay {
-            if wide, tour.panel != nil {
-                ZStack(alignment: .bottom) {
+        .overlay(alignment: .bottom) {
+            // The scrim fades and the panel slides up from the bottom edge, each with its own
+            // transition; with Reduce Motion both simply appear.
+            ZStack(alignment: .bottom) {
+                if showsPanel {
                     Color.black.opacity(0.4).ignoresSafeArea()
                         .onTapGesture { tour.panel = nil }
                         .accessibilityHidden(true)
+                        .transition(.opacity)
+                }
+                if showsPanel {
                     SampleTourDecision(tour: tour) {
                         tour.panel = nil
                         startJournal()
@@ -172,10 +179,15 @@ struct SampleTourHost: View {
                     .background(Palette.surface, in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
                     .transition(.move(edge: .bottom))
                 }
-                .ignoresSafeArea(.container, edges: .bottom)
             }
+            .ignoresSafeArea(.container, edges: .bottom)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: showsPanel)
         }
-        .animation(.easeOut(duration: 0.2), value: wide && tour.panel != nil)
+        // The panel is not a system sheet: put the tour editor's keyboard away while it is up, as
+        // Android does for its sheet, so typing cannot reach the field behind the scrim.
+        .onChange(of: showsPanel) { _, shown in
+            if shown { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) }
+        }
         .sheet(isPresented: Binding(get: { !wide && tour.panel != nil }, set: { if !$0 { tour.panel = nil } }), onDismiss: {
             if confirmed { confirmed = false; startJournal() }
         }) {
