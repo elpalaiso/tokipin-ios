@@ -6,8 +6,14 @@ struct PendingUndo: Identifiable {
     let undo: () -> Void
 }
 
+/// Which part of the window a screen is drawn in (UX v0.4).
+enum PaneRole { case single, calendar, day }
+
 /// Home: the four explore levels with a shared header, "오늘" and "+".
+/// UX v0.4: in two panes it is drawn twice, as the calendar pane (the level it shows, search,
+/// views, 오늘) and as the day pane (the selected day, 더보기, pencil or +).
 struct ExploreView: View {
+    var role: PaneRole = .single
     @Environment(SampleTour.self) private var tour: SampleTour?
     private struct Navigation: Equatable {
         let level: ExploreLevel
@@ -33,10 +39,30 @@ struct ExploreView: View {
     @State private var headerWidth: CGFloat = 390
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
+    /// The level this instance shows.
+    private var shown: ExploreLevel {
+        switch role {
+        case .single: app.level
+        case .calendar: app.calendarLevel
+        case .day: .day
+        }
+    }
+
+    /// The search list: over the whole column, or in the calendar pane while searching and while a
+    /// result opened from it is highlighted in the day pane.
+    private var showsSearch: Bool {
+        switch role {
+        case .single: app.isSearching
+        case .calendar: app.isSearching || app.searchHighlight != nil
+        case .day: false
+        }
+    }
+
     var body: some View {
         @Bindable var app = app
         ZStack {
-            BrandBackground()
+            // Two panes: the window draws the backdrop once.
+            if role == .single { BrandBackground() }
             VStack(spacing: 0) {
                 if let tour {
                     TourRail(tour: tour, editor: false, replay: tour.replay, next: tour.nextInArchive)
@@ -53,14 +79,15 @@ struct ExploreView: View {
             .contentColumn()
             .background(
                 PinchCatcher(
-                    isEnabled: app.editorDay == nil && !app.isSearching && !app.isShowingSettings,
+                    // The day pane takes no pinch (v0.4 §4).
+                    isEnabled: role != .day && app.editorDay == nil && !showsSearch && !app.isShowingSettings,
                     onBegin: beginPinch,
                     onChange: { scale in if pinchActive { pinchScale = scale } },
                     onEnd: finishPinch
                 )
             )
 
-            if store.isEmpty && app.level == .records {
+            if role == .single && store.isEmpty && app.level == .records {
                 EmptyHomeRabbit()
             }
         }
@@ -87,7 +114,7 @@ struct ExploreView: View {
             }
         }
         .overlay {
-            if app.isSearching {
+            if showsSearch {
                 VStack(spacing: 0) {
                     if let tour {
                         TourRail(tour: tour, editor: false, replay: { app.isSearching = false; tour.replay() },
@@ -96,10 +123,10 @@ struct ExploreView: View {
                     SearchView()
                 }
                 .contentColumn()
-                .background { BrandBackground() }.transition(.opacity)
+                .background { if role == .single { BrandBackground() } else { Color.clear } }.transition(.opacity)
             }
         }
-        .sheet(isPresented: $app.isShowingSettings) {
+        .sheet(isPresented: role == .day ? .constant(false) : $app.isShowingSettings) {
             SettingsView()
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
@@ -118,7 +145,7 @@ struct ExploreView: View {
             Text(errorMessage ?? "")
         }
         .animation(.easeOut(duration: 0.2), value: pendingUndo?.id)
-        .animation(.easeOut(duration: 0.18), value: app.isSearching)
+        .animation(.easeOut(duration: 0.18), value: showsSearch)
     }
 
     // MARK: Header
@@ -166,7 +193,11 @@ struct ExploreView: View {
                 if let parent = parentLevel {
                     Button {
                         app.searchHighlight = nil
-                        if app.level == .day {
+                        if role == .calendar {
+                            // Up from the level the calendar pane shows, never "closing" the day pane.
+                            app.setLevel(parent)
+                            app.requestReveal(app.selectedDay)
+                        } else if app.level == .day {
                             app.closeDay()
                         } else {
                             app.setLevel(parent, haptic: false)
@@ -184,7 +215,7 @@ struct ExploreView: View {
                 }
                 Spacer()
                 // Adding and editing live in the bottom +/pencil; the menu keeps deleting a whole day.
-                if app.level == .day && !store.items(on: app.selectedDay).isEmpty {
+                if shown == .day && !store.items(on: app.selectedDay).isEmpty {
                     Menu {
                         Button(role: .destructive) { dayToDelete = app.selectedDay } label: {
                             Label("이날 기록 삭제", systemImage: "trash")
@@ -192,7 +223,10 @@ struct ExploreView: View {
                     } label: { HeaderIcon(systemName: "ellipsis") }
                     .accessibilityLabel("이날 더보기")
                 }
-                if app.searchHighlight != nil && app.level == .day {
+                if role == .day {
+                    // The day pane carries only its date and 더보기; search and views are in the calendar pane.
+                    EmptyView()
+                } else if role == .single && app.searchHighlight != nil && app.level == .day {
                     // Icon-only so the centred title never collides with it.
                     Button { app.isSearching = true } label: { HeaderIcon(systemName: "text.magnifyingglass") }
                         .buttonStyle(.plain)
@@ -202,7 +236,7 @@ struct ExploreView: View {
                         .buttonStyle(.plain)
                         .accessibilityLabel("기록 검색")
                 }
-                viewMenu
+                if role != .day { viewMenu }
             }
     }
 
@@ -220,12 +254,13 @@ struct ExploreView: View {
 
     private var viewMenu: some View {
         Menu {
-            Picker("탐색 보기", selection: Binding(get: { app.level }, set: {
+            Picker("탐색 보기", selection: Binding(get: { shown }, set: {
                 app.searchHighlight = nil
                 app.setLevel($0)
                 app.requestReveal(app.selectedDay)
             })) {
-                ForEach(ExploreLevel.allCases.reversed()) { level in
+                // The calendar pane's menu has no 일간 (v0.4 §3).
+                ForEach(role == .calendar ? Adaptive.calendarMenu : ExploreLevel.allCases.reversed()) { level in
                     Label(level.title, systemImage: level.systemImage).tag(level)
                 }
             }
@@ -237,11 +272,13 @@ struct ExploreView: View {
         } label: {
             HeaderIcon(systemName: "square.on.square")
         }
-        .accessibilityLabel("탐색 보기, \(app.level.title)")
+        .accessibilityLabel("탐색 보기, \(shown.title)")
     }
 
     private var parentLevel: ExploreLevel? {
-        switch app.level {
+        if role == .day { return nil }
+        if role == .calendar { return shown == .year ? nil : .year }
+        return switch app.level {
         case .day: app.dayReturnLevel
         case .records, .month: .year
         case .year: nil
@@ -251,7 +288,7 @@ struct ExploreView: View {
     /// 일간 "2017.05", 기록한 날 the committed month's year, 월간 the visible month's year,
     /// 연간 none (each year block carries its own).
     private var headerTitle: String? {
-        switch app.level {
+        switch shown {
         case .day: DateHeader.day(app.selectedDay)
         case .records: DateHeader.year(app.recordsMonth)
         case .month: DateHeader.year(app.focusedMonth)
@@ -260,7 +297,7 @@ struct ExploreView: View {
     }
 
     private var headerSpokenTitle: String? {
-        switch app.level {
+        switch shown {
         case .day: app.selectedDay.monthKey.spokenLabel
         case .records: MonthKey.spokenYear(app.recordsMonth.year)
         case .month: MonthKey.spokenYear(app.focusedMonth.year)
@@ -274,21 +311,25 @@ struct ExploreView: View {
     /// (UX v0.1 §2: closing a day returns to the view and place it was opened from).
     private var content: some View {
         ZStack {
-            layer(.year) { YearView() }
-            layer(.month) { MonthView() }
-            layer(.records) {
-                if store.isEmpty {
-                    EmptyHome()
-                } else {
-                    RecordsView(onLongPress: { dayToDelete = $0 })
+            if role != .day {
+                layer(.year) { YearView() }
+                layer(.month) { MonthView() }
+                layer(.records) {
+                    if store.isEmpty {
+                        EmptyHome()
+                    } else {
+                        RecordsView(onLongPress: { dayToDelete = $0 })
+                    }
                 }
             }
-            layer(.day) { DayView(onUndo: showUndo, onError: showError) }
+            if role != .calendar {
+                layer(.day) { DayView(onUndo: showUndo, onError: showError) }
+            }
         }
     }
 
     private func layer<Content: View>(_ level: ExploreLevel, @ViewBuilder _ content: () -> Content) -> some View {
-        let active = app.level == level
+        let active = shown == level
         let liveScale = active && pinchActive && !reduceMotion ? min(max(pinchScale, 0.5), 2.0) : 1
         return content()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -306,11 +347,14 @@ struct ExploreView: View {
                     self.pendingUndo = nil
                 }
             }
-            if !(store.isEmpty && app.level == .records) {
+            if !(store.isEmpty && shown == .records) {
                 HStack {
-                    FloatingCapsuleButton(title: "오늘") { app.goToday() }
+                    // Two panes: 오늘 in the calendar pane, pencil or + in the day pane.
+                    if role != .day { FloatingCapsuleButton(title: "오늘") { app.goToday() } }
                     Spacer()
-                    if app.level == .day && !store.items(on: app.selectedDay).isEmpty {
+                    if role == .calendar {
+                        EmptyView()
+                    } else if shown == .day && !store.items(on: app.selectedDay).isEmpty {
                         FloatingAddButton(systemImage: "pencil", accessibilityLabel: "이날 기록 편집") {
                             app.openEditor(for: app.selectedDay, keyboard: false)
                         }
@@ -332,7 +376,7 @@ struct ExploreView: View {
         pinchActive = true
         app.isPinching = true
         pinchScale = 1
-        pinchAnchor = app.pinchTarget(at: point, in: app.level, visibleIn: contentFrame)
+        pinchAnchor = app.pinchTarget(at: point, in: shown, visibleIn: contentFrame)
         let focus = pinchAnchor.map { CGPoint(x: $0.frame.midX, y: $0.frame.midY) } ?? point
         zoomAnchor = UnitPoint(
             x: (focus.x - contentFrame.minX) / max(contentFrame.width, 1),
@@ -345,7 +389,7 @@ struct ExploreView: View {
         app.isPinching = false
         guard pinchActive else { return }
         pinchActive = false
-        let from = app.level
+        let from = shown
         let to = InteractionRules.pinchLevel(from: from, scale: scale)
         guard to != from else {
             // Neutral release, cancel or first/last level: back to where it was, no tick.
@@ -368,6 +412,12 @@ struct ExploreView: View {
         pinchAnchor = nil
         app.searchHighlight = nil
 
+        if role == .calendar && to == .day {
+            // Spreading 기록한 날 in the calendar pane opens the date in the day pane; the calendar stays.
+            withAnimation(.easeOut(duration: InteractionRules.cancelDuration)) { pinchScale = 1 }
+            app.navigate(to: day, level: .day)
+            return
+        }
         if reduceMotion {
             withAnimation(.easeOut(duration: InteractionRules.reduceMotionDuration)) {
                 pinchScale = 1
@@ -398,7 +448,7 @@ struct ExploreView: View {
     /// + opens the day on screen in 일간 (today elsewhere). That day's own draft is resumed;
     /// drafts kept on other days stay where they are.
     private func openAdd() {
-        app.openEditor(for: app.level == .day ? app.selectedDay : .today)
+        app.openEditor(for: shown == .day ? app.selectedDay : .today)
     }
 
     private func deleteDay(_ day: DayKey) {

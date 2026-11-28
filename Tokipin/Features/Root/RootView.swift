@@ -30,7 +30,8 @@ struct RootView: View {
                 if let sampleTour {
                     SampleTourHost(tour: sampleTour, startJournal: startJournal)
                 } else if didRoute {
-                    ExploreView()
+                    PaneContainer(editorAllowsKeyboard: !delayEditorKeyboard)
+                        .usageSharingInvitation(isPresented: $inviteFromEditor, onJoin: { usage.setEnabled(true) }) { delayEditorKeyboard = false }
                 }
             }
         }
@@ -38,11 +39,6 @@ struct RootView: View {
             if showSplash { LaunchSplash().transition(.opacity) }
         }
         .usageSharingInvitation(isPresented: $inviteFromExplore, onJoin: { usage.setEnabled(true) })
-        .fullScreenCover(item: $app.editorDay) { day in
-            EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard,
-                       allowsKeyboard: !delayEditorKeyboard)
-                .usageSharingInvitation(isPresented: $inviteFromEditor, onJoin: { usage.setEnabled(true) }) { delayEditorKeyboard = false }
-        }
         .task { await load() }
         // The month may roll over while the app is in the background or the time zone changes.
         .onChange(of: scenePhase) { _, phase in if phase == .active { refreshToday() } }
@@ -78,6 +74,17 @@ struct RootView: View {
         defer { hideSplash() }
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
+        #if DEBUG
+        // UI tests (TokipinUITests): start from the shared calendar-range fixture, past the first
+        // run and the usage invitation, so screens can be driven without setup taps.
+        if ProcessInfo.processInfo.arguments.contains("-uiTestRangeFixture"),
+           let url = Bundle.main.url(forResource: "calendar-range-records", withExtension: "json"),
+           let archive = try? JSONDecoder.tokipin.decode(RecordArchive.self, from: Data(contentsOf: url)) {
+            try? store.replaceAll(with: archive)
+            store.markEditorOpened()
+            return
+        }
+        #endif
         if store.needsSampleCalendar(hasUsageChoice: usage.hasChoice) {
             sampleTour = SampleTour()
             return

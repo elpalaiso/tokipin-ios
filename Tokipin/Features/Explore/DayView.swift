@@ -4,6 +4,7 @@ import SwiftUI
 /// Both page with the finger 1:1 (UX v0.1 §2): the body by one day, the rail by one week.
 struct DayView: View {
     @Environment(AppModel.self) private var app
+    @Environment(RecordStore.self) private var store
     let onUndo: (PendingUndo) -> Void
     let onError: (Error) -> Void
 
@@ -29,7 +30,8 @@ struct DayView: View {
     }
 
     private func move(_ days: Int) {
-        app.select(min(app.selectedDay.adding(days: days), CalendarRange.lastWritableDay(today: app.today)))
+        let day = min(app.selectedDay.adding(days: days), CalendarRange.lastWritableDay(today: app.today))
+        app.selectInDay(day, listedMonths: RecordedMonths.visible(recordedMonths: store.recordedMonths, today: app.today))
     }
 }
 
@@ -153,6 +155,7 @@ struct SwipePager<Page: View>: View {
 /// 일~토 (or the device's week start) for the week containing `center`.
 struct WeekRail: View {
     @Environment(AppModel.self) private var app
+    @Environment(RecordStore.self) private var store
     let center: DayKey
 
     var body: some View {
@@ -162,7 +165,7 @@ struct WeekRail: View {
             ForEach(0..<7, id: \.self) { offset in
                 let day = start.adding(days: offset)
                 let selected = day == center
-                Button { app.select(day) } label: {
+                Button { app.selectInDay(day, listedMonths: RecordedMonths.visible(recordedMonths: store.recordedMonths, today: app.today)) } label: {
                     VStack(spacing: 8) {
                         Text(symbols[offset])
                             .font(.brand(12))

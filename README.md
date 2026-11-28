@@ -68,10 +68,18 @@ every case that applies to iOS (81 of 82; `emoji.externalIme` is Android-only), 
 
 ## Native UX v0.3 (date headers, 기록한 날 months)
 
-- Shared spec: `../tokipin/native-spec/v0.3/Tokipin-Native-UX-v0.3.json` (109 cases, SHA-256 6bddea73…5599512), run by `TokipinTests/NativeUXSpecTests.swift`.
+- These rules are unchanged in v0.4; the 109 cases run from the v0.4 file (below).
 - Header titles sit on the screen's centre line: 일간 "2017.05" (selected day), 기록한 날 the committed month's year, 월간 the visible month's year, 연간 none (each block carries its year), editor "2017.05.14 ⌄".
 - 기록한 날 pages = months with saved items + this month (`RecordedMonths`). Body swipe, rail, taps, flings and VoiceOver all step through that list; past either end is empty. When the committed month disappears (delete, import, month change) the nearest shown month opens, the more recent on a tie, silently.
 - The rail reserves a hint line: for each other year, the slot nearest the centre shows its 4-digit year.
+
+## Native UX v0.4 (wide and folding screens)
+
+- Shared spec: `../tokipin/native-spec/v0.4/Tokipin-Native-UX-v0.4.json` (194 cases, SHA-256 81a9e6fd…7203). `NativeUXSpecTests` runs the 109 kept from v0.3, `AdaptiveSpecTests` the 85 new ones against `Core/AdaptiveLayout.swift` (a port of `adaptive-layout.cjs`). Set `TEST_RUNNER_TOKIPIN_SPEC_DIR=<folder>` to read another checkout of the folder.
+- One column is capped at 640pt and centred. A window at least 600×480 shows two panes (`Features/Root/PaneContainer.swift`): the calendar (the level it shows, search list, views, 오늘) on the left and the selected day (더보기, pencil or +) on the right, each at most 640pt against the split. An empty journal and the sample tour stay in one column.
+- The editor is a layer of the container (not a full-screen cover): in two panes it takes the day pane and dims the calendar; a window change only moves its frame, so text, caret and keyboard stay.
+- Folds (iOS 27.1 `reservedRegions(kind: .division)`) are not read yet: this build uses the iOS 26 SDK.
+- `TokipinUITests/WideScreenUITests` drives an iPad simulator through the real UI (two panes in both orientations, the editor in the day pane, hardware-key typing and Hangul composition through rotation, the tour's last-question panel) and attaches screenshots. Debug-only launch arguments: `-uiTestRangeFixture` (shared calendar-range fixture, past first run) and `-uiTestFreshInstall` (start like a new install).
 
 ## Calendar range
 
