@@ -69,6 +69,7 @@ struct EditorView: View {
                 }
                 bottomControls
             }
+            .contentColumn()
         }
         .onAppear(perform: setUp)
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
@@ -364,7 +365,8 @@ struct EditorView: View {
                 placeholder: model.kind.label,
                 font: BrandFont.uiFont(size, isFirstEntry(position) ? .medium : .regular, relativeTo: .title1),
                 preferEmoji: model.kind == .emoji,
-                isFocused: keyboardWanted && allowsKeyboard && model.selection == nil,
+                // The tour's last question covers the editor; the field must not take the keyboard back.
+                isFocused: keyboardWanted && allowsKeyboard && model.selection == nil && tour?.panel == nil,
                 accessibilityLabel: model.kind.inputLabel,
                 onBeginEditing: { keyboardWanted = true },
                 onFocusField: tour == nil ? nil : { trialField = $0 },

@@ -12,6 +12,13 @@ Open `Tokipin.xcodeproj` in Xcode 26 and run the `Tokipin` scheme, or:
 xcodebuild -project Tokipin.xcodeproj -scheme Tokipin -destination 'platform=iOS Simulator,name=iPhone 17' test
 ```
 
+`WindowChangeTests` (UX v0.4 §5: window size changes keep the editor, search and scroll state)
+runs on iPad only and is skipped on iPhone, so run the suite on an iPad simulator too:
+
+```sh
+xcodebuild -project Tokipin.xcodeproj -scheme Tokipin -destination 'platform=iOS Simulator,name=iPad Pro 13-inch (M5)' test
+```
+
 The signed/release app uses the **tokipin-app** Firebase project's Apple configuration for
 `com.tokipin.app`. Put the downloaded `GoogleService-Info.plist` under `Tokipin/`
 before building Release. The config stays outside version control. Debug builds without
