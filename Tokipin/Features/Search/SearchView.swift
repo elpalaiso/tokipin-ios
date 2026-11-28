@@ -117,6 +117,13 @@ struct SearchView: View {
         app.isSearching = false
         app.searchHighlight = nil
         app.searchQuery = ""
+        if app.twoPane {
+            // Two panes: the calendar pane goes back to its view and shows the selected date
+            // (the result's date when one was opened); nothing else moves.
+            app.searchReturn = nil
+            app.requestReveal(app.selectedDay)
+            return
+        }
         if let (level, day) = app.searchReturn {
             app.navigate(to: day, level: level, haptic: false)
             app.requestReveal(day)

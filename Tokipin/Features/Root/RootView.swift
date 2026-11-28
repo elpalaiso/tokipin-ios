@@ -30,7 +30,8 @@ struct RootView: View {
                 if let sampleTour {
                     SampleTourHost(tour: sampleTour, startJournal: startJournal)
                 } else if didRoute {
-                    ExploreView()
+                    PaneContainer(editorAllowsKeyboard: !delayEditorKeyboard)
+                        .usageSharingInvitation(isPresented: $inviteFromEditor, onJoin: { usage.setEnabled(true) }) { delayEditorKeyboard = false }
                 }
             }
         }
@@ -38,11 +39,6 @@ struct RootView: View {
             if showSplash { LaunchSplash().transition(.opacity) }
         }
         .usageSharingInvitation(isPresented: $inviteFromExplore, onJoin: { usage.setEnabled(true) })
-        .fullScreenCover(item: $app.editorDay) { day in
-            EditorView(day: day, focusItem: app.editorFocusItem, startsWithKeyboard: app.editorStartsWithKeyboard,
-                       allowsKeyboard: !delayEditorKeyboard)
-                .usageSharingInvitation(isPresented: $inviteFromEditor, onJoin: { usage.setEnabled(true) }) { delayEditorKeyboard = false }
-        }
         .task { await load() }
         // The month may roll over while the app is in the background or the time zone changes.
         .onChange(of: scenePhase) { _, phase in if phase == .active { refreshToday() } }

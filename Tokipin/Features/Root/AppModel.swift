@@ -83,11 +83,52 @@ final class AppModel {
     @ObservationIgnored var hapticSink: () -> Void = { Haptics.tick() }
     @ObservationIgnored var hapticsEnabled: () -> Bool = { Haptics.isEnabled }
 
+    // MARK: Two panes (UX v0.4)
+
+    /// Set by the window container while the window shows the calendar and day panes. The state is
+    /// the one the single column uses; here `level == .day` only means the day pane was used last.
+    var twoPane = false
+
+    /// The level the calendar pane shows: `level`, or the level a day was opened from.
+    var calendarLevel: ExploreLevel { Adaptive.calendarLevel(level, dayReturnLevel: dayReturnLevel) }
+
+    /// Two panes: one action, with one tick only when the selected date, the calendar pane's level
+    /// or the committed 기록한 날 month really changes (Adaptive.navigate).
+    private func navigatePanes(to day: DayKey?, level newLevel: ExploreLevel?, haptic: Bool, keepRecordsMonth: Bool) -> Bool {
+        let before = (day: selectedDay, calendar: calendarLevel, month: recordsMonth)
+        if let day, day != selectedDay {
+            selectedDay = day
+            focusedMonth = day.monthKey
+        }
+        if let newLevel {
+            if newLevel == .day {
+                if level != .day { dayReturnLevel = level; level = .day }
+            } else if newLevel != level {
+                if newLevel == .records, newLevel != calendarLevel, !keepRecordsMonth { recordsMonth = (day ?? selectedDay).monthKey }
+                level = newLevel
+            }
+        }
+        let changed = selectedDay != before.day || calendarLevel != before.calendar || recordsMonth != before.month
+        let events: [InteractionRules.NavigationEvent] = changed ? [.selectedDateChanged] : []
+        if haptic, InteractionRules.ticks(for: events, enabled: hapticsEnabled()) == 1 { hapticSink() }
+        return changed
+    }
+
+    /// Two panes: after the day pane changed the date, the calendar pane brings it into view
+    /// without a tick. 기록한 날 moves only to a month it lists.
+    func followInCalendar(listedMonths: [MonthKey]) {
+        guard twoPane else { return }
+        focusedMonth = selectedDay.monthKey
+        if calendarLevel == .records, listedMonths.contains(selectedDay.monthKey) { commitRecordsMonth(selectedDay.monthKey, haptic: false) }
+        requestReveal(selectedDay)
+    }
+
     /// The one path every navigation takes. Changes the date and/or level together and
     /// requests at most one selection tick, only if something really changed.
     @discardableResult
     func navigate(to day: DayKey? = nil, level newLevel: ExploreLevel? = nil, haptic: Bool = true,
                   keepRecordsMonth: Bool = false) -> Bool {
+        if twoPane { return navigatePanes(to: day, level: newLevel, haptic: haptic, keepRecordsMonth: keepRecordsMonth) }
         let dayChanged = day.map { $0 != selectedDay } ?? false
         let levelChanged = newLevel.map { $0 != level } ?? false
         // Entering 기록한 날 opens the selected (or anchored) day's month; closing a day keeps it.
@@ -115,9 +156,19 @@ final class AppModel {
         navigate(to: day, haptic: haptic)
     }
 
-    /// Tapping a date opens it in 일간 (one tick for date + level).
+    /// Tapping a date opens it in 일간 (one tick for date + level). Two panes: in the day pane, the
+    /// calendar pane keeps its level and scroll (a tick only if the date changed).
     func openDay(_ day: DayKey) {
         navigate(to: day, level: .day)
+    }
+
+    /// A date chosen in the day view (week rail, day or week swipe). Two panes: the day pane is
+    /// the one in use, and the calendar pane follows.
+    @discardableResult
+    func selectInDay(_ day: DayKey, listedMonths: [MonthKey]) -> Bool {
+        let changed = navigate(to: day, level: twoPane ? .day : nil)
+        if changed { followInCalendar(listedMonths: listedMonths) }
+        return changed
     }
 
     /// Closing 일간 returns to the view it was opened from, with that view's scroll intact.
@@ -139,7 +190,7 @@ final class AppModel {
     func goToday(_ today: DayKey = .today) {
         navigate(to: today, haptic: false)
         focusedMonth = today.monthKey
-        if level == .records { commitRecordsMonth(today.monthKey, haptic: false) }
+        if (twoPane ? calendarLevel : level) == .records { commitRecordsMonth(today.monthKey, haptic: false) }
         requestReveal(today)
     }
 

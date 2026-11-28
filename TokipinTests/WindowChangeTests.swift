@@ -162,4 +162,58 @@ final class WindowChangeTests: XCTestCase {
         }
         XCTAssertEqual(app.editorDay, day)
     }
+
+    /// UX v0.4: two panes on a wide window, one column when narrowed, and back. The editor is a
+    /// layer of the pane container, so the same field keeps text, caret and focus throughout.
+    func testEditorKeepsItsFieldBetweenTwoPanesAndOneColumn() async throws {
+        let (store, app, usage) = try await makeEnvironment()
+        host(RootView().environment(store).environment(app).environment(usage))
+        await wait(1.5)
+        XCTAssertTrue(app.twoPane, "a 13-inch iPad window shows two panes")
+        let day = DayKey(year: 2026, month: 11, day: 27)
+        app.openEditor(for: day)
+        await wait(1.2)
+        let field = try XCTUnwrap(inputFields(in: window).first)
+        if !field.isFirstResponder { field.becomeFirstResponder() }
+        field.insertText("봄바람")
+        let caret = try XCTUnwrap(field.position(from: field.beginningOfDocument, offset: 1))
+        field.selectedTextRange = field.textRange(from: caret, to: caret)
+        await wait()
+        // The editor sits in the day pane: narrower than the window.
+        XCTAssertLessThanOrEqual(field.window!.convert(field.bounds, from: field).width, Adaptive.paneMaxWidth)
+        let full = window.bounds.size
+        for size in [CGSize(width: 500, height: full.height), full] {
+            await resize(width: size.width, height: size.height)
+            XCTAssertEqual(app.twoPane, size.width >= Adaptive.twoPaneMinWidth)
+            let now = try XCTUnwrap(inputFields(in: window).first)
+            XCTAssertTrue(now === field, "the editor's field was rebuilt at \(size)")
+            XCTAssertEqual(now.text, "봄바람")
+            XCTAssertEqual(now.offset(from: now.beginningOfDocument, to: now.selectedTextRange!.start), 1)
+            XCTAssertTrue(now.isFirstResponder)
+        }
+    }
+
+    /// UX v0.4 §4: a date tapped in the calendar pane opens in the day pane; the calendar keeps its
+    /// level; one tick, none for the date already shown; back goes up from the calendar's level.
+    func testTwoPaneNavigationKeepsTheCalendarLevel() async throws {
+        let (store, app, usage) = try await makeEnvironment()
+        var ticks = 0
+        app.hapticSink = { ticks += 1 }
+        app.hapticsEnabled = { true }
+        host(RootView().environment(store).environment(app).environment(usage))
+        await wait(1.5)
+        XCTAssertTrue(app.twoPane)
+        app.setLevel(.month)
+        ticks = 0
+        app.openDay(DayKey(year: 2026, month: 11, day: 12))
+        XCTAssertEqual(app.level, .day)
+        XCTAssertEqual(app.calendarLevel, .month)
+        XCTAssertEqual(ticks, 1)
+        app.openDay(DayKey(year: 2026, month: 11, day: 12))
+        XCTAssertEqual(ticks, 1, "the date already shown")
+        app.setLevel(.month)
+        XCTAssertEqual(ticks, 1, "the level the calendar already shows")
+        app.goToday()
+        XCTAssertEqual(ticks, 1, "오늘 is silent")
+    }
 }
