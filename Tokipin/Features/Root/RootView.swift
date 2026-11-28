@@ -74,6 +74,17 @@ struct RootView: View {
         defer { hideSplash() }
         guard store.state == .loaded, !didRoute else { return }
         didRoute = true
+        #if DEBUG
+        // UI tests (TokipinUITests): start from the shared calendar-range fixture, past the first
+        // run and the usage invitation, so screens can be driven without setup taps.
+        if ProcessInfo.processInfo.arguments.contains("-uiTestRangeFixture"),
+           let url = Bundle.main.url(forResource: "calendar-range-records", withExtension: "json"),
+           let archive = try? JSONDecoder.tokipin.decode(RecordArchive.self, from: Data(contentsOf: url)) {
+            try? store.replaceAll(with: archive)
+            store.markEditorOpened()
+            return
+        }
+        #endif
         if store.needsSampleCalendar(hasUsageChoice: usage.hasChoice) {
             sampleTour = SampleTour()
             return

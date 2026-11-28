@@ -79,6 +79,7 @@ every case that applies to iOS (81 of 82; `emoji.externalIme` is Android-only), 
 - One column is capped at 640pt and centred. A window at least 600×480 shows two panes (`Features/Root/PaneContainer.swift`): the calendar (the level it shows, search list, views, 오늘) on the left and the selected day (더보기, pencil or +) on the right, each at most 640pt against the split. An empty journal and the sample tour stay in one column.
 - The editor is a layer of the container (not a full-screen cover): in two panes it takes the day pane and dims the calendar; a window change only moves its frame, so text, caret and keyboard stay.
 - Folds (iOS 27.1 `reservedRegions(kind: .division)`) are not read yet: this build uses the iOS 26 SDK.
+- `TokipinUITests/WideScreenUITests` drives an iPad simulator through the real UI (two panes in both orientations, the editor in the day pane, hardware-key typing and Hangul composition through rotation, the tour's last-question panel) and attaches screenshots. Debug-only launch arguments: `-uiTestRangeFixture` (shared calendar-range fixture, past first run) and `-uiTestFreshInstall` (start like a new install).
 
 ## Calendar range
 

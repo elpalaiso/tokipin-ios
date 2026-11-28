@@ -18,21 +18,31 @@
 			remoteGlobalIDString = AA0000000000000000000101;
 			remoteInfo = Tokipin;
 		};
+		AA0000000000000000000302 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA0000000000000000000101;
+			remoteInfo = Tokipin;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		AA0000000000000000000201 /* Tokipin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tokipin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0000000000000000000202 /* TokipinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TokipinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000203 /* TokipinUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TokipinUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AA0000000000000000000011 /* Tokipin */ = {isa = PBXFileSystemSynchronizedRootGroup; path = Tokipin; sourceTree = "<group>"; };
 		AA0000000000000000000012 /* TokipinTests */ = {isa = PBXFileSystemSynchronizedRootGroup; path = TokipinTests; sourceTree = "<group>"; };
+		AA0000000000000000000013 /* TokipinUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; path = TokipinUITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		AA0000000000000000000401 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (AA0000000000000000000901 /* FirebaseAnalyticsCore in Frameworks */,); runOnlyForDeploymentPostprocessing = 0; };
 		AA0000000000000000000402 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		AA0000000000000000000403 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -41,6 +51,7 @@
 			children = (
 				AA0000000000000000000011 /* Tokipin */,
 				AA0000000000000000000012 /* TokipinTests */,
+				AA0000000000000000000013 /* TokipinUITests */,
 				AA0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +61,7 @@
 			children = (
 				AA0000000000000000000201 /* Tokipin.app */,
 				AA0000000000000000000202 /* TokipinTests.xctest */,
+				AA0000000000000000000203 /* TokipinUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,6 +109,26 @@
 			productReference = AA0000000000000000000202 /* TokipinTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		AA0000000000000000000103 /* TokipinUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000603;
+			buildPhases = (
+				AA0000000000000000000503 /* Sources */,
+				AA0000000000000000000403 /* Frameworks */,
+				AA0000000000000000000513 /* Resources */,
+			);
+			buildRules = ();
+			dependencies = (
+				AA0000000000000000000702 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AA0000000000000000000013 /* TokipinUITests */,
+			);
+			name = TokipinUITests;
+			productName = TokipinUITests;
+			productReference = AA0000000000000000000203 /* TokipinUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -109,6 +141,7 @@
 				TargetAttributes = {
 					AA0000000000000000000101 = { CreatedOnToolsVersion = 26.0; };
 					AA0000000000000000000102 = { CreatedOnToolsVersion = 26.0; TestTargetID = AA0000000000000000000101; };
+					AA0000000000000000000103 = { CreatedOnToolsVersion = 26.0; TestTargetID = AA0000000000000000000101; };
 				};
 			};
 			buildConfigurationList = AA0000000000000000000600;
@@ -144,6 +177,7 @@
 			targets = (
 				AA0000000000000000000101 /* Tokipin */,
 				AA0000000000000000000102 /* TokipinTests */,
+				AA0000000000000000000103 /* TokipinUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -151,6 +185,7 @@
 /* Begin PBXResourcesBuildPhase section */
 		AA0000000000000000000511 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		AA0000000000000000000512 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		AA0000000000000000000513 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -171,6 +206,7 @@
 /* Begin PBXSourcesBuildPhase section */
 		AA0000000000000000000501 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 		AA0000000000000000000502 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		AA0000000000000000000503 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -178,6 +214,11 @@
 			isa = PBXTargetDependency;
 			target = AA0000000000000000000101 /* Tokipin */;
 			targetProxy = AA0000000000000000000301 /* PBXContainerItemProxy */;
+		};
+		AA0000000000000000000702 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA0000000000000000000101 /* Tokipin */;
+			targetProxy = AA0000000000000000000302 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -318,6 +359,34 @@
 			};
 			name = Release;
 		};
+		AA0000000000000000000831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9QA57R9ZML;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokipin.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Tokipin;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000832 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9QA57R9ZML;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokipin.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Tokipin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -344,6 +413,15 @@
 			buildConfigurations = (
 				AA0000000000000000000821 /* Debug */,
 				AA0000000000000000000822 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000603 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000831 /* Debug */,
+				AA0000000000000000000832 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

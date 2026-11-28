@@ -216,4 +216,35 @@ final class WindowChangeTests: XCTestCase {
         app.goToday()
         XCTAssertEqual(ticks, 1, "오늘 is silent")
     }
+
+    /// Split View ⅓ cannot be driven from tests; this is the nearest: the window narrowed to a
+    /// third (375pt) with the compact size class Split View gives, while editing, and back.
+    func testEditorKeepsItsFieldThroughACompactThirdWidthAndBack() async throws {
+        let (store, app, usage) = try await makeEnvironment()
+        host(RootView().environment(store).environment(app).environment(usage))
+        await wait(1.5)
+        app.openEditor(for: DayKey(year: 2026, month: 11, day: 27))
+        await wait(1.2)
+        let field = try XCTUnwrap(inputFields(in: window).first)
+        if !field.isFirstResponder { field.becomeFirstResponder() }
+        field.insertText("귤잼")
+        await wait()
+        let full = window.bounds.size
+        let root = try XCTUnwrap(window.rootViewController)
+        root.traitOverrides.horizontalSizeClass = .compact
+        await resize(width: 375, height: full.height)
+        XCTAssertEqual(root.traitCollection.horizontalSizeClass, .compact)
+        XCTAssertFalse(app.twoPane)
+        var now = try XCTUnwrap(inputFields(in: window).first)
+        XCTAssertTrue(now === field)
+        XCTAssertEqual(now.text, "귤잼")
+        XCTAssertTrue(now.isFirstResponder)
+        root.traitOverrides.horizontalSizeClass = .regular
+        await resize(width: full.width, height: full.height)
+        XCTAssertTrue(app.twoPane)
+        now = try XCTUnwrap(inputFields(in: window).first)
+        XCTAssertTrue(now === field)
+        XCTAssertEqual(now.text, "귤잼")
+        XCTAssertTrue(now.isFirstResponder)
+    }
 }
