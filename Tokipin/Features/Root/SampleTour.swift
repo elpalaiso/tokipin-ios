@@ -138,6 +138,11 @@ struct SampleTourHost: View {
     @Bindable var tour: SampleTour
     let startJournal: () -> Void
     @State private var confirmed = false
+    @State private var windowWidth: CGFloat = 0
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// Wider than one column: the last question sits at the bottom within the column's width
+    /// (UX v0.4 §3) instead of the centred iPad form sheet.
+    private var wide: Bool { windowWidth > ContentColumn.maxWidth }
 
     var body: some View {
         Group {
@@ -150,7 +155,28 @@ struct SampleTourHost: View {
         }
         .accessibilityHidden(tour.panel != nil)
         .environment(tour.store).environment(tour.app).environment(tour)
-        .sheet(isPresented: Binding(get: { tour.panel != nil }, set: { if !$0 { tour.panel = nil } }), onDismiss: {
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { windowWidth = $0 }
+        .overlay {
+            if wide, tour.panel != nil {
+                ZStack(alignment: .bottom) {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                        .onTapGesture { tour.panel = nil }
+                        .accessibilityHidden(true)
+                    SampleTourDecision(tour: tour) {
+                        tour.panel = nil
+                        startJournal()
+                    }
+                    .padding(.top, 8)
+                    .frame(height: typeSize.isAccessibilitySize ? 420 : 240)
+                    .frame(maxWidth: ContentColumn.maxWidth)
+                    .background(Palette.surface, in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
+                    .transition(.move(edge: .bottom))
+                }
+                .ignoresSafeArea(.container, edges: .bottom)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: wide && tour.panel != nil)
+        .sheet(isPresented: Binding(get: { !wide && tour.panel != nil }, set: { if !$0 { tour.panel = nil } }), onDismiss: {
             if confirmed { confirmed = false; startJournal() }
         }) {
             SampleTourDecision(tour: tour) {
