@@ -16,6 +16,22 @@ struct PaneContainer: View {
     @State private var insets = EdgeInsets()
 
     var body: some View {
+        // The window is read from a GeometryReader, which never grows with its content: the panes'
+        // fixed frames must not feed back into the size they are computed from (rotation).
+        GeometryReader { proxy in
+            panesView(window: proxy.size)
+                .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
+                .onChange(of: proxy.size, initial: true) { _, size in window = size }
+        }
+        // Panes are placed in window coordinates; each gets the part of the window's safe area that
+        // falls in its frame. The keyboard still insets the editor.
+        .ignoresSafeArea(.container)
+        .background { Color.clear.onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { insets = $0 } }
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.25), value: app.editorDay)
+    }
+
+    @ViewBuilder
+    private func panesView(window: CGSize) -> some View {
         let layout = Adaptive.layout(width: window.width, height: window.height, fold: nil, journalEmpty: store.isEmpty)
         let panes = window != .zero && layout.isTwoPane
         ZStack(alignment: .topLeading) {
@@ -54,12 +70,6 @@ struct PaneContainer: View {
                     .transition(reduceMotion ? .opacity : .move(edge: .bottom))
             }
         }
-        // Panes are placed in window coordinates; each gets the part of the window's safe area that
-        // falls in its frame. The keyboard still insets the editor.
-        .ignoresSafeArea(.container)
-        .background { Color.clear.ignoresSafeArea().onGeometryChange(for: CGSize.self) { $0.size } action: { window = $0 } }
-        .background { Color.clear.onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { insets = $0 } }
-        .animation(reduceMotion ? nil : .easeOut(duration: 0.25), value: app.editorDay)
         .onChange(of: panes, initial: true) { _, two in app.twoPane = two }
     }
 
